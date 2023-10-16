@@ -12,7 +12,6 @@ import DrawerComp from './DrawerComp';
 import { useEffect, useState } from 'react';
 
 const HeaderComp = () => {
-  // const [first, setfirst] = useState(second) 
   const theme=useTheme()
   const isMatch=useMediaQuery(theme.breakpoints.down('sm'))
   const [elevation, setElevation] = useState(0);
@@ -39,7 +38,7 @@ const HeaderComp = () => {
         <Toolbar>
           {isMatch ? (
             <>
-              <Typography style={{userSelect:'none'}}>
+              <Typography>
                 <span style={{color:"#8338EC",fontSize:"35px",fontFamily:'Montserrat'}}>:D</span>
                 <span style={{color:"#FFBE0B",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
                 <span style={{color:"#FB5607",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
@@ -51,7 +50,7 @@ const HeaderComp = () => {
            </>
           ):(
             <>
-            <Typography>
+            <Typography marginLeft={1}>
               <span style={{color:"#8338EC",fontSize:"35px",fontFamily:'Montserrat'}}>:D</span>
               <span style={{color:"#FFBE0B",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
               <span style={{color:"#FB5607",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
