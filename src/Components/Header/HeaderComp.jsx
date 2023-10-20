@@ -5,26 +5,33 @@ Toolbar,
 Button,
 useMediaQuery,
 useTheme,
+Avatar,
 } from '@mui/material';
-import './HeaderComp.css'
 import Colors from '../../assets/Colors/Colors';
 import DrawerComp from './DrawerComp';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import {useNavigate} from 'react-router-dom'
+import AuthContext from '../../context/AuthContext';
 
 const HeaderComp = () => {
   const theme=useTheme()
   const isMatch=useMediaQuery(theme.breakpoints.down('sm'))
   const [elevation, setElevation] = useState(0);
+  const navigate = useNavigate()
+
+  let {user,logOutUser} = useContext(AuthContext)
+  let users=false 
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > 0) {
+      if (currentScrollY > 0) { 
         setElevation(5);
       } else {
         setElevation(0);
       }
     };
+    
 
     window.addEventListener('scroll', handleScroll);
 
@@ -65,10 +72,21 @@ const HeaderComp = () => {
                 <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
                 <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
                 </ButtonBase> */}
-              {/* <ButtonGroup  style={{gap:15}} sx={{marginLeft:'auto'}}  aria-label="outlined button group"> */}
-                <Button  style={{color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} variant="elevated">Login</Button>
-                <Button style={{backgroundColor:Colors.primary_color}} variant="elevated">Create an Account</Button>
-              {/* </ButtonGroup> */}
+                {users ? (
+                  <>
+                  <Button  style={{color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} onClick={logOutUser} variant="elevated">Logout</Button>
+                  <Avatar
+                    alt="Remy Sharp"
+                    // src="/src/assets/images/Login.png"
+                    sx={{ width: 50, height: 50}}
+                  />
+                  </>
+                ):(
+                  <>
+                    <Button  style={{color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} onClick={()=>navigate("/login")} variant="elevated">Login</Button>
+                    <Button style={{backgroundColor:Colors.primary_color}} onClick={()=>navigate("/register")} variant="elevated">Create an Account</Button>
+                  </>
+                )}
           </>
           )
           }
