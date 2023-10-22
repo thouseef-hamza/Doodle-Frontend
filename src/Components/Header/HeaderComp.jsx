@@ -20,7 +20,6 @@ const HeaderComp = () => {
   const navigate = useNavigate()
 
   let {user,logOutUser} = useContext(AuthContext)
-  let users=false 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +31,6 @@ const HeaderComp = () => {
       }
     };
     
-
     window.addEventListener('scroll', handleScroll);
 
     return () => {
@@ -72,7 +70,7 @@ const HeaderComp = () => {
                 <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
                 <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
                 </ButtonBase> */}
-                {users ? (
+                {user ? (
                   <>
                   <Button  style={{color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} onClick={logOutUser} variant="elevated">Logout</Button>
                   <Avatar

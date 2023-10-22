@@ -1,4 +1,4 @@
-import { Alert, Button, ButtonBase, ButtonGroup, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Alert, Button, ButtonBase, Dialog, DialogActions, DialogTitle, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
 import useResponsive from '../../Hooks/useResponsive'
 import LogoComponent from '../../Components/Authentication/LogoComponent'
 import BoxWrapper from '../../Components/Authentication/BoxWrapper'
@@ -26,6 +26,7 @@ const OTPAuthentication = () => {
       const handleChange = (newValue) => {
         setOtp(newValue)
       }    
+
       // after Successfull completion for to redirect login
       const handleClose = () => {
         setOpen(false);
@@ -34,43 +35,62 @@ const OTPAuthentication = () => {
       // For Regenerating OTP
       const RegenerateOtp = async (e) => {
         e.preventDefault()
-        let response = await axios.patch(AUTH_BASE_URL + `user/verify-otp/${user_id}/`,{
-          phone_number:phone_number
-        },{
-          headers:{
-            'Content-Type':'application/json'
+        try {
+          let response = await axios.patch(AUTH_BASE_URL + `user/verify-otp/${user_id}/`,{
+            phone_number:phone_number
+          },{
+            headers:{
+              'Content-Type':'application/json'
+            }
+          })
+          console.log(response);
+          if (response.status === 200) {
+            toast.success('OTP Regenerated Successfully', {
+              position: toast.POSITION.TOP_RIGHT, 
+              autoClose: 4000,
+            });
+          }else {
+            toast.error('Something went wrong', {
+              position: toast.POSITION.TOP_RIGHT, 
+              autoClose: 4000,
+            });
           }
-        })
-        console.log(response);
-        if (response.status === 200) {
-          toast.success('OTP Regenerated Successfully', {
-            position: toast.POSITION.TOP_RIGHT, 
-            autoClose: 4000,
-          });
-        }else {
-          toast.error('Something went wrong', {
-            position: toast.POSITION.TOP_RIGHT, 
-            autoClose: 4000,
-          });
-        }
+        } catch (error) {
+          console.log(error);
+        }  
       }
 
       // For Submitting OTP to Django
       const handleSubmit = async (e) => {
         e.preventDefault()
-        let response = await axios.post(AUTH_BASE_URL + `user/verify-otp/${user_id}/`,{
-          otp:otp,
-          phone_number:phone_number
-        },{
-          headers:{
-            'Content-Type':'application/json'
+        try {
+          let response = await axios.post(AUTH_BASE_URL + `user/verify-otp/${user_id}/`,{
+            otp:otp,
+            phone_number:phone_number
+          },{
+            headers:{
+              'Content-Type':'application/json'
+            }
+          })
+          console.log(response);
+          if (response.status === 200) {
+            setOpen(true)
+          }else {
+            alert("Something went wrong");
           }
-        })
-        console.log(response);
-        if (response.status === 200) {
-          setOpen(true)
-        }else {
-          alert("Something went wrong");
+        } catch (error) {
+          console.log(error);
+          if (error.response.status === 401){
+            toast.error(error.response.data.detail, {
+              position: toast.POSITION.TOP_RIGHT, 
+              autoClose: 4000,
+            });
+          } else {
+            toast.error("Something Went Wrong", {
+              position: toast.POSITION.TOP_RIGHT, 
+              autoClose: 4000,
+            });
+          }
         }
       }
 
