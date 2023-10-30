@@ -7,7 +7,6 @@ useMediaQuery,
 useTheme,
 Avatar,
 } from '@mui/material';
-import Colors from '../../assets/Colors/Colors';
 import DrawerComp from './DrawerComp';
 import { useContext, useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom'
@@ -63,16 +62,9 @@ const HeaderComp = () => {
               <span style={{color:"#FF006E",fontSize:"35px",fontFamily:'Montserrat'}}>l</span>
               <span style={{color:"#13C2C2",fontSize:"35px",fontFamily:'Montserrat'}}>e</span>
             </Typography>
-              {/* <ButtonBase>
-                <Button sx={{marginLeft:'auto'}} texttxo variant="text">Home</Button>
-                <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
-                <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
-                <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
-                <Button sx={{marginLeft:'auto'}} texttxo variant="text">Text</Button>
-                </ButtonBase> */}
                 {user ? (
                   <>
-                  <Button  style={{color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} onClick={logOutUser} variant="elevated">Logout</Button>
+                  <Button  style={{color:"white",borderColor:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} onClick={logOutUser} variant="elevated">Logout</Button>
                   <Avatar
                     alt="Remy Sharp"
                     // src="/src/assets/images/Login.png"
@@ -81,8 +73,8 @@ const HeaderComp = () => {
                   </>
                 ):(
                   <>
-                    <Button  style={{color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} onClick={()=>navigate("/login")} variant="elevated">Login</Button>
-                    <Button style={{backgroundColor:Colors.primary_color}} onClick={()=>navigate("/register")} variant="elevated">Create an Account</Button>
+                    <Button  style={{color:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} onClick={()=>navigate("/login")} variant="elevated">Login</Button>
+                    <Button style={{backgroundColor:theme.palette.primary.main}} onClick={()=>navigate("/register")} variant="elevated">Create an Account</Button>
                   </>
                 )}
           </>

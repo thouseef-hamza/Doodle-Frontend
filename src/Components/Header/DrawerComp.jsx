@@ -1,8 +1,10 @@
 import { Button, Drawer,IconButton,List, ListItem, } from '@mui/material'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu';
-import Colors from '../../assets/Colors/Colors';
+import { useTheme } from '@mui/material';
 const DrawerComp = () => {
+  const theme = useTheme()
+
   const [openDrawer, setOpenDrawer] = useState(false)
   return (
     <>
@@ -11,10 +13,10 @@ const DrawerComp = () => {
       >
         <List>
           <ListItem>
-            <Button  style={{width:"100%",color:Colors.primary_color,borderColor:Colors.primary_color,marginLeft:'auto',marginRight:"10px"}} variant="outlined">Login</Button>
+            <Button  style={{width:"100%",color:theme.palette.primary.main,borderColor:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} variant="outlined">Login</Button>
           </ListItem>
           <ListItem>
-            <Button style={{color:"#ffff",backgroundColor:Colors.primary_color}} variant="elevated">Create an Account</Button>
+            <Button style={{color:"#ffff",backgroundColor:theme.palette.primary.main}} color={'primary'} variant="elevated">Create an Account</Button>
           </ListItem>
         </List>
       </Drawer>

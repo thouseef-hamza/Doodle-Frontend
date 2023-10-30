@@ -4,7 +4,6 @@ const InsHomePage = () => {
   return (
     <>
      <HeaderComp/>
-    
     </>
   )
 }

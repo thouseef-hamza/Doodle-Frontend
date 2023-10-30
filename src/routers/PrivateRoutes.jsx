@@ -1,4 +1,4 @@
-import { Routes, Route,Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
 
 const PrivateRoutes = ({children, ...rest}) => {
