@@ -6,6 +6,7 @@ import BoxWrapper from '../../Components/Authentication/BoxWrapper';
 import LogoComponent from '../../Components/Authentication/LogoComponent';
 import { useContext } from 'react';
 import AuthContext from '../../context/AuthContext';
+import { ToastContainer } from "react-toastify";
 
 
 const InstituteLogin = () => {
@@ -16,6 +17,7 @@ const InstituteLogin = () => {
   return (
     <>
      <Button sx={{margin:'10px'}} onClick={()=> navigate('/login')}  size='large' color='secondary' ><ArrowBackOutlinedIcon fontSize='large' sx={{color:'#8338EC'}} /></Button>
+     <ToastContainer />
      <form onSubmit={loginUser}>
           <BoxWrapper>
             <LogoComponent/>

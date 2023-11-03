@@ -49,7 +49,7 @@ const SearchBar = ({children}) => {
           placeholder="Search…"
           inputProps={{ "aria-label": "search" }}
           />
-          <Button sx={{marginLeft:1}} variant="contained">Search</Button>
+          <Button sx={{marginLeft:1,marginBottom:0.45}} variant="contained">Search</Button>
      </Search>
      {children}
           </Container>

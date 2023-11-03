@@ -1,5 +1,7 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 
 import { AUTH_BASE_URL } from "../utils/api/api";
 
@@ -22,6 +24,7 @@ export const AuthProvider = ({ children }) => {
   );
   const navigate = useNavigate();
   let [loading, setLoading] = useState(false);
+  
 
   let loginUser = async (e) => {
     e.preventDefault();
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         alert("Something Went Wrong");
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.detail)
     }
   };
 
@@ -65,55 +68,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  
-  let updateToken = async () => {
-    try{
-      let response = await axios.post(
-      AUTH_BASE_URL + "token/refresh/",
-      {
-        refresh: authTokens?.refresh,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    let data = await response.data;
-    if (response.status == 200) {
-      setAuthTokens(data);
-      setUser(jwtDecode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
-    } else {
-      logOutUser();
+  useEffect(()=>{
+    if(authTokens){
+      setUser(jwtDecode(authTokens.access))
     }
+    setLoading(false)
+  },[authTokens,loading])
 
-    if (loading) {
-      setLoading(false);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-  
-};
 
-useEffect(() => {
-  if (loading) {
-    updateToken();
-  }
-  let fourMinutes = 1000 * 60 * 0.25;
-  let interval = setInterval(() => {
-    if (authTokens) {
-      console.log("bfgerfgrgfgbfrgfbfgr");
-      updateToken();
-    }
-  }, fourMinutes);
-  return () => clearInterval(interval);
-}, [authTokens,loading]);
 
   let contextData = {
     user: user,
     authTokens: authTokens,
+    setAuthTokens:setAuthTokens,
+    setUser:setUser,
     loginUser: loginUser,
     logOutUser: logOutUser,
   };
