@@ -58,8 +58,6 @@ const InsStudentDetailView = () => {
           } else {
             newState[name] = value;
           }
-
-          console.log(newState, "guvhguvhjb");
           return newState;
         });
         };
