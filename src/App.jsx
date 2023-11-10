@@ -15,6 +15,7 @@ import InsStudentsListCreate from "./Pages/Institute/InsStudentsListCreate";
 import InsBatchesListCreate from "./Pages/Institute/InsBatchesListCreate";
 import InsBatchesDetail from "./Pages/Institute/InsBatchesDetail";
 import InsStudentDetailView from "./Pages/Institute/InsStudentDetailView";
+import PrivateRoutes from "./routers/PrivateRoutes";
 
 function App() {
   return (
@@ -37,7 +38,14 @@ function App() {
 
       {/* Institute Actions */}
       <Route element={<InsHomePage />} path="/institute/home" />
-      <Route element={<InsDashboard />} path="/institute/dashboard" />
+      <Route
+        element={
+          <PrivateRoutes>
+            <InsDashboard />
+          </PrivateRoutes>
+        }
+        path="/institute/dashboard"
+      />
 
       <Route element={<InsInbox />} path="/institute/inbox" />
       <Route element={<InsProfile />} path="/institute/profile" />

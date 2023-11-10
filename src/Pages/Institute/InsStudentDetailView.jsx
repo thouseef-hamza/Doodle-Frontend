@@ -1,45 +1,88 @@
-import { Box, Button, Card, CardActionArea, CardMedia, Grid, Paper, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import { Box, Button, Card, CardActionArea, CardMedia, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
+import { useEffect,useLayoutEffect, useState } from 'react'
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate, useParams } from 'react-router-dom';
 import UploadIcon from "@mui/icons-material/Upload"; 
 import EditNoteIcon from "@mui/icons-material/EditNote"; 
 import useAxios from '../../Hooks/useAxios';
-import { INS_BASE_URL } from '../../utils/api/api';
 import SpinnerComp from '../../Components/SpinnerComp';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { editStudentDetail, getStudentDetail } from '../../Redux/Institute/InsStudents/InsStudentDetailAction';
+import { ToastContainer, toast } from 'react-toastify';
 
 const InsStudentDetailView = () => {
      const navigate=useNavigate()
      const [edit, setEdit] = useState(false);
-     const [loading,setLoading] = useState(true)
-     const [studentDetail,setStudentDetail] = useState([])
-     console.log(studentDetail);
-     const api = useAxios()
+     const { studentDetail,loading } = useSelector( 
+       (state) => state.insStudentDetail,shallowEqual
+     );
+      const [formData, setFormData] = useState();
+     const dispatch = useDispatch()
+     const api = useAxios() 
      const {id} = useParams()
+     useEffect(() => {
+       dispatch(
+         getStudentDetail({id,api})
+       );
+     },[]);
 
      useEffect(()=>{
-          fetchStudentDetails()
-     },[])
+      setFormData({...studentDetail})
+     },[studentDetail])
 
-     const fetchStudentDetails = async () =>{
-          try {
-            const response = await api.get(INS_BASE_URL + `student/${id}/`);
-            if (response.status === 200) {
-              setStudentDetail(response.data);
-              setLoading(false);
-            }
-          } catch (error) {
-               setLoading(false)
-               console.log(error)
+      const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((state) => {
+        //   const newState = { ...state };
+        //   console.log(newState,"guvhguvhjb");
+        //   if (name === "address" || name === "city" || name === "date_of_birth" || name === "gender" || name === "postal_code" || name === "profile_picture" || name === "state") {
+        //     newState.student_profile={...newState.student_profile,[name]:value}
+        //   } else if (name === "batch_name") {
+        //     console.log("here");
+        //       newState.student_profile={...newState.student_profile.batch,["name"]:value}
+        //   } else {
+        //     newState[name] = value;
+        //   }
+        //   return newState;
+        // });
+        const newState = { ...state };
+
+          if (name === "address" || name === "city" || name === "date_of_birth" || name === "gender" || name === "postal_code" || name === "profile_picture" || name === "state") {
+            newState.student_profile = { ...newState.student_profile, [name]: value };
+          } else if (name === "batch_name") {
+            newState.student_profile = {
+              ...newState.student_profile,
+              batch: { ...newState.student_profile.batch, "name": value }
+            };
+          } else {
+            newState[name] = value;
           }
-     }
+
+          console.log(newState, "guvhguvhjb");
+          return newState;
+        });
+        };
+      const handleSubmit = (e)=>{
+        console.log("here");
+        e.preventDefault()
+        dispatch(
+          editStudentDetail({
+            id: id,
+            values: formData,
+            api: api,
+            toast: toast,
+          })
+        );
+      }
+      
   return (
     <>
       {loading ? (
         <SpinnerComp />
       ) : (
         <SidebarComp>
+          <ToastContainer />
           <Box>
             <Button
               sx={{ position: "absolute", marginTop: 2.5 }}
@@ -56,26 +99,26 @@ const InsStudentDetailView = () => {
               marginLeft={7}
               paddingY={3}
             >
-              {studentDetail.first_name || "Student"}
+              {studentDetail && studentDetail.first_name}
             </Typography>
           </Box>
           <Paper>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Grid container spacing={2} margin={0} padding={1}>
                 <Grid item xs={3}>
                   <Card>
-                    <CardActionArea>
+                    <CardActionArea onClick={() => window.alert("jdhds")}>
                       <CardMedia
                         component="img"
                         sx={{ maxHeight: "50vh" }}
                         image={
-                          studentDetail.student_profile.profile_picture
-                            ? studentDetail.student_profile?.profile_picture
+                          formData && formData.student_profile?.profile_picture
+                            ? formData.student_profile.profile_picture
                             : "/src/assets/images/Login.png"
                         }
-                        onError={(e) => {
-                          e.target.src = "/src/assets/images/Login.png";
-                        }}
+                        // onError={(e) => {
+                        //   e.target.src = "/src/assets/images/Login.png";
+                        // }}
                         alt="Student Profile"
                       />
                     </CardActionArea>
@@ -86,7 +129,10 @@ const InsStudentDetailView = () => {
                       endIcon={<UploadIcon />}
                       fullWidth
                       sx={{ marginTop: 2 }}
-                      onClick={() => setEdit(false)}
+                      type="submit"
+                      onClick={() =>
+                        window.alert("Are You Sure Want to update data")
+                      }
                     >
                       Update
                     </Button>
@@ -101,7 +147,7 @@ const InsStudentDetailView = () => {
                     </Button>
                   )}
                   <Button fullWidth variant="outlined" sx={{ marginTop: 1 }}>
-                    {studentDetail.unique_code}
+                    {formData && formData.unique_code}
                   </Button>
                 </Grid>
                 <Grid item xs={8}>
@@ -115,8 +161,11 @@ const InsStudentDetailView = () => {
                         label="Firstname"
                         variant="outlined"
                         name="first_name"
-                        value={studentDetail.first_name}
-                        // onChange={handleInputChange}
+                        value={formData && formData.first_name}
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -125,8 +174,11 @@ const InsStudentDetailView = () => {
                         label="Lastname"
                         variant="outlined"
                         name="last_name"
-                        value={studentDetail.last_name}
-                        // onChange={handleInputChange}
+                        value={formData && formData.last_name}
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -135,7 +187,12 @@ const InsStudentDetailView = () => {
                         label="Email"
                         color="primary"
                         variant="outlined"
-                        value={studentDetail.email}
+                        name="email"
+                        value={formData && formData.email}
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={6}>
@@ -143,26 +200,78 @@ const InsStudentDetailView = () => {
                         fullWidth
                         label="Phone Number"
                         variant="outlined"
-                        value={studentDetail.phone_number}
+                        name="phone_number"
+                        value={formData && formData.phone_number}
+                        onChange={handleInputChange}
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                      />
+                    </Grid>
+                    {/* <Grid item xs={3}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Gender
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Gender"
+                          // name="gender"
+                          disabled={!edit}
+                          // onChange={handleInputChange}
+                          value={
+                            formData && formData.student_profile?.gender
+                          }
+                        >
+                          <MenuItem value={"M"}>Male</MenuItem>
+                          <MenuItem value={"F"}>Female</MenuItem>
+                          <MenuItem value={"O"}>Other</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid> */}
+                    <Grid item xs={3}>
+                      <TextField
+                        fullWidth
+                        label="Date of Birth"
+                        variant="outlined"
+                        name="date_of_birth"
+                        value={
+                          formData &&
+                          formData.student_profile?.date_of_birth
+                        }
+                        onChange={handleInputChange}
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
                       />
                     </Grid>
                     <Grid item xs={3}>
                       <TextField
                         fullWidth
-                        label="Gender"
+                        label="Unique Code"
                         variant="outlined"
-                        value={studentDetail.student_profile.gender}
+                        name="unique_code"
+                        value={formData && formData.unique_code}
+                        onChange={handleInputChange}
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
                       />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={3}>
                       <TextField
                         fullWidth
                         label="Batch Name"
                         variant="outlined"
-                        value={studentDetail.student_profile.batch.name}
+                        name="batch_name"
+                        value={
+                          formData && formData.student_profile?.batch?.name
+                            
+                        }
+                        onChange={handleInputChange}
                       />
                     </Grid>
-                    <Grid item xs={3}></Grid>
                     <Typography variant="h6" padding={2}>
                       Student Profile Details
                     </Typography>
@@ -171,16 +280,46 @@ const InsStudentDetailView = () => {
                         fullWidth
                         label="Address"
                         variant="outlined"
+                        name="address"
                         multiline
-                        value={studentDetail.student_profile.address}
+                        value={
+                          formData && formData.student_profile?.address
+                            
+                        }
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
+                    {/* <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Profile Picture"
+                        variant="outlined"
+                        name="profile_picture"
+                        type="file"
+                        multiline
+                        value={
+                          formData && formData.student_profile.profile_picture
+                        }
+                        onChange={handleInputChange}
+                      />
+                    </Grid> */}
                     <Grid item xs={4}>
                       <TextField
                         fullWidth
                         label="City"
                         variant="outlined"
-                        value={studentDetail.student_profile.city}
+                        name="city"
+                        value={
+                          formData && formData.student_profile.city
+                            
+                        }
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={4}>
@@ -188,15 +327,31 @@ const InsStudentDetailView = () => {
                         fullWidth
                         label="State"
                         variant="outlined"
-                        value={studentDetail.student_profile.state}
+                        name="state"
+                        value={
+                          formData && formData.student_profile.state
+                            
+                        }
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
                     <Grid item xs={4} marginBottom={3}>
                       <TextField
                         fullWidth
                         label="Postal Code"
+                        name="postal_code"
                         variant="outlined"
-                        value={studentDetail.student_profile.postal_code}
+                        value={
+                          formData && formData.student_profile.postal_code
+                           
+                        }
+                        InputProps={{
+                          readOnly: !edit,
+                        }}
+                        onChange={handleInputChange}
                       />
                     </Grid>
                   </Grid>

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, FormControl, InputLabel, MenuItem, Paper, Select, TableBody, TableCell, TableRow, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, InputLabel, MenuItem, Select,TextField, Typography } from '@mui/material';
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 import SearchBar from '../../Components/SearchBar';
 import TableComp from '../../Components/TableComp';
@@ -12,6 +12,8 @@ import AuthContext from '../../context/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
 import { INS_BASE_URL } from '../../utils/api/api';
 import SpinnerComp from '../../Components/SpinnerComp';
+import { useDispatch, useSelector } from 'react-redux';
+import { createStudent, listStudents } from '../../Redux/Institute/InsStudents/InsStudentListCreateAction';
 
 let tableHead = [
   {key:1,name:"Student Code"},
@@ -22,10 +24,13 @@ let tableHead = [
 const InsStudentsListCreate = () => {
     const [open, setOpen] = useState(false);
     const { logOutUser } = useContext(AuthContext);
-
-    const [students, setStudents] = useState([]);
+    const dispatch = useDispatch()
     const [batches,setBatches] = useState([])
-    const [loading,setLoading] = useState(true)
+    const { students, loading } = useSelector(
+      (state) => state.insStudentsListCreate
+    );
+
+    let api = useAxios();
 
     const formik = useFormik({
       initialValues: {
@@ -37,43 +42,26 @@ const InsStudentsListCreate = () => {
       },
       validationSchema: basicSchema,
     });
+    
     const handleSubmit= async(e)=>{
       e.preventDefault()
-      try {
-        const response = await api.post(INS_BASE_URL+"students/", formik.values);
-        if (response.status === 201) {
-          setOpen(!open)
-          toast.success("Student Created Successfully");
-        }
-      } catch (error) {
-        if(error.response.status === 400){
-          alert(error.response.data.email);
-          setOpen(open)
-        }
-      }
+      const value = formik.values
+      dispatch(
+        createStudent({
+          values: value,
+          api:api,
+          setOpen:setOpen,
+          toast:toast,
+        })
+      );
     }
 
-    let api = useAxios();
 
     useEffect(() => {
-        fetchStudents();
+      dispatch(listStudents({api:api}))
         fetchBatches();
     }, []);
-
-    const fetchStudents = async () => {
-      try {
-        let response = await api.get(INS_BASE_URL+"students/");
-        if (response.status === 200) {
-          setStudents(response.data);
-          setLoading(false)
-        } else if (response.statusText === "Unauthorized") {
-          logOutUser();
-        }
-      } catch (error) {
-        setLoading(false)
-        console.log(error);
-      }
-    };
+    console.log(students,"cfhfgvgjhkb");
 
     const fetchBatches = async () => {
       try {
@@ -81,20 +69,16 @@ const InsStudentsListCreate = () => {
 
         if (response.status === 200) {
           setBatches(response.data);
-          setLoading(false)
+          // setLoading(false)
         } else if (response.statusText === "Unauthorized") {
           logOutUser();
         }
       } catch (error) {
-        setLoading(false)
+        // setLoading(false)
         console.log(error);
       }
     };
     
-    const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };

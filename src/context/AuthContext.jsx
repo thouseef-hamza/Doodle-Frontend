@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(data.jwt_token);
         setUser(jwtDecode(data.jwt_token.access));
         localStorage.setItem("authTokens", JSON.stringify(data.jwt_token));
-        navigate("/");
+        navigate("/institute/dashboard");
       } else {
         alert("Something Went Wrong");
       }

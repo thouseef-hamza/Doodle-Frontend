@@ -14,34 +14,85 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
 
   return (
     <>
-    <Button sx={{margin:'10px'}} onClick={()=>navigate("/")} size='large' color='secondary' ><ArrowBackOutlinedIcon fontSize='large' sx={{color:'#8338EC'}} /></Button>
-    <Box style={{display:'flex',justifyContent:'center',alignItems:'center'}} paddingRight={3}>
-    <Grid container xs={12} md={6} spacing={5} sx={{margin:isMobile ? '0 0 0 0' : '0 0 0 0 ' }}>
-          <Grid item xs={6}>
-               <Card  onMouseEnter={()=>setElevation(prevElevation=>({...prevElevation,Card1:5}))} onMouseLeave={()=>setElevation(prevElevation=>({...prevElevation,Card1:0}))} elevation={elevation.Card1}>
-                    <CardMedia
-                    sx={{height:isMobile? 150 : 300}}
-                    image={teacher_image}
-                    />
-                    <CardContent>
-                         <Typography padding={1} color={'#1F2D5A'} variant='h6'>{teacher_title}</Typography>
-                    </CardContent>
-               </Card>
+      <Button
+        sx={{ margin: "10px" }}
+        onClick={() => navigate("/")}
+        size="large"
+        color="secondary"
+      >
+        <ArrowBackOutlinedIcon fontSize="large" sx={{ color: "#8338EC" }} />
+      </Button>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        paddingRight={3}
+      >
+        <Grid
+          container
+          spacing={5}
+          sx={{ margin: isMobile ? "0 0 0 0" : "0 0 0 0 ",display:'flex',justifyContent:'center',alignItems:'center'}}
+        >
+          <Grid item xs={12} md={3}>
+            <Card
+              onMouseEnter={() =>
+                setElevation((prevElevation) => ({
+                  ...prevElevation,
+                  Card1: 5,
+                }))
+              }
+              onMouseLeave={() =>
+                setElevation((prevElevation) => ({
+                  ...prevElevation,
+                  Card1: 0,
+                }))
+              }
+              elevation={elevation.Card1}
+            >
+              <CardMedia
+                sx={{ height: isMobile ? 150 : 300 }}
+                image={teacher_image}
+              />
+              <CardContent>
+                <Typography padding={1} color={"#1F2D5A"} variant="h6">
+                  {teacher_title}
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
-          <Grid item xs={6}>
-               <Card onClick={()=>navigate(`${institute_path}`)} onMouseEnter={()=>setElevation(prevElevation=>({...prevElevation,Card2:5}))} onMouseLeave={()=>setElevation(prevElevation=>({...prevElevation,Card2:0}))} elevation={elevation.Card2}>
-                    <CardMedia
-                    sx={{height:isMobile? 150 : 300}}
-                    image={institute_image}
-                    />
-                    <CardContent>
-                         <Typography padding={1} color={'#1F2D5A'} variant='h6'>{institute_title}</Typography>
-                    </CardContent>
-               </Card>
+          <Grid item xs={3}>
+            <Card
+              onClick={() => navigate(`${institute_path}`)}
+              onMouseEnter={() =>
+                setElevation((prevElevation) => ({
+                  ...prevElevation,
+                  Card2: 5,
+                }))
+              }
+              onMouseLeave={() =>
+                setElevation((prevElevation) => ({
+                  ...prevElevation,
+                  Card2: 0,
+                }))
+              }
+              elevation={elevation.Card2}
+            >
+              <CardMedia
+                sx={{ height: isMobile ? 150 : 300}}
+                image={institute_image}
+              />
+              <CardContent>
+                <Typography padding={1} color={"#1F2D5A"} variant="h6">
+                  {institute_title}
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
-     </Grid>
-     </Box>
+        </Grid>
+      </Box>
     </>
-  )
+  );
 }
 
