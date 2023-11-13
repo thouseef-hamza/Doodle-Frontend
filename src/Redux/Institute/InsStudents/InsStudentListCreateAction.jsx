@@ -9,6 +9,7 @@ export const createStudent = createAsyncThunk(
     try {
       const response = await api.post(INS_BASE_URL + "students/", values);
       const result = response.data;
+      console.log(response.data);
       setOpen(false);
       toast.success("Student Created Successfully");
       return result;
