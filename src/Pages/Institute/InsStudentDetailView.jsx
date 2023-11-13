@@ -55,7 +55,6 @@ const InsStudentDetailView = () => {
         const { name, value } = event.target;
         setFormData((state) => {
         const newState = { ...state };
-
           if (name === "address" || name === "city" || name === "date_of_birth" || name === "gender" || name === "postal_code" || name === "profile_picture" || name === "state") {
             newState.student_profile = { ...newState.student_profile, [name]: value };
           } else if (name === "batch_id") {
@@ -152,26 +151,13 @@ const InsStudentDetailView = () => {
                   <Card>
                     <CardActionArea title='click to upload image here' onClick={handleCardClick}>
                       <input
-                        
                         type="file"
                         style={{ display: "none" }}
                         ref={fileInputRef}
-                        // onChange={(e)=>{
-                        //   const image = e.target.files[0]
-                        //   console.log(image);
-                        //   if (image) {
-                        //     const reader = new FileReader()
-                        //     reader.onload=()=>{
-                        //       const updatedFormData = { ...formData };
-                        //         updatedFormData.student_profile.profile_picture = reader.result; // Use the base64 data URL for preview
-                        //         setFormData(updatedFormData);
-                        //       };
-                        //       reader.readAsDataURL(image);
-                        //     }
-                        // }}
                         onChange={(e)=>handleImageChange(e.target.files[0])}
                       />
                       <CardMedia
+                      loading='lazy'
                         component="img"
                         sx={{ maxHeight: "50vh" }}
                         image={
