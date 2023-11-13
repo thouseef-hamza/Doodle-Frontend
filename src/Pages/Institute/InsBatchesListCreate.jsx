@@ -2,8 +2,7 @@ import { Avatar, Box, Button, Container, Grid, Typography,TextField } from '@mui
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 import SearchBar from '../../Components/SearchBar';
 import CardComp from '../../Components/CardComp';
-import { useContext, useEffect, useState } from 'react';
-import AuthContext from '../../context/AuthContext';
+import {  useEffect, useState } from 'react';
 import useAxios from '../../Hooks/useAxios';
 import StudentAddComp from '../../Components/StudentAddComp';
 import { ToastContainer, toast } from "react-toastify";
@@ -15,7 +14,6 @@ import { createBatches, listBatches } from '../../Redux/Institute/InsBatches/Ins
 
 const InsBatchesListCreate = () => {
   const [open,setOpen] = useState(false)
-  // const { logOutUser } = useContext(AuthContext);
   const dispatch = useDispatch()
   const { batches, loading } = useSelector(
     (state) => state.insBatchesListCreate
