@@ -14,6 +14,7 @@ import { INS_BASE_URL } from '../../utils/api/api';
 import SpinnerComp from '../../Components/SpinnerComp';
 import { useDispatch, useSelector } from 'react-redux';
 import { createStudent, listStudents } from '../../Redux/Institute/InsStudents/InsStudentListCreateAction';
+import { listBatches } from '../../Redux/Institute/InsBatches/InsBatchesListCreateAction';
 
 let tableHead = [
   {key:1,name:"Student Code"},
@@ -25,11 +26,10 @@ const InsStudentsListCreate = () => {
     const [open, setOpen] = useState(false);
     const { logOutUser } = useContext(AuthContext);
     const dispatch = useDispatch()
-    const [batches,setBatches] = useState([])
-    const { students, loading } = useSelector(
+    const { students, loading , error} = useSelector(
       (state) => state.insStudentsListCreate
     );
-
+    const {batches} = useSelector(state=>state.insBatchesListCreate)
     let api = useAxios();
 
     const formik = useFormik({
@@ -42,6 +42,7 @@ const InsStudentsListCreate = () => {
       },
       validationSchema: basicSchema,
     });
+    console.log(formik.values,"ith thousi");
     
     const handleSubmit= async(e)=>{
       e.preventDefault()
@@ -55,29 +56,12 @@ const InsStudentsListCreate = () => {
         })
       );
     }
-
+    console.log(error);
 
     useEffect(() => {
       dispatch(listStudents({api:api}))
-        fetchBatches();
+      dispatch(listBatches({api:api}))
     }, []);
-    console.log(students,"cfhfgvgjhkb");
-
-    const fetchBatches = async () => {
-      try {
-        let response = await api.get(INS_BASE_URL+"batches/");
-
-        if (response.status === 200) {
-          setBatches(response.data);
-          // setLoading(false)
-        } else if (response.statusText === "Unauthorized") {
-          logOutUser();
-        }
-      } catch (error) {
-        // setLoading(false)
-        console.log(error);
-      }
-    };
     
   const handleClose = () => {
     setOpen(false);
@@ -142,6 +126,7 @@ const InsStudentsListCreate = () => {
           <StudentAddComp open={open} title={"Student Form Filling"}>
             <form onSubmit={handleSubmit}>
               <TextField
+                required
                 id="outlined-basic"
                 label="First Name"
                 type="text"
@@ -177,6 +162,7 @@ const InsStudentsListCreate = () => {
               />
               <TextField
                 id="outlined-basic"
+                required
                 label="Email"
                 type="email"
                 variant="outlined"
@@ -191,6 +177,7 @@ const InsStudentsListCreate = () => {
               />
               <TextField
                 id="outlined-basic"
+                required
                 label="Phonenumber"
                 type="number"
                 variant="outlined"
@@ -209,11 +196,12 @@ const InsStudentsListCreate = () => {
                 margin="normal"
               />
               {/* <Container fullWidth> */}
-              <InputLabel id="demo-simple-select-label">Batch</InputLabel>
+              <InputLabel id="demo-simple-select-label" required>Batch</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                label="Age"
+                required
+                label="Batch"
                 fullWidth
                 name="batch_id"
                 value={formik.values.batch_id}

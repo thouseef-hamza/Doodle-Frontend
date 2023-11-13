@@ -24,8 +24,9 @@ export const InsStudentDetailSlice = createSlice({
        .addCase(editStudentDetail.pending, (state) => {
          state.loading = true;
        })
-       .addCase(editStudentDetail.fulfilled, (state) => {
+       .addCase(editStudentDetail.fulfilled, (state,action) => {
          state.loading = false;
+         state.studentDetail = action.payload
        })
        .addCase(editStudentDetail.rejected, (state) => {
          state.loading = false;
