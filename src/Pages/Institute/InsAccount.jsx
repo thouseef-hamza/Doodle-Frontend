@@ -1,15 +1,15 @@
-import { Box, Button, TextField,Card, CardActionArea,CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Button,Snackbar,Alert,AlertTitle, TextField,Card, CardActionArea,CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 // import { useNavigate } from 'react-router-dom';
 import {  useState } from 'react';
 import useAxios from '../../Hooks/useAxios';
 import { AUTH_BASE_URL } from '../../utils/api/api';
-
-
+import {ToastContainer,toast} from 'react-toastify'
 
 
 const InsAccount = () => {
   const [pass,setPass]=useState(false)
+  const [error,setError] = useState()
   const api = useAxios()
   const [formData,setFormData] = useState({
     old_password:"",
@@ -23,15 +23,47 @@ const InsAccount = () => {
       [name]:value
     })
   };
-  const handleSubmit = async () => {
-    const response = await api.patch(AUTH_BASE_URL + "user/change-password/",formData);
-    if response
-
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try{
+      const response = await api.patch(AUTH_BASE_URL + "user/change-password/",formData);
+      if (response.status === 200){
+        toast.success("Password Updated Successfully")
+        setPass(false)
+        setFormData({
+          ...formData,
+          old_password:"",
+          new_password:""
+        })
+      }
+    } catch (error) {
+      setError(error)
+    }
   }
-  console.log(formData);
   return (
     <div>
       <SidebarComp>
+        <ToastContainer/>
+        {error ? (
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            open={error ? true : false}
+            autoHideDuration={6000}
+            onClose={() => setError(false)}
+            key={"top" + "center"}
+          >
+            <Alert severity="error">
+              {error.message === "Network Error" ? (
+                <AlertTitle>{error.message}</AlertTitle>
+              ) : (
+                <>
+                  <AlertTitle>{"Invalid Credentials"}</AlertTitle>
+                  {[error.response.data?.msg]}
+                </>
+              )}
+            </Alert>
+          </Snackbar>
+        ) : null}
         <Box>
           <Typography
             color={"#1F2D5A"}
@@ -90,45 +122,47 @@ const InsAccount = () => {
               left: "35%",
             }}
           >
-              <form onSubmit={handleSubmit}>
-            <CardContent>
-              <CardMedia
-                height={200}
-                width={10}
-                component={"img"}
-                style={{ objectFit: "contain" }}
-                src="/src/assets/images/shield.png"
-              />
-              <Typography>Reset Password</Typography>
-                
-              <TextField
-                id="outlined-basic"
-                label="Old Password"
-                type="text"
-                variant="outlined"
-                value={formData && formData.old_password}
-                name="old_password"
-                fullWidth
-                margin="normal"
-                onChange={handleChange}
-              />
-              <TextField
-                id="outlined-basic"
-                label="New Password"
-                type="text"
-                variant="outlined"
-                name="new_password"
-                value={formData && formData.new_password}
-                fullWidth
-                margin="normal"
-                onChange={handleChange}
-              />
-              <Button onClick={() => setPass(false)} sx={{ marginLeft: 27 }}>
-                Close
-              </Button>
-              <Button type="submit">Update</Button>
-            </CardContent>
-        </form>
+            <form onSubmit={handleSubmit}>
+              <CardContent>
+                <CardMedia
+                  height={200}
+                  width={10}
+                  component={"img"}
+                  style={{ objectFit: "contain" }}
+                  src="/src/assets/images/shield.png"
+                />
+                <Typography>Reset Password</Typography>
+
+                <TextField
+                  required
+                  id="outlined-basic"
+                  label="Old Password"
+                  type="text"
+                  variant="outlined"
+                  value={formData && formData.old_password}
+                  name="old_password"
+                  fullWidth
+                  margin="normal"
+                  onChange={handleChange}
+                />
+                <TextField
+                  required
+                  id="outlined-basic"
+                  label="New Password"
+                  type="text"
+                  variant="outlined"
+                  name="new_password"
+                  value={formData && formData.new_password}
+                  fullWidth
+                  margin="normal"
+                  onChange={handleChange}
+                />
+                <Button onClick={() => setPass(false)} sx={{ marginLeft: 27 }}>
+                  Close
+                </Button>
+                <Button type="submit">Update</Button>
+              </CardContent>
+            </form>
           </Card>
         ) : null}
       </SidebarComp>
