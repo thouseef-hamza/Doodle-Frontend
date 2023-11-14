@@ -16,9 +16,11 @@ export const InsStudentDetailSlice = createSlice({
       .addCase(getStudentDetail.fulfilled, (state, action) => {
         state.studentDetail = action.payload;
         state.loading = false;
+        state.error=false;
       })
-      .addCase(getStudentDetail.rejected, (state) => {
+      .addCase(getStudentDetail.rejected, (state,action) => {
         state.loading = false;
+        state.error = action.payload
       });
      builder
        .addCase(editStudentDetail.pending, (state) => {
@@ -27,9 +29,11 @@ export const InsStudentDetailSlice = createSlice({
        .addCase(editStudentDetail.fulfilled, (state,action) => {
          state.loading = false;
          state.studentDetail = action.payload
+         state.error = null;
        })
-       .addCase(editStudentDetail.rejected, (state) => {
+       .addCase(editStudentDetail.rejected, (state,action) => {
          state.loading = false;
+         state.error = action.payload
        });
      builder
        .addCase(deleteStudentDetail.pending, (state) => {
@@ -37,6 +41,7 @@ export const InsStudentDetailSlice = createSlice({
        })
        .addCase(deleteStudentDetail.fulfilled, (state) => {
          state.loading = false;
+         state.error=null;
        })
        .addCase(deleteStudentDetail.rejected, (state) => {
          state.loading = false;

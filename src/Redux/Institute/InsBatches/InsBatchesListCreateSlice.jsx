@@ -15,6 +15,7 @@ export const InsBatchesListCreateSlice = createSlice({
                })
                .addCase(listBatches.fulfilled, (state,action) => {
                     state.loading = false;
+                    state.error = null;
                     state.batches=action.payload
                })
                .addCase(listBatches.rejected, (state,action) => {
@@ -27,7 +28,7 @@ export const InsBatchesListCreateSlice = createSlice({
                })
                .addCase(createBatches.fulfilled, (state,action) => {
                     state.loading = false;
-                    console.log(action.payload);
+                    state.error=null;
                     state.batches.push(action.payload)
                })
                .addCase(createBatches.rejected, (state,action)=>{

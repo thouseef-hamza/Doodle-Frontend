@@ -16,6 +16,7 @@ import InsBatchesListCreate from "./Pages/Institute/InsBatchesListCreate";
 import InsBatchesDetail from "./Pages/Institute/InsBatchesDetail";
 import InsStudentDetailView from "./Pages/Institute/InsStudentDetailView";
 import PrivateRoutes from "./routers/PrivateRoutes";
+import InsChangePassword from "./Pages/Institute/InsChangePassword";
 
 function App() {
   return (
@@ -49,7 +50,6 @@ function App() {
 
       <Route element={<InsInbox />} path="/institute/inbox" />
       <Route element={<InsProfile />} path="/institute/profile" />
-      <Route element={<InsAccount />} path="/institute/account" />
 
       {/* InsBatches Actions */}
       <Route element={<InsBatchesListCreate />} path="/institute/batches" />
@@ -58,6 +58,13 @@ function App() {
       {/* InsStudent Actions */}
       <Route element={<InsStudentsListCreate />} path="/institute/students" />
       <Route element={<InsStudentDetailView />} path="/institute/student/:id" />
+
+      {/* InsAccount Actions */}
+      <Route element={<InsAccount />} path="/institute/account" />
+      <Route
+        element={<InsChangePassword />}
+        path="/institute/account/change-password"
+      />
     </Routes>
   );
 }

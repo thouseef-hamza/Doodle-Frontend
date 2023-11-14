@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { deleteBatchDetail, editBatchDetail, getBatchDetail } from "./InsBatchesDetailAction";
-import { deleteStudentDetail, editStudentDetail } from "../InsStudents/InsStudentDetailAction";
 
 export const InsBatchesDetailSlice = createSlice({
   name: "InsBatchesDetailSlice",
@@ -17,6 +16,7 @@ export const InsBatchesDetailSlice = createSlice({
      .addCase(getBatchDetail.fulfilled,(state,action)=>{
           state.loading = false;
           state.batchDetails = action.payload
+          state.error = null;
      })
      .addCase(getBatchDetail.rejected, (state,action)=>{
           state.loading = false;
@@ -28,11 +28,12 @@ export const InsBatchesDetailSlice = createSlice({
      })
      .addCase(editBatchDetail.fulfilled, (state,action)=> {
           state.loading = false;
-          state.batchDetails = action.payload
+          state.batchDetails = action.payload;
+          state.error = null;
      })
      .addCase(editBatchDetail.rejected,(state,action)=>{
           state.loading = false;
-          state.error = action.payload
+          state.error = action.payload;
      })
      builder
      .addCase(deleteBatchDetail.pending,state => {
@@ -40,6 +41,7 @@ export const InsBatchesDetailSlice = createSlice({
      })
      .addCase(deleteBatchDetail.fulfilled,state=>{
           state.loading=false;
+          state.error=null;
      })
      .addCase(deleteBatchDetail.rejected, state => {
           state.loading = false;

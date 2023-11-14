@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActionArea, CardMedia, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Card, CardActionArea, CardMedia, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Snackbar, TextField, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react'
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const InsStudentDetailView = () => {
      const navigate=useNavigate()
-     const { studentDetail,loading } = useSelector( 
+     const { studentDetail,loading,error } = useSelector( 
        (state) => state.insStudentDetail,shallowEqual
      );
      const { batches } = useSelector( 
@@ -50,7 +50,6 @@ const InsStudentDetailView = () => {
         batch_id: studentDetail.student_profile?.batch?.id,
       });
      },[studentDetail])
-     console.log(formData);
       const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData((state) => {
@@ -62,7 +61,6 @@ const InsStudentDetailView = () => {
           } else {
             newState[name] = value;
           }
-          console.log("newState", newState);
           return newState;
         });
         };
@@ -122,9 +120,32 @@ const InsStudentDetailView = () => {
     <>
       {loading ? (
         <SpinnerComp />
-      ) : ( 
+      ) : (
         <SidebarComp>
           <ToastContainer />
+          {error ? (
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={error ? true : false}
+              autoHideDuration={6000}
+              // onClose={}
+              key={"top" + "center"}
+            >
+              <Alert severity="error">
+                {error.message === "Network Error" ? (
+                  <AlertTitle>{error.message}</AlertTitle>
+                ) : (
+                  <>
+                    <AlertTitle>{"Invalid Credentials"}</AlertTitle>
+                    {[
+                      error.response.data?.email,
+                      error.response.data?.phone_number,
+                    ]}
+                  </>
+                )}
+              </Alert>
+            </Snackbar>
+          ) : null}
           <Box>
             <Button
               sx={{ position: "absolute", marginTop: 2.5 }}
@@ -149,15 +170,19 @@ const InsStudentDetailView = () => {
               <Grid container spacing={2} margin={0} padding={1}>
                 <Grid item xs={3}>
                   <Card>
-                    <CardActionArea title='click to upload image here' onClick={handleCardClick}>
+                    <CardActionArea
+                      title="click to upload image here"
+                      onClick={handleCardClick}
+                    >
                       <input
                         type="file"
                         style={{ display: "none" }}
                         ref={fileInputRef}
-                        onChange={(e)=>handleImageChange(e.target.files[0])}
+                        value={""}
+                        onChange={(e) => handleImageChange(e.target.files[0])}
                       />
                       <CardMedia
-                      loading='lazy'
+                        loading="lazy"
                         component="img"
                         sx={{ maxHeight: "50vh" }}
                         image={
@@ -241,7 +266,7 @@ const InsStudentDetailView = () => {
                     </Grid>
                     <Grid item xs={3}>
                       <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
+                        <InputLabel id="demo-simple-select-label">  
                           Gender
                         </InputLabel>
                         <Select
@@ -249,10 +274,10 @@ const InsStudentDetailView = () => {
                           id="demo-simple-select"
                           label="Gender"
                           name="gender"
-                          defaultValue={"M"}
                           onChange={handleInputChange}
-                          value={formData && formData.student_profile?.gender}
+                          value={formData && formData.student_profile?.gender || "S"} 
                         >
+                          <MenuItem disabled value={"S"}>Select</MenuItem>
                           <MenuItem value={"M"}>Male</MenuItem>
                           <MenuItem value={"F"}>Female</MenuItem>
                           <MenuItem value={"O"}>Other</MenuItem>
@@ -266,7 +291,7 @@ const InsStudentDetailView = () => {
                         variant="outlined"
                         name="date_of_birth"
                         value={
-                          formData && formData.student_profile?.date_of_birth
+                          formData && formData.student_profile.date_of_birth
                         }
                         onChange={handleInputChange}
                       />
@@ -286,7 +311,7 @@ const InsStudentDetailView = () => {
                         labelId="demo-multiple-name-label"
                         id="demo-multiple-name"
                         fullWidth
-                        value={formData && formData.batch_id}
+                        value={formData && formData.batch_id || ""}
                         onChange={(e) => {
                           const select = batches?.find(
                             (x) => x.id === e.target.value
@@ -298,7 +323,8 @@ const InsStudentDetailView = () => {
                         }}
                         label="Batch Name"
                       >
-                        {batches.map((batch) => (
+                        <MenuItem disabled value="S"> Select</MenuItem>
+                        {batches && batches?.map((batch) => (
                           <MenuItem key={batch.id} value={batch.id}>
                             {batch.name}
                           </MenuItem>

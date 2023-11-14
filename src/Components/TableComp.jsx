@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 
-const TableComp = ( { data,columns } ) => {
+const TableComp = ( { data,columns,search } ) => {
   const navigate = useNavigate()
   return (
     <TableContainer sx={{ marginTop: 4 }} component={Paper}>

@@ -5,7 +5,7 @@ import { Button, Container } from "@mui/material";
 
 
 
-const Search = styled("div")(({ theme }) => ({
+export const Search = styled("div")(({ theme }) => ({
   position: "relative",
   maxWidth:"50vw",
   borderRadius: theme.shape.borderRadius,
@@ -20,7 +20,7 @@ const Search = styled("div")(({ theme }) => ({
     width: "auto",
   },
 }));
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   borderRadius: 4,
   backgroundColor: "#ECE9FD",
   color: theme.palette.text.primary,
@@ -43,7 +43,6 @@ const SearchBar = ({children}) => {
   return (
     <>
     <Container sx={{display:'flex',alignItems:'center',marginLeft:-3}}>
-
      <Search>
      <StyledInputBase
           placeholder="Search…"
@@ -52,7 +51,7 @@ const SearchBar = ({children}) => {
           <Button sx={{marginLeft:1,marginBottom:0.45}} variant="contained">Search</Button>
      </Search>
      {children}
-          </Container>
+      </Container>
     </>
   );
 };
