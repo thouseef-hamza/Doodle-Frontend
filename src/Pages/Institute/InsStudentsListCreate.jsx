@@ -1,6 +1,6 @@
-import { Avatar, Box, Button, Container, InputLabel, MenuItem, Select,TextField, Typography } from '@mui/material';
+import { Alert, AlertTitle, Avatar, Box, Button, Container, InputLabel, MenuItem, Select,Snackbar,TextField, Typography } from '@mui/material';
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
-import SearchBar from '../../Components/SearchBar';
+import SearchBar, { Search, StyledInputBase } from '../../Components/SearchBar';
 import TableComp from '../../Components/TableComp';
 import StudentAddComp from '../../Components/StudentAddComp';
 import { useContext, useEffect, useState } from 'react';
@@ -10,11 +10,11 @@ import useResponsive from '../../Hooks/useResponsive';
 import useAxios from '../../Hooks/useAxios';
 import AuthContext from '../../context/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
-import { INS_BASE_URL } from '../../utils/api/api';
 import SpinnerComp from '../../Components/SpinnerComp';
 import { useDispatch, useSelector } from 'react-redux';
 import { createStudent, listStudents } from '../../Redux/Institute/InsStudents/InsStudentListCreateAction';
 import { listBatches } from '../../Redux/Institute/InsBatches/InsBatchesListCreateAction';
+import ReactSearchBox from "react-search-box";
 
 let tableHead = [
   {key:1,name:"Student Code"},
@@ -24,8 +24,9 @@ let tableHead = [
 
 const InsStudentsListCreate = () => {
     const [open, setOpen] = useState(false);
-    const { logOutUser } = useContext(AuthContext);
+    // const { logOutUser } = useContext(AuthContext);
     const dispatch = useDispatch()
+    // const [search,setSearch] = useState("")
     const { students, loading , error} = useSelector(
       (state) => state.insStudentsListCreate
     );
@@ -42,7 +43,6 @@ const InsStudentsListCreate = () => {
       },
       validationSchema: basicSchema,
     });
-    console.log(formik.values,"ith thousi");
     
     const handleSubmit= async(e)=>{
       e.preventDefault()
@@ -56,7 +56,6 @@ const InsStudentsListCreate = () => {
         })
       );
     }
-    console.log(error);
 
     useEffect(() => {
       dispatch(listStudents({api:api}))
@@ -70,10 +69,40 @@ const InsStudentsListCreate = () => {
   return (
     <>
       {loading ? (
-        <SpinnerComp/>
+        <SpinnerComp />
       ) : (
         <SidebarComp>
           <ToastContainer />
+          {error ? (
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={error ? true : false}
+              autoHideDuration={6000}
+              onClose={() => {
+                if (error.message === "Network Error") {
+                  dispatch(listStudents({ api: api }));
+                } else {
+                  const time=setTimeout(() => {
+                    return true
+                  }, 1000);
+                  clearTimeout(time)
+                }
+              }}
+              key={"top" + "center"}
+            >
+              <Alert severity="error">
+                {error.message === "Network Error" ? (
+                  <AlertTitle>{error.message}</AlertTitle>
+                ) : (
+                  <>
+                    <AlertTitle>{"Invalid Credentials"}</AlertTitle>
+                    {[error.response.data?.email,error.response.data?.phone_number]}
+                  </>
+                )}
+              </Alert>
+            </Snackbar>
+          ) : null}
+
           <Box>
             <Typography
               color={"#1F2D5A"}
@@ -84,8 +113,22 @@ const InsStudentsListCreate = () => {
               Students
             </Typography>
           </Box>
-          <SearchBar>
-            {/* Add Student Button */}
+          <Container
+            sx={{ display: "flex", alignItems: "center", marginLeft: -3 }}
+          >
+            <Search>
+              <StyledInputBase
+                onChange={(e) => console.log(e.target.value)}
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+              />
+              <Button
+                sx={{ marginLeft: 1, marginBottom: 0.45 }}
+                variant="contained"
+              >
+                Search
+              </Button>
+            </Search>
             <Button
               onClick={() => setOpen(true)}
               variant="outlined"
@@ -97,7 +140,7 @@ const InsStudentsListCreate = () => {
             >
               Add Students
             </Button>
-          </SearchBar>
+          </Container>
 
           {/* Student List Table */}
           {students.length === 0 ? (
@@ -196,7 +239,9 @@ const InsStudentsListCreate = () => {
                 margin="normal"
               />
               {/* <Container fullWidth> */}
-              <InputLabel id="demo-simple-select-label" required>Batch</InputLabel>
+              <InputLabel id="demo-simple-select-label" required>
+                Batch
+              </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"

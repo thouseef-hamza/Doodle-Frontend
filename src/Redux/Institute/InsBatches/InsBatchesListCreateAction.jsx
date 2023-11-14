@@ -6,7 +6,6 @@ export const listBatches = createAsyncThunk(
      "listBatches",
      async (args,{rejectWithValue}) => {
           const { api } = args;
-          console.log(api);
           try {
                const response = await api.get(INS_BASE_URL + "batches/")
                return response.data

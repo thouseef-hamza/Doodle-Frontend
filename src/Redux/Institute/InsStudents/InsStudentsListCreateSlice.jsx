@@ -15,6 +15,7 @@ export const InsStudentsListCreateSlice = createSlice({
       })
       .addCase(createStudent.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null
         state.students.push(action.payload);
       })
       .addCase(createStudent.rejected, (state, action) => {
@@ -28,6 +29,7 @@ export const InsStudentsListCreateSlice = createSlice({
       .addCase(listStudents.fulfilled, (state, action) => {
         state.loading = false;
         state.students = action.payload;
+        state.error = null
       })
       .addCase(listStudents.rejected, (state, action) => {
         state.loading = false;
