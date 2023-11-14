@@ -62,21 +62,10 @@ const HeaderComp = () => {
               <span style={{color:"#FF006E",fontSize:"35px",fontFamily:'Montserrat'}}>l</span>
               <span style={{color:"#13C2C2",fontSize:"35px",fontFamily:'Montserrat'}}>e</span>
             </Typography>
-                {user ? (
-                  <>
-                  <Button  style={{color:"white",borderColor:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} onClick={logOutUser} variant="elevated">Logout</Button>
-                  <Avatar
-                    alt="Remy Sharp"
-                    // src="/src/assets/images/Login.png"
-                    sx={{ width: 50, height: 50}}
-                  />
-                  </>
-                ):(
                   <>
                     <Button  style={{color:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} onClick={()=>navigate("/login")} variant="elevated">Login</Button>
                     <Button style={{backgroundColor:theme.palette.primary.main}} onClick={()=>navigate("/register")} variant="elevated">Create an Account</Button>
                   </>
-                )}
           </>
           )
           }

@@ -16,7 +16,6 @@ import InsBatchesListCreate from "./Pages/Institute/InsBatchesListCreate";
 import InsBatchesDetail from "./Pages/Institute/InsBatchesDetail";
 import InsStudentDetailView from "./Pages/Institute/InsStudentDetailView";
 import PrivateRoutes from "./routers/PrivateRoutes";
-import InsChangePassword from "./Pages/Institute/InsChangePassword";
 
 function App() {
   return (
@@ -61,10 +60,10 @@ function App() {
 
       {/* InsAccount Actions */}
       <Route element={<InsAccount />} path="/institute/account" />
-      <Route
+      {/* <Route
         element={<InsChangePassword />}
         path="/institute/account/change-password"
-      />
+      /> */}
     </Routes>
   );
 }
