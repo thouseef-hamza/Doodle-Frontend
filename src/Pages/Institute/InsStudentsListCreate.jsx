@@ -67,11 +67,11 @@ const InsStudentsListCreate = () => {
   };
   const isMobile = useResponsive("sm");
   return (
-    <>
+        <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
-        <SidebarComp>
+        <>
           <ToastContainer />
           {error ? (
             <Snackbar
@@ -267,9 +267,9 @@ const InsStudentsListCreate = () => {
               </Button>
             </form>
           </StudentAddComp>
-        </SidebarComp>
+          </>
       )}
-    </>
+      </SidebarComp>
   );
 }
 

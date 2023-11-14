@@ -16,7 +16,8 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import ContactEmergencyOutlinedIcon from "@mui/icons-material/ContactEmergencyOutlined";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
 
 
 const drawerWidth = 240;
@@ -78,28 +79,22 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default  function  SidebarComp({children}) {
+// eslint-disable-next-line react/display-name
+const SidebarComp =  React.memo(({children})=> {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false);
   const isMobile = useResponsive("sm")
   const navigate = useNavigate()
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
+  const location = useLocation()
+  const {logOutUser } = React.useContext(AuthContext)
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}></AppBar>
       <Drawer variant="permanent" open={open}>
-        <Box onClick={open ? handleDrawerClose : handleDrawerOpen}>
+        <Box>
           {open ? (
             <Typography
+              onMouseLeave={() => setOpen(false)}
               padding={5}
               sx={{ fontSize: isMobile ? "50px" : "35px" }}
               margin={0}
@@ -125,6 +120,7 @@ export default  function  SidebarComp({children}) {
             </Typography>
           ) : (
             <Typography
+              onMouseEnter={() => setOpen(true)}
               sx={{ fontSize: isMobile ? "50px" : "35px" }}
               paddingX={1.5}
               paddingY={5}
@@ -138,6 +134,8 @@ export default  function  SidebarComp({children}) {
         <List>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               onClick={() => {
                 navigate("/institute/dashboard");
               }}
@@ -145,7 +143,15 @@ export default  function  SidebarComp({children}) {
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
-                ":hover": {
+                backgroundColor:
+                  location.pathname === "/institute/dashboard"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/dashboard"
+                    ? "white"
+                    : "text.primary",
+                "&:hover": {
                   backgroundColor: theme.palette.primary.dark,
                   color: "white",
                 },
@@ -168,11 +174,21 @@ export default  function  SidebarComp({children}) {
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               onClick={() => navigate("/institute/batches")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/batches"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/batches"
+                    ? "white"
+                    : "text.primary",
                 ":hover": {
                   backgroundColor: theme.palette.primary.dark,
                   color: "white",
@@ -196,11 +212,21 @@ export default  function  SidebarComp({children}) {
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               onClick={() => navigate("/institute/students")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/students"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/students"
+                    ? "white"
+                    : "text.primary",
                 ":hover": {
                   backgroundColor: theme.palette.primary.dark,
                   color: "white",
@@ -224,11 +250,21 @@ export default  function  SidebarComp({children}) {
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               onClick={() => navigate("/institute/profile")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/profile"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/profile"
+                    ? "white"
+                    : "text.primary",
                 ":hover": {
                   backgroundColor: theme.palette.primary.dark,
                   color: "white",
@@ -252,11 +288,21 @@ export default  function  SidebarComp({children}) {
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               onClick={() => navigate("/institute/account")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/account"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/account"
+                    ? "white"
+                    : "text.primary",
                 ":hover": {
                   backgroundColor: theme.palette.primary.dark,
                   color: "white",
@@ -278,8 +324,14 @@ export default  function  SidebarComp({children}) {
               />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItem
+            disablePadding
+            sx={{ display: "block" }}
+            onClick={() => logOutUser()}
+          >
             <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
@@ -312,4 +364,5 @@ export default  function  SidebarComp({children}) {
       </Box>
     </Box>
   );
-}
+});
+export default SidebarComp;

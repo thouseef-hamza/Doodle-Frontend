@@ -109,26 +109,17 @@ const InsProfile = () => {
   };
 
   return (
-    <>
+        <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
-        <SidebarComp>
+        <>
           <ToastContainer/>
           <Box>
-            <Button
-              sx={{ position: "absolute", marginTop: 2.5 }}
-              onClick={() => navigate("/institute/students")}
-              size="large"
-              color="secondary"
-            >
-              <ArrowBackIcon fontSize="large" sx={{ color: "#8338EC" }} />
-            </Button>
             <Typography
               color={"#1F2D5A"}
               variant="h4"
               paddingLeft={1}
-              marginLeft={7}
               paddingY={3}
             >
               Edit Profile
@@ -297,9 +288,9 @@ const InsProfile = () => {
               </Grid>
             </Grid>
           </form>
-        </SidebarComp>
+          </>
       )}
-    </>
+      </SidebarComp>
   );
 }
 

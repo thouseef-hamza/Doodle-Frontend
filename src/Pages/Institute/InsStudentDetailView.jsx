@@ -117,11 +117,11 @@ const InsStudentDetailView = () => {
        }
       
   return (
-    <>
+        <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
-        <SidebarComp>
+          <>
           <ToastContainer />
           {error ? (
             <Snackbar
@@ -382,9 +382,9 @@ const InsStudentDetailView = () => {
               </Grid>
             </form>
           </Paper>
-        </SidebarComp>
+          </>
       )}
-    </>
+      </SidebarComp>
   );
 }
 

@@ -52,7 +52,9 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
               elevation={elevation.Card1}
             >
               <CardMedia
-                sx={{ height: isMobile ? 150 : 300 }}
+              loading='lazy'
+              component={"img"}
+                sx={{ height: isMobile ? 150 : 300,objectFit:"contain" }}
                 image={teacher_image}
               />
               <CardContent>
@@ -80,7 +82,9 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
               elevation={elevation.Card2}
             >
               <CardMedia
-                sx={{ height: isMobile ? 150 : 300}}
+              component={"img"}
+              loading='lazy'
+                sx={{ height: isMobile ? 150 : 300,objectFit:"contain"}}
                 image={institute_image}
               />
               <CardContent>

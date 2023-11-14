@@ -52,11 +52,11 @@ const InsBatchesDetail = () => {
   }
 
   return (
-    <>
+      <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
-        <SidebarComp>
+        <>
           <ToastContainer />
           <Box>
             <Button
@@ -140,9 +140,9 @@ const InsBatchesDetail = () => {
               </Grid>
             </form>
           </Paper>
-        </SidebarComp>
+          </>
       )}
-    </>
+      </SidebarComp>
   );
 }
 

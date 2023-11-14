@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(null);
       setUser(null);
       localStorage.clear();
-      navigate("/login");
+      navigate("/");
     } else {
       null
     }
