@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Grid, Typography, Button, Box } from '@mui/material'
+import { Card, CardContent, CardMedia, Grid, Typography, Button, Box, Snackbar, Alert } from '@mui/material'
 import { useState } from 'react'
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import {useNavigate} from 'react-router-dom'
@@ -11,6 +11,7 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
      })
      const isMobile = useResponsive('sm')
      const navigate = useNavigate()
+     const [message,setMessage] = useState(false)
 
   return (
     <>
@@ -22,6 +23,17 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
       >
         <ArrowBackOutlinedIcon fontSize="large" sx={{ color: "#8338EC" }} />
       </Button>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={message}
+        autoHideDuration={3000}
+        onClose={() => setMessage(false)}
+        key={"top" + "center"}
+      >
+        <Alert severity="info" sx={{ width: "100%" }}>
+          I am working upon that.I will Release Soon
+        </Alert>
+      </Snackbar>
       <Box
         style={{
           display: "flex",
@@ -33,10 +45,16 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
         <Grid
           container
           spacing={5}
-          sx={{ margin: isMobile ? "0 0 0 0" : "0 0 0 0 ",display:'flex',justifyContent:'center',alignItems:'center'}}
+          sx={{
+            margin: isMobile ? "0 0 0 0" : "0 0 0 0 ",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
           <Grid item xs={12} md={3}>
             <Card
+            onClick={()=>setMessage(true)}
               onMouseEnter={() =>
                 setElevation((prevElevation) => ({
                   ...prevElevation,
@@ -52,9 +70,9 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
               elevation={elevation.Card1}
             >
               <CardMedia
-              loading='lazy'
-              component={"img"}
-                sx={{ height: isMobile ? 150 : 300,objectFit:"contain" }}
+                loading="lazy"
+                component={"img"}
+                sx={{ height: isMobile ? 150 : 300, objectFit: "contain" }}
                 image={teacher_image}
               />
               <CardContent>
@@ -82,9 +100,9 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
               elevation={elevation.Card2}
             >
               <CardMedia
-              component={"img"}
-              loading='lazy'
-                sx={{ height: isMobile ? 150 : 300,objectFit:"contain"}}
+                component={"img"}
+                loading="lazy"
+                sx={{ height: isMobile ? 150 : 300, objectFit: "contain" }}
                 image={institute_image}
               />
               <CardContent>

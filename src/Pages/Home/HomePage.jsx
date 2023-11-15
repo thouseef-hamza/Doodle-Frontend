@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import HeaderComp from '../../Components/Header/HeaderComp'
-import { Grid, Typography,CardMedia, useMediaQuery,useTheme, CardContent, Card, Box, Link, Container } from '@mui/material'
-import { Facebook, Instagram, Twitter } from '@mui/icons-material';
+import { Grid, Typography,CardMedia, useMediaQuery,useTheme, CardContent, Card, Box, Link, Container, Button, Alert, Snackbar } from '@mui/material'
+import { ArrowBack, ArrowForward, Facebook, Instagram, Twitter } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 
 const HomePage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate()
+  const [message,setMessage] = useState(false)
   const [elevation, setElevation] = useState({
     Card1:0,
     Card2:0,
@@ -17,73 +20,76 @@ const HomePage = () => {
   return (
     <>
       <HeaderComp />
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={message}
+        onClose={() => setMessage(false)}
+        key={"top" + "center"}
+      >
+        <Alert  severity="info" sx={{ width: "100%" }}>
+          I am working upon that.I will Release Soon
+        </Alert>
+      </Snackbar>
+      <Container maxWidth="lg">
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <Typography variant="h4" textTransform={"uppercase"}>
+              Lets Educate and Empower, make the next Generation with teaching
+            </Typography>
+            <Typography variant="body1" paragraph>
+              This platform offer you the best student management for teaching
+              center and job opportunities for teachers
+            </Typography>
+            <Button
+              variant="outlined"
+              size="large"
+              color="primary"
+              sx={{ borderRadius: "22px", marginTop: 2 }}
+              onClick={() => setMessage(true)}
+            >
+              Join as Teacher
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              sx={{ borderRadius: "22px", marginLeft: 2, marginTop: 2 }}
+              endIcon={<ArrowForward />}
+              onClick={() => navigate("/institute/register")}
+            >
+              Join as School
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <img
+              src="src/assets/images/Education.png"
+              alt="Description"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </Grid>
+        </Grid>
+      </Container>
+      {/* Second Page */}
+
       <Grid
         container
         spacing={2}
-        height={"90vh"}
-        display={"flex"}
-        justifyContent={"center"}
+        alignItems="center"
+        sx={{ backgroundColor: "#F5F6FB" }}
       >
-        <Grid item sm={12} md={6}>
-          <Typography
-            color={"#1F2D5A"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            lineHeight={isMobile ? 1.3 : 1.4}
-            style={{
-              fontSize: isMobile ? "2rem" : "3.8rem",
-            }}
-            marginLeft={isMobile ? 2.5 : 5}
-            marginTop={isMobile ? 1.5 : 5}
-            gutterBottom
-          >
-            Lets Educate and Empower, make the next Generation with teaching
-          </Typography>
-          <Typography
-            color={"#1F2D5A"}
-            style={{
-              fontSize: isMobile ? ".7rem" : ".8rem",
-            }}
-            marginLeft={isMobile ? 2.5 : 5}
-          >
-            This platform offer you the best student management for teaching
-            center and job opportunities for teachers
-          </Typography>
+        <Grid item xs={12} md={6}>
+          <img
+            src="src/assets/images/Online learning-pana.png"
+            alt="Description"
+            style={{ width: "100%", height: "auto" }}
+          />
         </Grid>
         <Grid item xs={12} md={6}>
-          <CardMedia
-            loading="lazy"
-            component="img"
-            image="src/assets/images/Education.png"
-            alt="education image"
-          />
-        </Grid>
-      </Grid>
-      <br />
-      {/* Second Page */}
-      <Grid
-        container
-        spacing={2}
-        height={"90vh"}
-        style={{ backgroundColor: "#F5F6FB" }}
-        display={"flex"}
-        alignItems={"center"}
-        // justifyContent={"center"}
-      >
-        <Grid item sm={12} md={6}>
-          <CardMedia
-            component="img"
-            image="src/assets/images/Online learning-pana.png"
-            alt="dashboard image"
-          />
-        </Grid>
-        <Grid item sm={12} md={6}>
           <Typography
-            color={"#1F2D5A"}
-            lineHeight={1.4}
-            style={{
-              fontSize: isMobile ? "2rem" : "3.5rem",
-            }}
+            variant="h4"
+            marginLeft={3}
+            textTransform={"uppercase"}
+            gutterBottom
           >
             Lets learn together teach together make the future brighter
           </Typography>
@@ -118,10 +124,10 @@ const HomePage = () => {
             elevation={elevation.Card1}
           >
             <CardMedia
-            component={"img"}
-            style={{objectFit:"contain"}}
-            loading='lazy'
-            image="src/assets/images/Job hunt-amico.png"
+              component={"img"}
+              style={{ objectFit: "contain" }}
+              loading="lazy"
+              image="src/assets/images/Job hunt-amico.png"
             />
             <CardContent>
               <Typography variant="h6">
@@ -141,10 +147,10 @@ const HomePage = () => {
             elevation={elevation.Card2}
           >
             <CardMedia
-            component={"img"}
-            style={{objectFit:"contain"}}
-            image="src/assets/images/Job offers-amico.png"
-            loading="lazy"
+              component={"img"}
+              style={{ objectFit: "contain" }}
+              image="src/assets/images/Job offers-amico.png"
+              loading="lazy"
             />
             <CardContent>
               <Typography variant="h6">
@@ -153,10 +159,9 @@ const HomePage = () => {
             </CardContent>
           </Card>
         </Grid>
-        {/* <Grid container xs={12} md={6} spacing={2} sx={{margin:isMobile ? '0 0 0 0' : '0 0 0 0 ' }}> */}
         <Grid item xs={6} md={3}>
           <Card
-          sx={{maxHeight:600}}
+            sx={{ maxHeight: 600 }}
             onMouseEnter={() =>
               setElevation((prevElevation) => ({ ...prevElevation, Card3: 5 }))
             }
@@ -198,12 +203,13 @@ const HomePage = () => {
             />
             <CardContent>
               <Typography variant="h6">
-                Stunning dashboard where you can manage 
+                Stunning dashboard where you can manage
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+
       {/* Footer Page */}
       <Box
         component="footer"

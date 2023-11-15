@@ -11,6 +11,7 @@ import DrawerComp from './DrawerComp';
 import { useContext, useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom'
 import AuthContext from '../../context/AuthContext';
+import HomeLogoComponent from '../HomeLogoComponent';
 
 const HeaderComp = () => {
   const theme=useTheme()
@@ -42,30 +43,14 @@ const HeaderComp = () => {
         <Toolbar>
           {isMatch ? (
             <>
-              <Typography>
-                <span style={{color:"#8338EC",fontSize:"35px",fontFamily:'Montserrat'}}>:D</span>
-                <span style={{color:"#FFBE0B",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
-                <span style={{color:"#FB5607",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
-                <span style={{color:"#8338EC",fontSize:"35px",fontFamily:'Montserrat'}}>d</span>
-                <span style={{color:"#FF006E",fontSize:"35px",fontFamily:'Montserrat'}}>l</span>
-                <span style={{color:"#13C2C2",fontSize:"35px",fontFamily:'Montserrat'}}>e</span>
-            </Typography>
+            <HomeLogoComponent/>
             <DrawerComp/>
            </>
           ):(
             <>
-            <Typography marginLeft={1}>
-              <span style={{color:"#8338EC",fontSize:"35px",fontFamily:'Montserrat'}}>:D</span>
-              <span style={{color:"#FFBE0B",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
-              <span style={{color:"#FB5607",fontSize:"35px",fontFamily:'Montserrat'}}>o</span>
-              <span style={{color:"#8338EC",fontSize:"35px",fontFamily:'Montserrat'}}>d</span>
-              <span style={{color:"#FF006E",fontSize:"35px",fontFamily:'Montserrat'}}>l</span>
-              <span style={{color:"#13C2C2",fontSize:"35px",fontFamily:'Montserrat'}}>e</span>
-            </Typography>
-                  <>
-                    <Button  style={{color:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} onClick={()=>navigate("/login")} variant="elevated">Login</Button>
-                    <Button style={{backgroundColor:theme.palette.primary.main}} onClick={()=>navigate("/register")} variant="elevated">Create an Account</Button>
-                  </>
+            <HomeLogoComponent/>
+            <Button  style={{color:theme.palette.primary.main,marginLeft:'auto',marginRight:"10px"}} onClick={()=>navigate("/login")} variant="elevated">Login</Button>
+            <Button style={{backgroundColor:theme.palette.primary.main}} onClick={()=>navigate("/register")} variant="elevated">Create an Account</Button>
           </>
           )
           }

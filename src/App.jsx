@@ -60,10 +60,6 @@ function App() {
 
       {/* InsAccount Actions */}
       <Route element={<InsAccount />} path="/institute/account" />
-      {/* <Route
-        element={<InsChangePassword />}
-        path="/institute/account/change-password"
-      /> */}
     </Routes>
   );
 }

@@ -22,6 +22,7 @@ const InsStudentDetailView = () => {
        (state) => state.insBatchesListCreate
      );
       const [formData, setFormData] = useState();
+      const [changes,setChanges] = useState(true)
      const dispatch = useDispatch()
      const api = useAxios() 
      const {id} = useParams()
@@ -51,6 +52,7 @@ const InsStudentDetailView = () => {
       });
      },[studentDetail])
       const handleInputChange = (event) => {
+        setChanges(false)
         const { name, value } = event.target;
         setFormData((state) => {
         const newState = { ...state };
@@ -92,6 +94,7 @@ const InsStudentDetailView = () => {
        };
 
        const handleImageChange = (file) => { 
+        setChanges(false)
         const imageData = new FormData()
         imageData.append("file",file);
         imageData.append(
@@ -201,6 +204,7 @@ const InsStudentDetailView = () => {
                     fullWidth
                     sx={{ marginTop: 1 }}
                     type="submit"
+                    disabled={changes}
                     onClick={() =>
                       window.alert("Are You Sure Want to update data")
                     }
