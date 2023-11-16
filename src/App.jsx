@@ -18,6 +18,7 @@ import InsStudentDetailView from "./Pages/Institute/InsStudentDetailView";
 import PrivateRoutes from "./routers/PrivateRoutes";
 import InsTaskManagement from "./Pages/Institute/TaskManagement/InsTaskManagement";
 import InsTaskDetailView from "./Pages/Institute/TaskManagement/InsTaskDetailView";
+import InsClassroomManagement from "./Pages/Institute/ClassroomManagement/InsClassroomManagement";
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
       <Route element={<InsAccount />} path="/institute/account" />
       <Route element={<InsTaskManagement/>} path="/institute/task"/>
       <Route element={<InsTaskDetailView/>} path="/institute/task/detail"/>
+      <Route element={<InsClassroomManagement/>} path="/institute/classroom"/>
     </Routes>
   );
 }
