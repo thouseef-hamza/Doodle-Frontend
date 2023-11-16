@@ -8,7 +8,7 @@ const card = {
     backgroundColor: "primary.dark", // Change to your desired color
     color: "white",
   },
-};
+}; 
 
 const InsDashboard = () => {
   return (

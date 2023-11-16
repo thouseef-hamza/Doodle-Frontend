@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import HeaderComp from '../../Components/Header/HeaderComp'
-import { Grid, Typography,CardMedia, useMediaQuery,useTheme, CardContent, Card, Box, Link, Container, Button, Alert, Snackbar } from '@mui/material'
-import { ArrowBack, ArrowForward, Facebook, Instagram, Twitter } from '@mui/icons-material';
+import { Grid, Typography,CardMedia, CardContent, Card, Box, Link, Container, Button, Alert, Snackbar } from '@mui/material'
+import {  ArrowForward, Facebook, Instagram, Twitter } from '@mui/icons-material';
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { useNavigate } from 'react-router-dom';
 
 
 const HomePage = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate()
   const [message,setMessage] = useState(false)
   const [elevation, setElevation] = useState({
@@ -26,17 +25,21 @@ const HomePage = () => {
         onClose={() => setMessage(false)}
         key={"top" + "center"}
       >
-        <Alert  severity="info" sx={{ width: "100%" }}>
+        <Alert severity="info" sx={{ width: "100%" }}>
           I am working upon that.I will Release Soon
         </Alert>
       </Snackbar>
       <Container maxWidth="lg">
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
-            <Typography variant="h4" textTransform={"uppercase"}>
+            <Typography
+              variant="h4"
+              textTransform={"uppercase"}
+              color={"text.primary"}
+            >
               Lets Educate and Empower, make the next Generation with teaching
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1" paragraph color={"text.primary"}>
               This platform offer you the best student management for teaching
               center and job opportunities for teachers
             </Typography>
@@ -90,21 +93,23 @@ const HomePage = () => {
             marginLeft={3}
             textTransform={"uppercase"}
             gutterBottom
+            color={"text.primary"}
           >
             Lets learn together teach together make the future brighter
           </Typography>
         </Grid>
       </Grid>
       {/* Third Page */}
-      <Typography
-        gutterBottom
-        align="center"
-        color={"#1F2D5A"}
-        sx={{ fontSize: isMobile ? "2rem" : "3.8rem" }}
-        marginTop={5}
-      >
-        Our Features
-      </Typography>
+      <Grid item xs={12}>
+        <Typography
+          variant="h4"
+          textAlign={"center"}
+          margin={4}
+          color={"text.primary"}
+        >
+          Our Features
+        </Typography>
+      </Grid>
       <Grid
         container
         spacing={3}
@@ -209,6 +214,98 @@ const HomePage = () => {
           </Card>
         </Grid>
       </Grid>
+      {/* Integrations */}
+      {/* <Grid
+        container
+        spacing={3}
+        sx={{ backgroundColor: "#F5F6FB", color: "text.primary" }}
+        paddingX={10}
+      >
+        <Grid item xs={12}>
+          <Typography variant="h4" textAlign={"center"} margin={1}>
+            Our Website Powered with
+          </Typography>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <Card>
+            <CardContent>
+              <CardMedia
+                component={"img"}
+                loading="lazy"
+                sx={{ objectFit: "contain" }}
+                src="http://jwt.io/img/logo-asset.svg"
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <Card>
+            <CardContent>
+              <CardMedia
+                component={"img"}
+                loading="lazy"
+                sx={{ objectFit: "contain" }}
+                src="/src/assets/images/whatsapp.png"
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <Card>
+            <CardContent>
+              <Container
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  marginTop: 1,
+                }}
+              >
+                <BusinessCenterIcon fontSize="large" />
+                <Typography marginTop={1} marginLeft={2}>
+                  Connect
+                </Typography>
+                <br />
+              </Container>
+              <Typography
+                fontSize={15}
+                marginTop={1}
+                marginLeft={2}
+                textTransform={"capitalize"}
+              >
+                Connect with them,chat with them
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <Card>
+            <CardContent>
+              <Container
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  marginTop: 1,
+                }}
+              >
+                <BusinessCenterIcon fontSize="large" />
+                <Typography marginTop={1} marginLeft={2}>
+                  Hire Them !
+                </Typography>
+                <br />
+              </Container>
+              <Typography
+                fontSize={15}
+                marginTop={1}
+                marginLeft={2}
+                textTransform={"capitalize"}
+              >
+                Hire them for your students
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={6} md={3}></Grid>
+      </Grid> */}
 
       {/* Footer Page */}
       <Box

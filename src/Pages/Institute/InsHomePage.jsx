@@ -99,18 +99,14 @@ const InsHomePage = () => {
                 style={{
                   color: theme.palette.primary.main,
                   marginLeft: 50,
-                  // marginRight: "500px",
                 }}
                 // onClick={() => navigate("/login")}
-                // variant="outlined"
               >
                 View Teachers
               </Button>
               <Button
                 style={{
                   color: theme.palette.primary.main,
-                  // marginLeft: "auto",
-                  // marginRight: "10px",
                 }}
                 onClick={() => navigate("/login")}
                 variant="elevated"
@@ -121,7 +117,6 @@ const InsHomePage = () => {
                 style={{ color: theme.palette.primary.main }}
                 onClick={() => navigate("/institute/dashboard")}
                 variant="elevated"
-                // sx={{ paddingX: 4 }}
               >
                 Dashboard
               </Button>
@@ -149,10 +144,6 @@ const InsHomePage = () => {
               What are you waiting for <br />
               Find your talented Teachers
             </Typography>
-            {/* <Typography variant="body1" paragraph>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in
-              urna sit amet justo eleifend congue.
-            </Typography> */}
             <Button
               variant="outlined"
               size="large"
@@ -180,7 +171,6 @@ const InsHomePage = () => {
           </Grid>
         </Grid>
       </Container>
-      {/* <Container maxWidth="lg"> */}
       <Grid
         container
         spacing={3}

@@ -18,6 +18,8 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import ContactEmergencyOutlinedIcon from "@mui/icons-material/ContactEmergencyOutlined";
 import { useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
+import AddTaskIcon from "@mui/icons-material/AddTask";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 
 const drawerWidth = 240;
@@ -290,6 +292,44 @@ const SidebarComp =  React.memo(({children})=> {
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
+              onClick={() => navigate("/institute/task")}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/task"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/task"
+                    ? "white"
+                    : "text.primary",
+                ":hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                  color: "white",
+                },
+              }}
+            >
+              <AddTaskIcon
+                sx={{
+                  ":hover": {
+                    color: "white",
+                  },
+                  mr: open ? 3 : "auto",
+                }}
+              />
+              <ListItemText
+                primary={"Task"}
+                color="#1F2D5A"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
               onClick={() => navigate("/institute/account")}
               sx={{
                 minHeight: 48,
@@ -342,7 +382,7 @@ const SidebarComp =  React.memo(({children})=> {
                 },
               }}
             >
-              <InboxIcon
+              <LogoutIcon
                 sx={{
                   ":hover": {
                     color: "white",
