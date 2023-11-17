@@ -1,8 +1,9 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardActionArea, CardContent, Container, Grid, IconButton, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Grid, IconButton, Typography } from '@mui/material'
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward"; 
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
+import { Link } from 'react-router-dom';
 
 const StudentCard = () => (
     <Card sx={{marginBottom:1}}>
@@ -21,29 +22,24 @@ const StudentCard = () => (
 );
 
 const TeacherCard = () => (
-  <Card sx={{ height: "70vh" }}>
+  <Card sx={{ height: "90vh" }}>
     <CardContent>
       <Typography gutterBottom>Classroom #12121568</Typography>
-      <Card sx={{ width: "50vw", height: "40vh" }}>
-        <video
-          //   autoPlay
-          //   loop
-          muted
-          poster="https://assets.codepen.io/6093409/river.jpg"
-        >
-          <source
-            src="https://assets.codepen.io/6093409/river.mp4"
-            type="video/mp4"
-          />
-        </video>
+      <Card>
+        <CardMedia
+          component={"img"}
+          src="/src/assets/images/salman.png"
+
+          sx={{ maxWidth: "50vw", maxHeight: "42vh",objectFit:"contain" }}
+        ></CardMedia>
       </Card>
-      <Box display={"flex"} marginTop={2}  justifyContent={"space-between"}>
-      <Typography color={"text.secondary"}>
+      <Box display={"flex"} marginTop={2} justifyContent={"space-between"}>
+        <Typography color={"text.secondary"}>
           Hosted by : Thouseef | You
-      </Typography>
-      <Typography color={"primary.main"}>
+        </Typography>
+        <Typography color={"primary.main"}>
           Teacher : Mufees, Yaseen, Amal ,Anuroop
-      </Typography>
+        </Typography>
       </Box>
       <Box
         display={"flex"}
@@ -58,15 +54,19 @@ const TeacherCard = () => (
         <Button variant="outlined">
           <VolumeOffOutlinedIcon />
         </Button>
-        <Button variant="contained">
-          Join Now
-        </Button>
+        <Link to={"detail"}>
+          <Button variant="contained">Join Now</Button>
+        </Link>
       </Box>
-      <Typography marginTop={2}>
-          Description:
-          <Typography >
-               Learn Physics First Chapter Second Topic 15th Section
-          </Typography>
+      <Typography marginTop={2} gutterBottom>
+        Physics Chapter 2:
+      </Typography>
+      <Typography>
+        Probability Theory Probability theory helps students to calculate the
+        possibilities in cases like cards deck, heads, and tails in coins,
+        probability of winning the match, and many more situations. This is
+        considered one of the most important math topics in the class 9 math
+        syllabus and for students preparing for other Competitive exams.
       </Typography>
     </CardContent>
   </Card>
