@@ -21,6 +21,7 @@ import AuthContext from "../../context/AuthContext";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import LogoutIcon from "@mui/icons-material/Logout";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
 
 const drawerWidth = 240;
 
@@ -359,6 +360,44 @@ const SidebarComp =  React.memo(({children})=> {
               />
               <ListItemText
                 primary={"Classroom"}
+                color="#1F2D5A"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+              onClick={() => navigate("/institute/chatroom")}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/chatroom"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/chatroom"
+                    ? "white"
+                    : "text.primary",
+                ":hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                  color: "white",
+                },
+              }}
+            >
+              <QuestionAnswerOutlinedIcon
+                sx={{
+                  ":hover": {
+                    color: "white",
+                  },
+                  mr: open ? 3 : "auto",
+                }}
+              />
+              <ListItemText
+                primary={"Chatroom"}
                 color="#1F2D5A"
                 sx={{ opacity: open ? 1 : 0 }}
               />

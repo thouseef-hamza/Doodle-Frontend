@@ -20,6 +20,7 @@ import InsTaskManagement from "./Pages/Institute/TaskManagement/InsTaskManagemen
 import InsTaskDetailView from "./Pages/Institute/TaskManagement/InsTaskDetailView";
 import InsClassroomManagement from "./Pages/Institute/ClassroomManagement/InsClassroomManagement";
 import InsClassroomDetailView from "./Pages/Institute/ClassroomManagement/InsClassroomDetailView";
+import InsChatroom from "./Pages/Institute/ChatManagement/InsChatroom";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
       <Route element={<InsTaskDetailView/>} path="/institute/task/detail"/>
       <Route element={<InsClassroomManagement/>} path="/institute/classroom"/>
       <Route element={<InsClassroomDetailView/>} path="/institute/classroom/detail"/>
+      <Route element={<InsChatroom/>} path="/institute/chatroom" />
     </Routes>
   );
 }
