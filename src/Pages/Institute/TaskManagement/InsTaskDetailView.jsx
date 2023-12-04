@@ -1,15 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
 import { Box, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { Search, SearchIconWrapper, StyledInputBase } from '../../../Components/SearchBar';
-import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from "@mui/icons-material/Search";  
+import { useDispatch } from 'react-redux';
+import { deleteTaskDetail, getTaskDetails } from '../../../Redux/Institute/InsTasks/InsTaskDetailAction';
+import useAxios from '../../../Hooks/useAxios';
 
 const InsTaskDetailView = () => {
+  const {id} = useParams()
+  const dispatch = useDispatch()
+  let api=useAxios();
+  const navigate=useNavigate()
+  useEffect(()=>{
+    dispatch(getTaskDetails({api:api}))
+  },[])
   return (
     <>
       <SidebarComp>
@@ -42,7 +52,7 @@ const InsTaskDetailView = () => {
                   label="Task Name"
                   name="name"
                   variant="outlined"
-                  // value={formData.name}
+                  value={name}
                   // onChange={handleInputChange}
                 />
               </Grid>
@@ -82,10 +92,10 @@ const InsTaskDetailView = () => {
                 sx={{ marginTop: 1, marginLeft: 2 }}
                 color="error"
                 variant="contained"
-                // onClick={() => {
-                //   alert("Are you sure want to delete");
-                //   dispatch(deleteBatchDetail({ id, api, toast, navigate }));
-                // }}
+                onClick={() => {
+                  alert("Are you sure want to delete");
+                  dispatch(deleteTaskDetail({ id, api, navigate }));
+                }}
               >
                 Delete
               </Button>
