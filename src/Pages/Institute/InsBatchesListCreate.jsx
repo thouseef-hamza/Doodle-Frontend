@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Container, Grid, Typography,TextField } from '@mui/material';
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
-import SearchBar from '../../Components/SearchBar';
+import SearchBar, { Search, StyledInputBase } from '../../Components/SearchBar';
 import CardComp from '../../Components/CardComp';
 import {  useEffect, useState } from 'react';
 import useAxios from '../../Hooks/useAxios';
@@ -14,10 +14,12 @@ import { createBatches, listBatches } from '../../Redux/Institute/InsBatches/Ins
 
 const InsBatchesListCreate = () => {
   const [open,setOpen] = useState(false)
+  const [search,setSearch] = useState("?")
   const dispatch = useDispatch()
   const { batches, loading } = useSelector(
     (state) => state.insBatchesListCreate
   );
+  console.log(search);
   const [formData, setFormData] = useState({
     name: "",
     start_date: null,
@@ -26,9 +28,20 @@ const InsBatchesListCreate = () => {
   let api = useAxios()  
 
   useEffect(() => {
-    dispatch(listBatches({ api: api }));
+    dispatch(listBatches({ api: api,search }));
   }, []);
   
+  const handleSearch = () => {
+    dispatch(listBatches({api:api,search:search}))
+  }
+  const handleSearchChange = (e) => {
+    setSearch(`?search=${e.target.value}`);
+    console.log(e.target.value);
+    if (e.target.value === "") {
+      let search = "?";
+      dispatch(listBatches({ api, search }));
+    }
+  };
   const handleSubmit = async e => {
     e.preventDefault()
     dispatch(createBatches({api : api,values:formData,setOpen:setOpen,toast:toast,open:open}))
@@ -62,20 +75,27 @@ const InsBatchesListCreate = () => {
                 Batches
               </Typography>
             </Box>
-            <SearchBar title="Add Batches">
-              {/* Add Student Button */}
-              <Button
-                variant="outlined"
-                onClick={() => setOpen(true)}
-                style={{
-                  marginLeft: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                Add Batches
-              </Button>
-            </SearchBar>
+            <Container
+              sx={{ display: "flex", alignItems: "center", marginLeft: -3 }}
+            >
+              <form onSubmit={handleSearch}>
+                <TextField
+                  onChange={handleSearchChange}
+                  id="outlined-size-small"
+                  value={search.slice(8)}
+                  placeholder="Search..."
+                  size="small"
+                />
+                <Button
+                  sx={{ marginLeft: 1 }}
+                  variant="contained"
+                  type="submit"
+                >
+                  Search
+                </Button>
+              </form>
+            </Container>
+            {/* Add Student Button */}
             {batches.length === 0 ? (
               <>
                 <Container

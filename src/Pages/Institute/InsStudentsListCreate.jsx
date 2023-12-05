@@ -32,6 +32,7 @@ const InsStudentsListCreate = () => {
     );
     const {batches} = useSelector(state=>state.insBatchesListCreate)
     let api = useAxios();
+    const [search,setSearch] = useState("?")
 
     const formik = useFormik({
       initialValues: {
@@ -57,17 +58,31 @@ const InsStudentsListCreate = () => {
       );
     }
 
+    const handleSearch = (e)=> {
+      e.preventDefault()
+      dispatch(listStudents({api,search}))
+    }
+    const handleSearchChange = (e) => {
+      setSearch(`?search=${e.target.value}`);
+      console.log(e.target.value);
+      if (e.target.value === "") {
+        let search = "?";
+        dispatch(listStudents({ api, search }));
+      }
+    };
+     
+    console.log(search);
     useEffect(() => {
-      dispatch(listStudents({api:api}))
+      dispatch(listStudents({api:api,search}))
       dispatch(listBatches({api:api}))
-    }, []);
+    }, [dispatch]);
     
   const handleClose = () => {
     setOpen(false);
   };
   const isMobile = useResponsive("sm");
   return (
-        <SidebarComp>
+    <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
@@ -82,10 +97,10 @@ const InsStudentsListCreate = () => {
                 if (error.message === "Network Error") {
                   dispatch(listStudents({ api: api }));
                 } else {
-                  const time=setTimeout(() => {
-                    return true
+                  const time = setTimeout(() => {
+                    return true;
                   }, 1000);
-                  clearTimeout(time)
+                  clearTimeout(time);
                 }
               }}
               key={"top" + "center"}
@@ -96,7 +111,10 @@ const InsStudentsListCreate = () => {
                 ) : (
                   <>
                     <AlertTitle>{"Invalid Credentials"}</AlertTitle>
-                    {[error.response.data?.email,error.response.data?.phone_number]}
+                    {[
+                      error.response.data?.email,
+                      error.response.data?.phone_number,
+                    ]}
                   </>
                 )}
               </Alert>
@@ -116,19 +134,23 @@ const InsStudentsListCreate = () => {
           <Container
             sx={{ display: "flex", alignItems: "center", marginLeft: -3 }}
           >
-            <Search>
-              <StyledInputBase
-                onChange={(e) => console.log(e.target.value)}
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-              <Button
-                sx={{ marginLeft: 1, marginBottom: 0.45 }}
-                variant="contained"
-              >
-                Search
-              </Button>
-            </Search>
+            <form onSubmit={handleSearch}>
+            <TextField
+              onChange={handleSearchChange}
+              id="outlined-size-small"
+              value={search.slice(8)}
+              placeholder='Search...'
+              size="small"
+            />  
+            <Button
+              sx={{ marginLeft: 1}}
+              variant="contained"
+              type='submit'
+            >
+              Search
+            </Button>
+            </form>
+            {/* </Search> */}
             <Button
               onClick={() => setOpen(true)}
               variant="outlined"
@@ -267,9 +289,9 @@ const InsStudentsListCreate = () => {
               </Button>
             </form>
           </StudentAddComp>
-          </>
+        </>
       )}
-      </SidebarComp>
+    </SidebarComp>
   );
 }
 

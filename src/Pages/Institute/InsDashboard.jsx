@@ -2,6 +2,9 @@ import AvatarComp from '../../Components/AvatarComp';
 import SidebarComp  from '../../Components/Sidebar/SidebarComp'
 import { Box, Typography,Grid,Card,CardContent,Container } from '@mui/material';
 import SchoolIcon from "@mui/icons-material/School";
+import useAxios from '../../Hooks/useAxios';
+import { INS_BASE_URL } from '../../utils/api/api';
+import { useEffect, useState } from 'react';
 
 const card = {
   "&:hover": {
@@ -10,7 +13,24 @@ const card = {
   },
 }; 
 
+
 const InsDashboard = () => {
+  let api=useAxios()
+  console.log(api);
+  const [data, setData] = useState("");
+  console.log(data);
+  const fetchData = async () => {
+    try {
+      const response = await api.get(INS_BASE_URL + "dashboard/");
+      console.log(response);
+      setData(response.data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(()=>{
+    fetchData()
+  },[])
   return (
     <>
       <SidebarComp>
@@ -43,7 +63,7 @@ const InsDashboard = () => {
                   }}
                 >
                   <SchoolIcon fontSize="large" />
-                  <Typography variant="h4">141</Typography>
+                  <Typography variant="h4">{data.batch_count}</Typography>
                 </Container>
               </CardContent>
             </Card>
@@ -60,12 +80,12 @@ const InsDashboard = () => {
                   }}
                 >
                   <SchoolIcon fontSize="large" />
-                  <Typography variant="h4">141</Typography>
+                  <Typography variant="h4">{data.student_count}</Typography>
                 </Container>
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={6} md={3}>
+          {/* <Grid item xs={6} md={3}>
             <Card sx={card}>
               <CardContent>
                 <Typography> Revenue this month</Typography>
@@ -98,7 +118,7 @@ const InsDashboard = () => {
                 </Container>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </SidebarComp>
     </>

@@ -125,7 +125,7 @@ const InsHomePage = () => {
                   marginLeft: "auto",
                   marginRight: "10px",
                 }}
-                onClick={() => navigate("/logout")}
+                // onClick={() => navigate("/logout")}
                 variant="contained"
                 endIcon={<LogoutIcon />}
               >

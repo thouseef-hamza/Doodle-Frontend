@@ -5,9 +5,9 @@ import { INS_BASE_URL } from "../../../utils/api/api";
 export const listBatches = createAsyncThunk(
      "listBatches",
      async (args,{rejectWithValue}) => {
-          const { api } = args;
+          const { api,search } = args;
           try {
-               const response = await api.get(INS_BASE_URL + "batches/")
+               const response = await api.get(INS_BASE_URL + `batches/${search}`)
                return response.data
           } catch (error) {
                console.log("error",error);

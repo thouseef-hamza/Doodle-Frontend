@@ -4,6 +4,7 @@ import InsStudentDetailSlice from "./Institute/InsStudents/InsStudentDetailSlice
 import  InsBatchesListCreateSlice  from "./Institute/InsBatches/InsBatchesListCreateSlice";
 import InsBatchesDetailSlice from "./Institute/InsBatches/InsBatchesDetailSlice";
 import InsProfileSlice from "./Institute/InsProfile/InsProfileSlice";
+import InsTasksListCreateSlice from "./Institute/InsTasks/InsTasksListCreateSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     insBatchesListCreate: InsBatchesListCreateSlice,
     insBatchDetail:InsBatchesDetailSlice,
     insProfile:InsProfileSlice,
+    insTasksListCreate:InsTasksListCreateSlice,
   },
 });

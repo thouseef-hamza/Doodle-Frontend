@@ -74,6 +74,11 @@ const TeacherCard = () => (
 
 
 const InsClassroomManagement = () => {
+  const APP_ID = import.meta.env.VITE_AGORA_SDK_APP_ID;
+  const CHANNEL = "Doodle";
+  const TOKEN = import.meta.env.VITE_VIDEO_CHANNEL_NAME;
+
+  const client = AgoraRTC.createClient()
   return (
     <>
       <SidebarComp>

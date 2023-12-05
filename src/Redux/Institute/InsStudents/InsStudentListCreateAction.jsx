@@ -25,9 +25,9 @@ export const createStudent = createAsyncThunk(
 export const listStudents = createAsyncThunk(
   "showStudents",
   async (args, { rejectWithValue }) => {
-    const { api } = args;
+    const { api,search } = args;
     try {
-      const response = await api.get(INS_BASE_URL + "students/");
+      const response = await api.get(INS_BASE_URL + "students/" + search);
       const result = await response.data;
       return result;
     } catch (error) {

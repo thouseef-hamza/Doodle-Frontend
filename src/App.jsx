@@ -21,21 +21,19 @@ import InsTaskDetailView from "./Pages/Institute/TaskManagement/InsTaskDetailVie
 import InsClassroomManagement from "./Pages/Institute/ClassroomManagement/InsClassroomManagement";
 import InsClassroomDetailView from "./Pages/Institute/ClassroomManagement/InsClassroomDetailView";
 import InsChatroom from "./Pages/Institute/ChatManagement/InsChatroom";
+import StuDashboard from "./Pages/Student/StuDashboard";
+import StuProfile from "./Pages/Student/StuProfile";
 
 function App() {
   return (
     <Routes>
       <Route element={<HomePage />} path="/" exact />
 
-      {/* Register Interface View Only */}
+      {/* Authentication Action  */}
       <Route element={<RegisterInterface />} path="/register" />
       <Route element={<LoginInterface />} path="/login" />
-
-      {/* Institute Register and Ins,Student Login */}
       <Route element={<InstituteRegister />} path="/institute/register" />
       <Route element={<InstituteLogin />} path="/institute/login" />
-
-      {/* OTP Authentication */}
       <Route
         element={<OTPAuthentication />}
         path="/verifyotp/:user_id/:phone_number"
@@ -45,31 +43,26 @@ function App() {
       <Route element={<InsHomePage />} path="/institute/home" />
       <Route
         element={
-          <PrivateRoutes>
             <InsDashboard />
-          </PrivateRoutes>
         }
         path="/institute/dashboard"
       />
-
       <Route element={<InsInbox />} path="/institute/inbox" />
       <Route element={<InsProfile />} path="/institute/profile" />
-
-      {/* InsBatches Actions */}
       <Route element={<InsBatchesListCreate />} path="/institute/batches" />
       <Route element={<InsBatchesDetail />} path="/institute/batch/:id" />
-
-      {/* InsStudent Actions */}
       <Route element={<InsStudentsListCreate />} path="/institute/students" />
       <Route element={<InsStudentDetailView />} path="/institute/student/:id" />
-
-      {/* InsAccount Actions */}
       <Route element={<InsAccount />} path="/institute/account" />
       <Route element={<InsTaskManagement/>} path="/institute/task"/>
-      <Route element={<InsTaskDetailView/>} path="/institute/task/detail"/>
+      <Route element={<InsTaskDetailView/>} path="/institute/task/detail/:id"/>
       <Route element={<InsClassroomManagement/>} path="/institute/classroom"/>
       <Route element={<InsClassroomDetailView/>} path="/institute/classroom/detail"/>
       <Route element={<InsChatroom/>} path="/institute/chatroom" />
+
+      {/* Student Action */}
+      <Route element={<StuDashboard/>} path="/student/dashboard"/>
+      <Route element={<StuProfile/>} path="/student/profile"/>
     </Routes>
   );
 }
