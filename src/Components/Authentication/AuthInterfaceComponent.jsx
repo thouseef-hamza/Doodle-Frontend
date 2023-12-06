@@ -4,10 +4,11 @@ import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import {useNavigate} from 'react-router-dom'
 import useResponsive from '../../Hooks/useResponsive';
 
-export const AuthInterfaceComponent = ({teacher_title, institute_title, institute_path, teacher_path,institute_image,teacher_image}) => {
+export const AuthInterfaceComponent = ({teacher_title, institute_title, student_title,institute_path, teacher_path,student_path, institute_image, teacher_image,student_image}) => {
      const [elevation, setElevation] = useState({
           Card1:0,
-          Card2:0
+          Card2:0,
+          Card3:0
      })
      const isMobile = useResponsive('sm')
      const navigate = useNavigate()
@@ -112,6 +113,36 @@ export const AuthInterfaceComponent = ({teacher_title, institute_title, institut
               </CardContent>
             </Card>
           </Grid>
+          {/* <Grid item xs={3}>
+            <Card
+              onClick={() => navigate(`${student_path}`)}
+              onMouseEnter={() =>
+                setElevation((prevElevation) => ({
+                  ...prevElevation,
+                  Card3: 5,
+                }))
+              }
+              onMouseLeave={() =>
+                setElevation((prevElevation) => ({
+                  ...prevElevation,
+                  Card3: 0,
+                }))
+              }
+              elevation={elevation.Card3}
+            >
+              <CardMedia
+                component={"img"}
+                loading="lazy"
+                sx={{ height: isMobile ? 150 : 300, objectFit: "contain" }}
+                image={institute_image}
+              />
+              <CardContent>
+                <Typography padding={1} color={"#1F2D5A"} variant="h6">
+                  {student_title}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid> */}
         </Grid>
       </Box>
     </>

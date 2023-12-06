@@ -4,6 +4,8 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
 import { Link } from 'react-router-dom';
+import { useClient } from '../../../Agora_Settings/settings';
+import { useState } from 'react';
 
 const StudentCard = () => (
     <Card sx={{marginBottom:1}}>
@@ -21,7 +23,7 @@ const StudentCard = () => (
     </Card>
 );
 
-const TeacherCard = () => (
+const TeacherCard = ({client,}) => (
   <Card sx={{ height: "90vh" }}>
     <CardContent>
       <Typography gutterBottom>Classroom #12121568</Typography>
@@ -48,10 +50,10 @@ const TeacherCard = () => (
         marginTop={2}
         gap={3}
       >
-        <Button variant="outlined">
+        <Button variant="outlined" onClick={()=>mute("video")}>
           <VideocamOutlinedIcon />
         </Button>
-        <Button variant="outlined">
+        <Button variant="outlined" onClick={()=>mute("audio")}>
           <VolumeOffOutlinedIcon />
         </Button>
         <Link to={"detail"}>
@@ -73,12 +75,11 @@ const TeacherCard = () => (
 );
 
 
-const InsClassroomManagement = () => {
-  const APP_ID = import.meta.env.VITE_AGORA_SDK_APP_ID;
-  const CHANNEL = "Doodle";
-  const TOKEN = import.meta.env.VITE_VIDEO_CHANNEL_NAME;
+const InsClassroomManagement = (props) => {
+  const client = useClient()
+  const {tracks,setStart,setInCall} = props;
+  const [tracksState,setTrackState] = useState({video:true,audio:true})
 
-  const client = AgoraRTC.createClient()
   return (
     <>
       <SidebarComp>
@@ -111,7 +112,7 @@ const InsClassroomManagement = () => {
             <StudentCard />
           </Grid>
            <Grid item xs={12} md={7}>
-            <TeacherCard />
+            <TeacherCard client={client} />
           </Grid>
         </Grid>
          

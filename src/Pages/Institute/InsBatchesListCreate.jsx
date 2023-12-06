@@ -19,7 +19,6 @@ const InsBatchesListCreate = () => {
   const { batches, loading } = useSelector(
     (state) => state.insBatchesListCreate
   );
-  console.log(search);
   const [formData, setFormData] = useState({
     name: "",
     start_date: null,
@@ -36,7 +35,6 @@ const InsBatchesListCreate = () => {
   }
   const handleSearchChange = (e) => {
     setSearch(`?search=${e.target.value}`);
-    console.log(e.target.value);
     if (e.target.value === "") {
       let search = "?";
       dispatch(listBatches({ api, search }));

@@ -83,6 +83,18 @@ const InsHomePage = () => {
                       Dashboard
                     </Button>
                   </ListItem>
+                  <ListItem>
+                    <Button
+                      style={{
+                        color: "#ffff",
+                        backgroundColor: theme.palette.primary.main,
+                      }}
+                      color={"primary"}
+                      variant="elevated"
+                    >
+                      Messages
+                    </Button>
+                  </ListItem>
                 </List>
               </Drawer>
               <IconButton

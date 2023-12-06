@@ -42,12 +42,11 @@ export const AuthProvider = ({ children }) => {
         }
       );
       let data = await response.data;
-      console.log(data,"login Data");
       if (response.status === 200) {
         setAuthTokens(data.jwt_token);
         setUser(jwtDecode(data.jwt_token.access));
         localStorage.setItem("authTokens", JSON.stringify(data.jwt_token));
-        navigate("/institute/home");
+        user.is_institute ? navigate("/institute/home") : user.is_student ? navigate("/student/dashboard") : null
       } else {
         alert("Something Went Wrong");
       }

@@ -14,7 +14,6 @@ import SpinnerComp from '../../Components/SpinnerComp';
 import { useDispatch, useSelector } from 'react-redux';
 import { createStudent, listStudents } from '../../Redux/Institute/InsStudents/InsStudentListCreateAction';
 import { listBatches } from '../../Redux/Institute/InsBatches/InsBatchesListCreateAction';
-import ReactSearchBox from "react-search-box";
 
 let tableHead = [
   {key:1,name:"Student Code"},
