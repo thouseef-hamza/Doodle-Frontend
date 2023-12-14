@@ -5,7 +5,8 @@ import SchoolIcon from "@mui/icons-material/School";
 import useAxios from '../../Hooks/useAxios';
 import { INS_BASE_URL } from '../../utils/api/api';
 import { useEffect, useState } from 'react';
-
+import {useSpring,animated} from '@react-spring/web'
+import PeopleIcon from "@mui/icons-material/People";
 const card = {
   "&:hover": {
     backgroundColor: "primary.dark", // Change to your desired color
@@ -13,6 +14,15 @@ const card = {
   },
 }; 
 
+function NumberAnimation({n}) {
+  const {number} = useSpring({
+    from:{number:0},
+    number:n,
+    delay:200,
+    config:{mass:1,tension:20,friction:10},
+  })
+  return <animated.div>{number.to((n)=>n.toFixed(0))}</animated.div>
+}
 
 const InsDashboard = () => {
   let api=useAxios()
@@ -63,7 +73,9 @@ const InsDashboard = () => {
                   }}
                 >
                   <SchoolIcon fontSize="large" />
-                  <Typography variant="h4">{data.batch_count}</Typography>
+                  <Typography variant="h4">
+                    <NumberAnimation n={data.batch_count} />
+                  </Typography>
                 </Container>
               </CardContent>
             </Card>
@@ -79,8 +91,10 @@ const InsDashboard = () => {
                     marginTop: 2,
                   }}
                 >
-                  <SchoolIcon fontSize="large" />
-                  <Typography variant="h4">{data.student_count}</Typography>
+                  <PeopleIcon fontSize="large" />
+                  <Typography variant="h4">
+                    <NumberAnimation n={data.student_count} />
+                  </Typography>
                 </Container>
               </CardContent>
             </Card>

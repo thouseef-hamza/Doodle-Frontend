@@ -5,9 +5,23 @@ import { INS_BASE_URL } from "../../../utils/api/api";
 export const listBatches = createAsyncThunk(
      "listBatches",
      async (args,{rejectWithValue}) => {
-          const { api,search } = args;
+          const { api,searchQuery,sortQuery,notification } = args;
+          let endpoint = "batches/"
+          const queryParams = [];
+          if (notification) {
+            queryParams.push(`scheduled=${true}`);
+          }
+          if (searchQuery) {
+            queryParams.push(`search=${searchQuery}`);
+          }
+          if (sortQuery) {
+            queryParams.push(`sort=${sortQuery}`);
+          }
+          if (queryParams.length > 0) {
+            endpoint += "?" + queryParams.join("&");
+          }
           try {
-               const response = await api.get(INS_BASE_URL + `batches/${search}`)
+               const response = await api.get(INS_BASE_URL + endpoint)
                return response.data
           } catch (error) {
                console.log("error",error);

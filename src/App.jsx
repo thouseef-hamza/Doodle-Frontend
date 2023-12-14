@@ -139,9 +139,7 @@ function App() {
       />
       <Route
         element={
-          <InstituteRoutes>
             <InsClassroomDetailView />
-          </InstituteRoutes>
         }
         path="/institute/classroom/detail"
       />

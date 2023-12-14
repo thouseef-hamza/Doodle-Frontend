@@ -133,6 +133,13 @@ const InsHomePage = () => {
                 Dashboard
               </Button>
               <Button
+                style={{ color: theme.palette.primary.main }}
+                onClick={() => navigate("/institute/chatroom")}
+                variant="elevated"
+              >
+                Messages
+              </Button>
+              <Button
                 style={{
                   marginLeft: "auto",
                   marginRight: "10px",

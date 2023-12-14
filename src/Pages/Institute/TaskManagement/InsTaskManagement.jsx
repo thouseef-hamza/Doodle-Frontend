@@ -127,7 +127,6 @@ const InsTaskManagement = () => {
       [name] : value
     })
   }
-  console.log(formData);
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createTask({api:api,values:formData,toast:toast,setOpen:setOpen}))
@@ -183,7 +182,7 @@ const InsTaskManagement = () => {
                     Add Task
                   </Button>
                 </Grid>
-                {tasks.map((value) =>
+                {tasks && tasks.length >= 1 && tasks.map((value) =>
                   value.task_type !== "teacher" ? (
                     <StudentCard
                       key={value.id}
@@ -206,7 +205,7 @@ const InsTaskManagement = () => {
                     Teachers
                   </Typography>
                 </Grid>
-                {tasks.map((value) =>
+                {tasks && tasks.length >= 1 && tasks.map((value) =>
                   value.task_type === "teacher" ? (
                     <TeacherCard
                       key={value.id}
@@ -302,7 +301,7 @@ const InsTaskManagement = () => {
                       }
                       input={<OutlinedInput label="Select Students" />}
                     >
-                      {students.map((student) => (
+                      {students && students?.map((student) => (
                         <MenuItem key={student.id} value={student.id}>
                           {student.first_name + " " + student.last_name}
                         </MenuItem>
@@ -330,7 +329,7 @@ const InsTaskManagement = () => {
                       }
                       input={<OutlinedInput label="Select Batches" />}
                     >
-                      {batches.map((batch) => (
+                      {batches && batches.map((batch) => (
                         <MenuItem key={batch.id} value={batch.id}>
                           {batch.name}
                         </MenuItem>

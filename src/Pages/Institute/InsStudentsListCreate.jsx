@@ -23,15 +23,13 @@ let tableHead = [
 
 const InsStudentsListCreate = () => {
     const [open, setOpen] = useState(false);
-    // const { logOutUser } = useContext(AuthContext);
     const dispatch = useDispatch()
-    // const [search,setSearch] = useState("")
     const { students, loading , error} = useSelector(
       (state) => state.insStudentsListCreate
     );
     const {batches} = useSelector(state=>state.insBatchesListCreate)
     let api = useAxios();
-    const [search,setSearch] = useState("?")
+    const [search,setSearch] = useState("")
 
     const formik = useFormik({
       initialValues: {
@@ -65,12 +63,10 @@ const InsStudentsListCreate = () => {
       setSearch(`?search=${e.target.value}`);
       console.log(e.target.value);
       if (e.target.value === "") {
-        let search = "?";
-        dispatch(listStudents({ api, search }));
+        dispatch(searchBatches({ api, search }));
       }
     };
      
-    console.log(search);
     useEffect(() => {
       dispatch(listStudents({api:api,search}))
       dispatch(listBatches({api:api}))
@@ -82,9 +78,7 @@ const InsStudentsListCreate = () => {
   const isMobile = useResponsive("sm");
   return (
     <SidebarComp>
-      {loading ? (
-        <SpinnerComp />
-      ) : (
+      
         <>
           <ToastContainer />
           {error ? (
@@ -137,7 +131,7 @@ const InsStudentsListCreate = () => {
             <TextField
               onChange={handleSearchChange}
               id="outlined-size-small"
-              value={search.slice(8)}
+              value={search.slice(9)}
               placeholder='Search...'
               size="small"
             />  
@@ -183,7 +177,11 @@ const InsStudentsListCreate = () => {
               <Typography marginLeft={"40vw"}>No Students Found !</Typography>
             </>
           ) : (
+            loading ? (
+              <SpinnerComp />
+            ) : (
             <TableComp data={students} columns={tableHead} />
+            )
           )}
 
           {/* Student Filling Form */}
@@ -216,10 +214,6 @@ const InsStudentsListCreate = () => {
                 value={formik.values.last_name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={
-                  formik.touched.last_name && Boolean(formik.errors.last_name)
-                }
-                helperText={formik.touched.last_name && formik.errors.last_name}
                 name="last_name"
                 sx={{ width: isMobile ? "70vw" : "40vw" }}
                 margin="normal"
@@ -273,7 +267,7 @@ const InsStudentsListCreate = () => {
                 value={formik.values.batch_id}
                 onChange={formik.handleChange}
               >
-                {batches.map((batch) => (
+                {batches && batches?.map((batch) => (
                   <MenuItem key={batch.id} value={batch.id}>
                     {batch.name}
                   </MenuItem>
@@ -289,7 +283,6 @@ const InsStudentsListCreate = () => {
             </form>
           </StudentAddComp>
         </>
-      )}
     </SidebarComp>
   );
 }

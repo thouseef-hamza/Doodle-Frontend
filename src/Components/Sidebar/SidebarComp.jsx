@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import HomeIcon from '@mui/icons-material/Home';
 import useResponsive from "../../Hooks/useResponsive";
 import ExploreIcon from "@mui/icons-material/Explore";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -22,6 +22,7 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 import LogoutIcon from "@mui/icons-material/Logout";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
+import PaymentIcon from "@mui/icons-material/Payment";
 
 const drawerWidth = 240;
 
@@ -45,25 +46,6 @@ const closedMixin = (theme) => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
-
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -135,6 +117,46 @@ const SidebarComp =  React.memo(({children})=> {
           )}
         </Box>
         <List>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+              onClick={() => {
+                navigate("/institute/home");
+              }}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/home"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/home"
+                    ? "white"
+                    : "text.primary",
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                  color: "white",
+                },
+              }}
+            >
+              <HomeIcon
+                sx={{
+                  ":hover": {
+                    color: "white",
+                  },
+                  mr: open ? 3 : "auto",
+                }}
+              />
+              <ListItemText
+                primary={"Home"}
+                color="#1F2D5A"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
@@ -322,6 +344,44 @@ const SidebarComp =  React.memo(({children})=> {
               />
               <ListItemText
                 primary={"Task"}
+                color="#1F2D5A"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+              onClick={() => navigate("/institute/task")}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                backgroundColor:
+                  location.pathname === "/institute/payments"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/institute/payments"
+                    ? "white"
+                    : "text.primary",
+                ":hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                  color: "white",
+                },
+              }}
+            >
+              <PaymentIcon
+                sx={{
+                  ":hover": {
+                    color: "white",
+                  },
+                  mr: open ? 3 : "auto",
+                }}
+              />
+              <ListItemText
+                primary={"Payments"}
                 color="#1F2D5A"
                 sx={{ opacity: open ? 1 : 0 }}
               />

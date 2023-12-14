@@ -11,7 +11,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { DateField, DesktopDatePicker } from "@mui/x-date-pickers";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { formatDate } from "../../utils/FormatDate/format-date";
 
 const InsBatchesDetail = () => {
   const navigate = useNavigate()
@@ -44,6 +46,7 @@ const InsBatchesDetail = () => {
       [name] : value
     })
   }
+  console.log(formData)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -52,7 +55,7 @@ const InsBatchesDetail = () => {
   }
 
   return (
-      <SidebarComp>
+    <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
@@ -78,12 +81,19 @@ const InsBatchesDetail = () => {
             </Typography>
           </Box>
           <Paper>
-            <Typography variant="h6" padding={2}>
-              Batch Details
-            </Typography>
+            <Box style={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h6">Batch Details</Typography>
+              <Button
+                variant="contained"
+                endIcon={<NotificationsIcon />}
+                size="small"
+              >
+                Fee Reminder
+              </Button>
+            </Box>
             <form onSubmit={handleSubmit}>
               <Grid container padding={2} spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth
                     id="outlined-basic-1"
@@ -94,7 +104,7 @@ const InsBatchesDetail = () => {
                     onChange={handleInputChange}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth
                     id="outlined-basic-2"
@@ -102,9 +112,27 @@ const InsBatchesDetail = () => {
                     variant="outlined"
                     name="start_date"
                     type="date"
-                    format="YYYY-MM-DD"
+                    format="YYYY-DD-MM"
                     value={formData.start_date}
                     onChange={handleInputChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  {/* <TextField
+                    fullWidth
+                    id="outlined-basic-3"
+                    label="Fee Reminder"
+                    variant="outlined"
+                    name="scheduled_date" 
+                    type="date"
+                  /> */}
+                  <DatePicker
+                    label="Dash Seperator"
+                    value={formData.scheduled_date}
+                    onChange={(date) =>
+                      setFormData({ ...formData, scheduled_date: date })
+                    }
+                    format="YYYY-MM-DD"
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>
@@ -130,9 +158,9 @@ const InsBatchesDetail = () => {
                   sx={{ marginTop: 1, marginLeft: 2 }}
                   color="error"
                   variant="contained"
-                  onClick={()=>{
-                    alert("Are you sure want to delete")
-                    dispatch(deleteBatchDetail({id,api,toast,navigate}))
+                  onClick={() => {
+                    alert("Are you sure want to delete");
+                    dispatch(deleteBatchDetail({ id, api, toast, navigate }));
                   }}
                 >
                   Delete
@@ -140,9 +168,9 @@ const InsBatchesDetail = () => {
               </Grid>
             </form>
           </Paper>
-          </>
+        </>
       )}
-      </SidebarComp>
+    </SidebarComp>
   );
 }
 
