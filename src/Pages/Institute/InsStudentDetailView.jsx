@@ -15,6 +15,8 @@ import axios from 'axios';
 
 const InsStudentDetailView = () => {
      const navigate=useNavigate()
+     const [fetchBatches,setFetchBatches] = useState(false)
+     
      const { studentDetail,loading,error } = useSelector( 
        (state) => state.insStudentDetail,shallowEqual
      );
@@ -30,8 +32,12 @@ const InsStudentDetailView = () => {
        dispatch(
          getStudentDetail({id,api})
        );
-       dispatch(listBatches({id,api}))
      },[]);
+     useEffect(()=>{
+      if (fetchBatches){
+        dispatch(listBatches({ id, api }));
+      }
+     },[fetchBatches])
      useEffect(()=>{
       setFormData({
         first_name: studentDetail.first_name,
@@ -120,11 +126,11 @@ const InsStudentDetailView = () => {
        }
       
   return (
-        <SidebarComp>
+    <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
-          <>
+        <>
           <ToastContainer />
           {error ? (
             <Snackbar
@@ -204,7 +210,6 @@ const InsStudentDetailView = () => {
                     fullWidth
                     sx={{ marginTop: 1 }}
                     type="submit"
-                    disabled={changes}
                     onClick={() =>
                       window.alert("Are You Sure Want to update data")
                     }
@@ -270,7 +275,7 @@ const InsStudentDetailView = () => {
                     </Grid>
                     <Grid item xs={3}>
                       <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">  
+                        <InputLabel id="demo-simple-select-label">
                           Gender
                         </InputLabel>
                         <Select
@@ -279,9 +284,14 @@ const InsStudentDetailView = () => {
                           label="Gender"
                           name="gender"
                           onChange={handleInputChange}
-                          value={formData && formData.student_profile?.gender || "S"} 
+                          value={
+                            (formData && formData.student_profile?.gender) ||
+                            "S"
+                          }
                         >
-                          <MenuItem disabled value={"S"}>Select</MenuItem>
+                          <MenuItem disabled value={"S"}>
+                            Select
+                          </MenuItem>
                           <MenuItem value={"M"}>Male</MenuItem>
                           <MenuItem value={"F"}>Female</MenuItem>
                           <MenuItem value={"O"}>Other</MenuItem>
@@ -311,29 +321,38 @@ const InsStudentDetailView = () => {
                       />
                     </Grid>
                     <Grid item xs={3}>
-                      <Select
-                        labelId="demo-multiple-name-label"
-                        id="demo-multiple-name"
-                        fullWidth
-                        value={formData && formData.batch_id || ""}
-                        onChange={(e) => {
-                          const select = batches?.find(
-                            (x) => x.id === e.target.value
-                          );
-                          setFormData((state) => ({
-                            ...state,
-                            batch_id: select.id,
-                          }));
-                        }}
-                        label="Batch Name"
-                      >
-                        <MenuItem disabled value="S"> Select</MenuItem>
-                        {batches && batches?.map((batch) => (
-                          <MenuItem key={batch.id} value={batch.id}>
-                            {batch.name}
+                      <FormControl fullWidth >
+                        <InputLabel id="demo-simple-select-label">
+                          Batch Name
+                        </InputLabel>
+                        <Select onClick={()=>setFetchBatches(true)}
+                          labelId="demo-multiple-name-label"
+                          id="demo-multiple-name"
+                          fullWidth
+                          value={(formData && formData.batch_id) || ""}
+                          onChange={(e) => {
+                            const select = batches.batch?.find(
+                              (x) => x.id === e.target.value
+                            );
+                            setFormData((state) => ({
+                              ...state,
+                              batch_id: select.id,
+                            }));
+                          }}
+                          label="Batch Name"
+                        >
+                          <MenuItem disabled value="S">
+                            {" "}
+                            Select
                           </MenuItem>
-                        ))}
-                      </Select>
+                          {batches &&
+                            batches.batch?.map((batch) => (
+                              <MenuItem key={batch.id} value={batch.id}>
+                                {batch.name}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
                     </Grid>
                     <Typography variant="h6" padding={2}>
                       Student Profile Details
@@ -386,9 +405,9 @@ const InsStudentDetailView = () => {
               </Grid>
             </form>
           </Paper>
-          </>
+        </>
       )}
-      </SidebarComp>
+    </SidebarComp>
   );
 }
 

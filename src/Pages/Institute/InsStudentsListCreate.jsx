@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Avatar, Box, Button, Container, InputLabel, MenuItem, Select,Snackbar,TextField, Typography } from '@mui/material';
+import { Alert, AlertTitle, Avatar, Box, Button, Container, InputLabel, MenuItem, Pagination, Select,Snackbar,TextField, Typography } from '@mui/material';
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 import SearchBar, { Search, StyledInputBase } from '../../Components/SearchBar';
 import TableComp from '../../Components/TableComp';
@@ -16,14 +16,21 @@ import { createStudent, listStudents } from '../../Redux/Institute/InsStudents/I
 import { listBatches } from '../../Redux/Institute/InsBatches/InsBatchesListCreateAction';
 
 let tableHead = [
-  {key:1,name:"Student Code"},
-  {key:2,name:"Student Name"},
-  {key:3,name:"Batch Number"},
+  {
+    key: 1,
+    profile_picture: "Student Picture",
+    student_id: "Student ID",
+    name: "Student Name",
+    email: "Student Email",
+    phone_number: "Student Phone Number",
+    gender: "Student Gender",
+  },
 ];
 
 const InsStudentsListCreate = () => {
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch()
+    const [page, setPage] = useState(1);
     const { students, loading , error} = useSelector(
       (state) => state.insStudentsListCreate
     );
@@ -62,9 +69,9 @@ const InsStudentsListCreate = () => {
     }
 
     useEffect(() => {
-      dispatch(listStudents({api,searchQuery,sortQuery}))
+      dispatch(listStudents({api,searchQuery,sortQuery,page}))
      
-    }, [dispatch,searchQuery,sortQuery]);
+    }, [dispatch,searchQuery,sortQuery,page]);
 
     useEffect(()=>{
       if (open){
@@ -178,7 +185,20 @@ const InsStudentsListCreate = () => {
             loading ? (
               <SpinnerComp />
             ) : (
-            <TableComp data={students} columns={tableHead} />
+              <>
+            <TableComp data={students.students} columns={tableHead} />
+            {students && students.total_page > 0 ? (
+                <Box mx={"auto"} marginTop={2} textAlign="center">
+                  <Pagination
+                    variant="outlined"
+                    page={page}
+                    onChange={(event, page) => setPage(page)}
+                    count={students && students.total_page}
+                    color="primary"
+                  />
+                </Box>
+              ) : null}
+                </>
             )
           )}
 
@@ -265,7 +285,7 @@ const InsStudentsListCreate = () => {
                 value={formik.values.batch_id}
                 onChange={formik.handleChange}
               >
-                {batches && batches?.map((batch) => (
+                {batches && batches.batch?.map((batch) => (
                   <MenuItem key={batch.id} value={batch.id}>
                     {batch.name}
                   </MenuItem>

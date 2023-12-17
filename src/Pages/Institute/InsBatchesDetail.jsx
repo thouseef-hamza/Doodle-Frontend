@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import SidebarComp from "../../Components/Sidebar/SidebarComp"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -12,15 +12,20 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { DateField, DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { listStudents } from "../../Redux/Institute/InsStudents/InsStudentListCreateAction";
 // import { DateAdapter } from "../../utils/FormatDate/DateAdapter";
 
 const InsBatchesDetail = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [page,setPage]=useState(1)
   const [formData,setFormData]=useState([])
   const { batchDetails, loading } = useSelector(
     (state) => state.insBatchDetail
   );
+  console.log(batchDetails.id);
+  const { students } = useSelector((state) => state.insStudentsListCreate);
+  const [showStudents,setShowStudents] = useState(true)
   const api= useAxios()
 
   const {id} = useParams()
@@ -39,6 +44,12 @@ const InsBatchesDetail = () => {
       fee_penalty: batchDetails.fee_penalty,
     });
   },[batchDetails])
+  useEffect(()=>{
+    if(showStudents){
+      dispatch(listStudents({ api, batchId: id }));
+    }
+  },[showStudents])
+  console.log(students);
   const handleInputChange = (e) => {
     const {name, value} = e.target
     setFormData({
@@ -78,7 +89,7 @@ const InsBatchesDetail = () => {
               {batchDetails.name}
             </Typography>
           </Box>
-          <Paper>
+          <Paper sx={{ marginBottom: 3 }}>
             <Box
               style={{
                 display: "flex",
@@ -154,12 +165,18 @@ const InsBatchesDetail = () => {
                     }
                     value={dayjs(formData.scheduled_date)}
                     format="DD-MM-YYYY"
-                    slotProps={(params) => (
-                      <TextField
-                        value={formData && formData.scheduled_date}
-                        {...params}
-                      />
-                    )}
+                    slotProps={(params) => <TextField {...params} />}
+                  />
+                </Grid>
+                <Grid item sm={3}>
+                  <DatePicker
+                    label="Last Date For Fees"
+                    onChange={(date) =>
+                      setFormData({ ...formData, due_date: date })
+                    }
+                    value={dayjs(formData.due_date)}
+                    format="DD-MM-YYYY"
+                    slotProps={(params) => <TextField {...params} />}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>
@@ -195,6 +212,92 @@ const InsBatchesDetail = () => {
               </Grid>
             </form>
           </Paper>
+          {showStudents && students && students.students.length > 0 ? (
+            <>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                marginBottom={1}
+              >
+                <Typography variant="h5">Student List</Typography>
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowStudents(!showStudents)}
+                >
+                  Hide Students
+                </Button>
+              </Box>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Student</TableCell>
+                      <TableCell>Student ID</TableCell>
+                      <TableCell align="left">Full Name</TableCell>
+                      <TableCell align="left">Email</TableCell>
+                      <TableCell align="left">Phone Number</TableCell>
+                      <TableCell align="left">Date of Birth</TableCell>
+                      <TableCell align="left">Gender</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {students &&
+                      students.students.map((student) => (
+                        <TableRow
+                          key={student.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell align="left">
+                            <Avatar
+                              alt={`${student.first_name}`}
+                              src={`${student.student_profile?.profile_picture}`}
+                            />
+                          </TableCell>
+                          <TableCell align="left">
+                            {student.unique_code}
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            {student.first_name + " " + student.last_name}
+                          </TableCell>
+                          <TableCell align="left">{student.email}</TableCell>
+                          <TableCell align="left">
+                            {student.phone_number}
+                          </TableCell>
+                          <TableCell align="left">
+                            {student?.student_profile?.date_of_birth}
+                          </TableCell>
+                          <TableCell align="left">
+                            {student?.student_profile?.gender?.replace(
+                              /\b\w/g,
+                              (match) => match.toUpperCase()
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {students.total_page > 0 ? (
+                <Box mx={"auto"} marginTop={2} textAlign="center">
+                  <Pagination
+                    variant="outlined"
+                    page={page}
+                    onChange={(event, page) => setPage(page)}
+                    count={students.total_page}
+                    color="primary"
+                  />
+                </Box>
+              ) : null}
+            </>
+          ) : (
+            <Typography variant="h5" sx={{ marginTop: 4 }}>
+              <Button variant="outlined" onClick={() => setShowStudents(true)}>
+                Show Students
+              </Button>
+            </Typography>
+          )}
         </>
       )}
     </SidebarComp>

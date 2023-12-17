@@ -3,6 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, Chip, Grid, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function CardComp({id,name,description,start_date,batch_fee,fee_penalty,is_scheduled,scheduled_date}) {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ export default function CardComp({id,name,description,start_date,batch_fee,fee_p
               </Typography>
               <Stack direction="row" spacing={1}>
                 <Chip
-                  label={`Started ${start_date}`}
+                  label={`Started ${dayjs(start_date).format("DD-MM-YYYY")}`}
                   color="primary"
                   size="small"
                   variant="outlined"

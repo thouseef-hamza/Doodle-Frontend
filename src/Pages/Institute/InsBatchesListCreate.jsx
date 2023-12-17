@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Grid, Typography,TextField, Select, MenuItem, Menu } from '@mui/material';
+import { Avatar, Box, Button, Container, Grid, Typography,TextField, Select, MenuItem, Menu, Pagination } from '@mui/material';
 import SidebarComp from '../../Components/Sidebar/SidebarComp';
 import CardComp from '../../Components/CardComp';
 import {  useEffect, useState } from 'react';
@@ -18,21 +18,18 @@ const InsBatchesListCreate = () => {
   const [open,setOpen] = useState(false)
   const [searchQuery,setSearchQuery] = useState("")
   const [sortQuery, setSortQuery] = useState("");
+  const [page,setPage]=useState(1)
   const dispatch = useDispatch()
   const [notification,setNotification] = useState(false)
   const { batches, loading } = useSelector(
     (state) => state.insBatchesListCreate
   );
-  const [formData, setFormData] = useState({
-    name: "",
-    start_date: new Date(),
-    description: "",
-  });
+  const [formData, setFormData] = useState({});
   let api = useAxios()  
 
   useEffect(() => {
-      dispatch(listBatches({ api, searchQuery,sortQuery,notification }));
-  }, [searchQuery,sortQuery,notification]);
+      dispatch(listBatches({ api, searchQuery,sortQuery,notification,page }));
+  }, [searchQuery,sortQuery,notification,page]);
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -171,7 +168,7 @@ const InsBatchesListCreate = () => {
                 rowSpacing={1}
                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
               >
-                {batches.map((item) => (
+                {batches.batch.map((item) => (
                   <CardComp
                     key={item.id}
                     id={item.id}
@@ -185,9 +182,22 @@ const InsBatchesListCreate = () => {
                   />
                 ))}
               </Grid>
+              {batches && batches.total_page > 0 ? (
+                <Box mx={"auto"} marginTop={2} textAlign="center">
+                  <Pagination
+                    variant="outlined"
+                    page={page}
+                    onChange={(event, page) => setPage(page)}
+                    count={batches && batches.total_page}
+                    color="primary"
+                  />
+                </Box>
+              ) : null}
+
               <StudentAddComp open={open} title={"Batch Form Filling"}>
                 <form onSubmit={handleSubmit}>
                   <TextField
+                    required
                     id="outlined-basic"
                     label="Batch Name"
                     type="text"
@@ -197,8 +207,28 @@ const InsBatchesListCreate = () => {
                     margin="normal"
                     onChange={handleChange}
                   />
+                  <TextField
+                    id="outlined-basic"
+                    label="Batch Fees"
+                    type="number"
+                    variant="outlined"
+                    name="batch_fees"
+                    fullWidth
+                    margin="normal"
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    id="outlined-basic"
+                    label="Fee Penalty"
+                    type="number"
+                    variant="outlined"
+                    name="fee_penalty"
+                    fullWidth
+                    margin="normal"
+                    onChange={handleChange}
+                  />
                   <DatePicker
-                  sx={{width:"100%"}}
+                    sx={{ width: "100%" }}
                     label="Start Date"
                     format="DD-MM-YYYY"
                     onChange={(date) =>

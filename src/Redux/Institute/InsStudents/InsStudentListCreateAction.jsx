@@ -25,7 +25,7 @@ export const createStudent = createAsyncThunk(
 export const listStudents = createAsyncThunk(
   "listStudents",
   async (args, { rejectWithValue }) => {
-    const { api,searchQuery,sortQuery } = args;
+    const { api, searchQuery, sortQuery, batchId,page } = args;
     let endpoint = "students/";
     const queryParams = [];
     if (searchQuery) {
@@ -34,11 +34,19 @@ export const listStudents = createAsyncThunk(
     if (sortQuery) {
       queryParams.push(`sort=${sortQuery}`);
     }
+    if (page) {
+      queryParams.push(`page=${page}`);
+    }
     if (queryParams.length > 0) {
       endpoint += "?" + queryParams.join("&");
     }
+    if (batchId) {
+      endpoint += `?batch=${batchId}`;
+      console.log(endpoint);
+    }
     try {
       const response = await api.get(INS_BASE_URL + endpoint);
+      console.log(response.data);
       const result = await response.data;
       return result;
     } catch (error) {
