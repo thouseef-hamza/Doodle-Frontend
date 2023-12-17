@@ -29,7 +29,13 @@ const InsStudentsListCreate = () => {
     );
     const {batches} = useSelector(state=>state.insBatchesListCreate)
     let api = useAxios();
-    const [search,setSearch] = useState("")
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortQuery, setSortQuery] = useState("");
+
+    const handleSearchChange = (e) => {
+      setSearchQuery(e.target.value);
+      setSortQuery(null);
+    };
 
     const formik = useFormik({
       initialValues: {
@@ -55,22 +61,16 @@ const InsStudentsListCreate = () => {
       );
     }
 
-    const handleSearch = (e)=> {
-      e.preventDefault()
-      dispatch(listStudents({api,search}))
-    }
-    const handleSearchChange = (e) => {
-      setSearch(`?search=${e.target.value}`);
-      console.log(e.target.value);
-      if (e.target.value === "") {
-        dispatch(searchBatches({ api, search }));
-      }
-    };
-     
     useEffect(() => {
-      dispatch(listStudents({api:api,search}))
-      dispatch(listBatches({api:api}))
-    }, [dispatch]);
+      dispatch(listStudents({api,searchQuery,sortQuery}))
+     
+    }, [dispatch,searchQuery,sortQuery]);
+
+    useEffect(()=>{
+      if (open){
+        dispatch(listBatches({ api: api }));
+      }
+    },[open])
     
   const handleClose = () => {
     setOpen(false);
@@ -127,11 +127,10 @@ const InsStudentsListCreate = () => {
           <Container
             sx={{ display: "flex", alignItems: "center", marginLeft: -3 }}
           >
-            <form onSubmit={handleSearch}>
             <TextField
-              onChange={handleSearchChange}
               id="outlined-size-small"
-              value={search.slice(9)}
+              value={searchQuery}
+              onChange={handleSearchChange}
               placeholder='Search...'
               size="small"
             />  
@@ -142,7 +141,6 @@ const InsStudentsListCreate = () => {
             >
               Search
             </Button>
-            </form>
             {/* </Search> */}
             <Button
               onClick={() => setOpen(true)}
@@ -237,7 +235,7 @@ const InsStudentsListCreate = () => {
                 id="outlined-basic"
                 required
                 label="Phonenumber"
-                type="number"
+                type="text"
                 variant="outlined"
                 value={formik.values.phone_number}
                 onChange={formik.handleChange}

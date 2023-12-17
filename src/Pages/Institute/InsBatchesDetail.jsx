@@ -8,12 +8,11 @@ import SpinnerComp from "../../Components/SpinnerComp";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteBatchDetail, editBatchDetail, getBatchDetail } from "../../Redux/Institute/InsBatches/InsBatchesDetailAction";
 import { ToastContainer, toast } from "react-toastify";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { DateField, DesktopDatePicker } from "@mui/x-date-pickers";
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { formatDate } from "../../utils/FormatDate/format-date";
+import { DateField, DateTimePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+// import { DateAdapter } from "../../utils/FormatDate/DateAdapter";
 
 const InsBatchesDetail = () => {
   const navigate = useNavigate()
@@ -22,23 +21,24 @@ const InsBatchesDetail = () => {
   const { batchDetails, loading } = useSelector(
     (state) => state.insBatchDetail
   );
-  console.log("kiti",batchDetails);
   const api= useAxios()
 
   const {id} = useParams()
-
+  console.log(formData);
   useEffect(()=>{
     dispatch(getBatchDetail({id:id,api:api}))
   },[])
 
   useEffect(()=>{
     setFormData({
-      name:batchDetails.name,
-      start_date:batchDetails.start_date,
-      description:batchDetails.description
-    })
+      name: batchDetails.name,
+      description: batchDetails.description,
+      start_date: batchDetails.start_date,
+      scheduled_date: batchDetails.scheduled_date,
+      batch_fees: batchDetails.batch_fees,
+      fee_penalty: batchDetails.fee_penalty,
+    });
   },[batchDetails])
-
   const handleInputChange = (e) => {
     const {name, value} = e.target
     setFormData({
@@ -46,8 +46,6 @@ const InsBatchesDetail = () => {
       [name] : value
     })
   }
-  console.log(formData)
-
   const handleSubmit = (e) => {
     e.preventDefault()
     alert("Are you sure want to update")
@@ -81,7 +79,14 @@ const InsBatchesDetail = () => {
             </Typography>
           </Box>
           <Paper>
-            <Box style={{ display: "flex", justifyContent: "space-between" }}>
+            <Box
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: 10,
+                marginLeft: 8,
+              }}
+            >
               <Typography variant="h6">Batch Details</Typography>
               <Button
                 variant="contained"
@@ -93,7 +98,7 @@ const InsBatchesDetail = () => {
             </Box>
             <form onSubmit={handleSubmit}>
               <Grid container padding={2} spacing={2}>
-                <Grid item xs={12} sm={4}>
+                <Grid item sm={4}>
                   <TextField
                     fullWidth
                     id="outlined-basic-1"
@@ -104,35 +109,57 @@ const InsBatchesDetail = () => {
                     onChange={handleInputChange}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    fullWidth
-                    id="outlined-basic-2"
+                <Grid item sm={2}>
+                  <DatePicker
                     label="Start Date"
-                    variant="outlined"
+                    format="DD-MM-YYYY"
+                    onChange={(date) =>
+                      setFormData({ ...formData, start_date: date })
+                    }
+                    value={dayjs(formData.start_date)}
                     name="start_date"
-                    type="date"
-                    format="YYYY-DD-MM"
-                    value={formData.start_date}
-                    onChange={handleInputChange}
+                    views={["year", "month", "day"]}
+                    slotProps={(props) => <TextField {...props} />}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  {/* <TextField
+                <Grid item sm={3}>
+                  <TextField
+                    required
                     fullWidth
-                    id="outlined-basic-3"
-                    label="Fee Reminder"
-                    variant="outlined"
-                    name="scheduled_date" 
-                    type="date"
-                  /> */}
+                    label="Batch Fees"
+                    value={formData.batch_fees}
+                    name="batch_fees"
+                    onChange={(e) =>
+                      setFormData({ ...formData, batch_fees: e.target.value })
+                    }
+                    type="number"
+                  />
+                </Grid>
+                <Grid item sm={3}>
+                  <TextField
+                    label="Fee Penalty"
+                    value={formData.fee_penalty}
+                    name="fee_penalty"
+                    onChange={(e) =>
+                      setFormData({ ...formData, fee_penalty: e.target.value })
+                    }
+                    type="number"
+                  />
+                </Grid>
+                <Grid item sm={3}>
                   <DatePicker
-                    label="Dash Seperator"
-                    value={formData.scheduled_date}
+                    label="Fee Scheduled Date"
                     onChange={(date) =>
                       setFormData({ ...formData, scheduled_date: date })
                     }
-                    format="YYYY-MM-DD"
+                    value={dayjs(formData.scheduled_date)}
+                    format="DD-MM-YYYY"
+                    slotProps={(params) => (
+                      <TextField
+                        value={formData && formData.scheduled_date}
+                        {...params}
+                      />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={12}>

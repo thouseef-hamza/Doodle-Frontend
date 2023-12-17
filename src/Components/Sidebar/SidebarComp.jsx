@@ -353,7 +353,7 @@ const SidebarComp =  React.memo(({children})=> {
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
-              onClick={() => navigate("/institute/task")}
+              onClick={() => navigate("/institute/payments")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
@@ -387,7 +387,7 @@ const SidebarComp =  React.memo(({children})=> {
               />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          {/* <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
@@ -424,8 +424,8 @@ const SidebarComp =  React.memo(({children})=> {
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          </ListItem> */}
+          {/* <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
@@ -462,7 +462,7 @@ const SidebarComp =  React.memo(({children})=> {
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               onMouseEnter={() => setOpen(true)}

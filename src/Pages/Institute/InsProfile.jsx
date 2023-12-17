@@ -107,7 +107,7 @@ const InsProfile = () => {
         });
       });
   };
-
+console.log(formData);
   return (
         <SidebarComp>
       {loading ? (

@@ -11,6 +11,8 @@ import { createBatches, listBatches } from '../../Redux/Institute/InsBatches/Ins
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 const InsBatchesListCreate = () => {
   const [open,setOpen] = useState(false)
@@ -23,7 +25,7 @@ const InsBatchesListCreate = () => {
   );
   const [formData, setFormData] = useState({
     name: "",
-    start_date: null,
+    start_date: new Date(),
     description: "",
   });
   let api = useAxios()  
@@ -31,7 +33,7 @@ const InsBatchesListCreate = () => {
   useEffect(() => {
       dispatch(listBatches({ api, searchQuery,sortQuery,notification }));
   }, [searchQuery,sortQuery,notification]);
-  console.log(notification);
+
   const handleSubmit = async e => {
     e.preventDefault()
     dispatch(createBatches({api : api,values:formData,setOpen:setOpen,toast:toast,open:open}))
@@ -88,7 +90,7 @@ const InsBatchesListCreate = () => {
         </Button>
         {/* </form> */}
         <Button
-        sx={{marginLeft:1}}
+          sx={{ marginLeft: 1 }}
           onClick={() => setNotification(!notification)}
           variant={notification ? "contained" : "outlined"}
         >
@@ -128,6 +130,17 @@ const InsBatchesListCreate = () => {
             Fee (High to Low)
           </MenuItem>
         </Menu>
+        <Button
+          onClick={() => setOpen(true)}
+          variant="outlined"
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          Add Batch
+        </Button>
       </Container>
       {loading ? (
         <SpinnerComp />
@@ -184,15 +197,16 @@ const InsBatchesListCreate = () => {
                     margin="normal"
                     onChange={handleChange}
                   />
-                  <h5>Start Date</h5>
-                  <TextField
-                    id="outlined-basic"
+                  <DatePicker
+                  sx={{width:"100%"}}
+                    label="Start Date"
+                    format="DD-MM-YYYY"
+                    onChange={(date) =>
+                      setFormData({ ...formData, start_date: date })
+                    }
+                    value={dayjs(formData.start_date)}
                     name="start_date"
-                    type="date"
-                    value={formData.start_date}
-                    onChange={handleChange}
-                    sx={{ width: "100%" }}
-                    fullWidth
+                    slotProps={(props) => <TextField fullWidth {...props} />}
                   />
                   <TextField
                     id="outlined-basic"

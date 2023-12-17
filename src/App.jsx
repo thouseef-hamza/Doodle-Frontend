@@ -24,139 +24,141 @@ import StuDashboard from "./Pages/Student/StuDashboard";
 import StuProfile from "./Pages/Student/StuProfile";
 import StudentLogin from "./Pages/Student/StudentLogin";
 import InstituteRoutes from "./routers/InstituteRoutes";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import InsPayments from "./Pages/Institute/InsPayments";
 
 function App() {
   return (
-    <Routes>
-      <Route element={<HomePage />} path="/" exact />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Routes>
+        <Route element={<HomePage />} path="/" exact />
+        {/* Authentication Action  */}
+        <Route element={<RegisterInterface />} path="/register" />
+        <Route element={<LoginInterface />} path="/login" />
+        <Route element={<InstituteRegister />} path="/institute/register" />
+        <Route element={<InstituteLogin />} path="/institute/login" />
+        <Route
+          element={<OTPAuthentication />}
+          path="/verifyotp/:user_id/:phone_number"
+        />
+        {/* Institute Actions */}
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsHomePage />
+            </InstituteRoutes>
+          }
+          path="/institute/home"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsDashboard />
+            </InstituteRoutes>
+          }
+          path="/institute/dashboard"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsInbox />
+            </InstituteRoutes>
+          }
+          path="/institute/inbox"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsProfile />
+            </InstituteRoutes>
+          }
+          path="/institute/profile"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsBatchesListCreate />
+            </InstituteRoutes>
+          }
+          path="/institute/batches"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsBatchesDetail />
+            </InstituteRoutes>
+          }
+          path="/institute/batch/:id"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsStudentsListCreate />
+            </InstituteRoutes>
+          }
+          path="/institute/students"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsStudentDetailView />
+            </InstituteRoutes>
+          }
+          path="/institute/student/:id"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsAccount />
+            </InstituteRoutes>
+          }
+          path="/institute/account"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsTaskManagement />
+            </InstituteRoutes>
+          }
+          path="/institute/task"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsTaskDetailView />
+            </InstituteRoutes>
+          }
+          path="/institute/task/detail/:id"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsClassroomManagement />
+            </InstituteRoutes>
+          }
+          path="/institute/classroom"
+        />
+        <Route
+          element={<InsClassroomDetailView />}
+          path="/institute/classroom/detail"
+        />
+        <Route
+          element={
+            <InstituteRoutes>
+              <InsChatroom />
+            </InstituteRoutes>
+          }
+          path="/institute/chatroom"
+        />
+        <Route element={<InsPayments />} path="/institute/payments" />
 
-      {/* Authentication Action  */}
-      <Route element={<RegisterInterface />} path="/register" />
-      <Route element={<LoginInterface />} path="/login" />
-      <Route element={<InstituteRegister />} path="/institute/register" />
-      <Route element={<InstituteLogin />} path="/institute/login" />
-      <Route
-        element={<OTPAuthentication />}
-        path="/verifyotp/:user_id/:phone_number"
-      />
-
-      {/* Institute Actions */}
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsHomePage />
-          </InstituteRoutes>
-        }
-        path="/institute/home"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsDashboard />
-          </InstituteRoutes>
-        }
-        path="/institute/dashboard"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsInbox />
-          </InstituteRoutes>
-        }
-        path="/institute/inbox"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsProfile />
-          </InstituteRoutes>
-        }
-        path="/institute/profile"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsBatchesListCreate />
-          </InstituteRoutes>
-        }
-        path="/institute/batches"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsBatchesDetail />
-          </InstituteRoutes>
-        }
-        path="/institute/batch/:id"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsStudentsListCreate />
-          </InstituteRoutes>
-        }
-        path="/institute/students"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsStudentDetailView />
-          </InstituteRoutes>
-        }
-        path="/institute/student/:id"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsAccount />
-          </InstituteRoutes>
-        }
-        path="/institute/account"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsTaskManagement />
-          </InstituteRoutes>
-        }
-        path="/institute/task"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsTaskDetailView />
-          </InstituteRoutes>
-        }
-        path="/institute/task/detail/:id"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsClassroomManagement />
-          </InstituteRoutes>
-        }
-        path="/institute/classroom"
-      />
-      <Route
-        element={
-            <InsClassroomDetailView />
-        }
-        path="/institute/classroom/detail"
-      />
-      <Route
-        element={
-          <InstituteRoutes>
-            <InsChatroom />
-          </InstituteRoutes>
-        }
-        path="/institute/chatroom"
-      />
-
-      {/* Student Action */}
-      <Route element={<StuDashboard />} path="/student/dashboard" />
-      <Route element={<StudentLogin />} path="/student/login" />
-      <Route element={<StuProfile />} path="/student/profile" />
-    </Routes>
+        {/* Student Action */}
+        <Route element={<StuDashboard />} path="/student/dashboard" />
+        <Route element={<StudentLogin />} path="/student/login" />
+        <Route element={<StuProfile />} path="/student/profile" />
+      </Routes>
+    </LocalizationProvider>
   );
 }
 
