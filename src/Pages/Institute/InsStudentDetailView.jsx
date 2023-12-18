@@ -12,6 +12,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import { listBatches } from '../../Redux/Institute/InsBatches/InsBatchesListCreateAction';
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from 'axios';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 const InsStudentDetailView = () => {
      const navigate=useNavigate()
@@ -44,27 +46,30 @@ const InsStudentDetailView = () => {
         last_name: studentDetail.last_name,
         email: studentDetail.email,
         phone_number: studentDetail.phone_number,
-        unique_code:studentDetail.unique_code,
+        unique_code: studentDetail.unique_code,
         student_profile: {
           address: studentDetail.student_profile?.address,
           gender: studentDetail.student_profile?.gender,
           city: studentDetail.student_profile?.city,
-          date_of_birth: studentDetail.student_profile?.date_of_birth,
+          date_of_birth: new Date(studentDetail.student_profile?.date_of_birth),
           postal_code: studentDetail.student_profile?.postal_code,
           profile_picture: studentDetail.student_profile?.profile_picture,
           state: studentDetail.student_profile?.state,
         },
         batch_id: studentDetail.student_profile?.batch?.id,
       });
-     },[studentDetail])
+    },[studentDetail])
+    console.log(formData);
+     console.log(formData);
       const handleInputChange = (event) => {
         setChanges(false)
         const { name, value } = event.target;
         setFormData((state) => {
         const newState = { ...state };
-          if (name === "address" || name === "city" || name === "date_of_birth" || name === "gender" || name === "postal_code" || name === "profile_picture" || name === "state") {
+          if (name === "address" || name === "city" || name === "gender" || name === "postal_code" || name === "profile_picture" || name === "state") {
             newState.student_profile = { ...newState.student_profile, [name]: value };
-          } else if (name === "batch_id") {
+          
+          }else if (name === "batch_id") {
               newState[name]= value
           } else {
             newState[name] = value;
@@ -299,7 +304,7 @@ const InsStudentDetailView = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={3}>
-                      <TextField
+                      {/* <TextField
                         fullWidth
                         label="Date of Birth"
                         variant="outlined"
@@ -308,6 +313,20 @@ const InsStudentDetailView = () => {
                           formData && formData.student_profile.date_of_birth
                         }
                         onChange={handleInputChange}
+                      /> */}
+                      <DatePicker
+                      disableFuture
+                        sx={{ width: "100%" }}
+                        label="Date Of Birth"
+                        format="DD-MM-YYYY"
+                        onChange={(date)=>setFormData((prevState)=>({...prevState,student_profile:{...prevState.student_profile,["date_of_birth"]:date}}))}
+                        value={dayjs(
+                          formData && formData.student_profile.date_of_birth
+                        )}
+                        name="date_of_birth"
+                        slotProps={(props) => (
+                          <TextField  {...props} />
+                        )}
                       />
                     </Grid>
                     <Grid item xs={3}>
@@ -321,11 +340,12 @@ const InsStudentDetailView = () => {
                       />
                     </Grid>
                     <Grid item xs={3}>
-                      <FormControl fullWidth >
+                      <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-label">
                           Batch Name
                         </InputLabel>
-                        <Select onClick={()=>setFetchBatches(true)}
+                        <Select
+                          onClick={() => setFetchBatches(true)}
                           labelId="demo-multiple-name-label"
                           id="demo-multiple-name"
                           fullWidth

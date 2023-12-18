@@ -37,13 +37,13 @@ export const listStudents = createAsyncThunk(
     if (page) {
       queryParams.push(`page=${page}`);
     }
+    if (batchId) {
+      queryParams.push(`batch=${batchId}`);
+    }
     if (queryParams.length > 0) {
       endpoint += "?" + queryParams.join("&");
     }
-    if (batchId) {
-      endpoint += `?batch=${batchId}`;
-      console.log(endpoint);
-    }
+    console.log(endpoint);
     try {
       const response = await api.get(INS_BASE_URL + endpoint);
       console.log(response.data);

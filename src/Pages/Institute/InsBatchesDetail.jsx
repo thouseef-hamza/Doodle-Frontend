@@ -1,16 +1,15 @@
-import { Avatar, Box, Button, Divider, Grid, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, Divider, Grid, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import SidebarComp from "../../Components/Sidebar/SidebarComp"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useAxios from "../../Hooks/useAxios";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import SpinnerComp from "../../Components/SpinnerComp";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteBatchDetail, editBatchDetail, getBatchDetail } from "../../Redux/Institute/InsBatches/InsBatchesDetailAction";
 import { ToastContainer, toast } from "react-toastify";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { DateField, DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { listStudents } from "../../Redux/Institute/InsStudents/InsStudentListCreateAction";
 // import { DateAdapter } from "../../utils/FormatDate/DateAdapter";
@@ -18,21 +17,21 @@ import { listStudents } from "../../Redux/Institute/InsStudents/InsStudentListCr
 const InsBatchesDetail = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const [page,setPage]=useState(1)
+  const [page,setPage] = useState(1)
   const [formData,setFormData]=useState([])
   const { batchDetails, loading } = useSelector(
     (state) => state.insBatchDetail
   );
-  console.log(batchDetails.id);
+
+  const [showStudents,setShowStudents] = useState(false)
   const { students } = useSelector((state) => state.insStudentsListCreate);
-  const [showStudents,setShowStudents] = useState(true)
+  const studentLoading = useSelector((state) => state.insStudentsListCreate.loading)
   const api= useAxios()
 
   const {id} = useParams()
-  console.log(formData);
-  useEffect(()=>{
-    dispatch(getBatchDetail({id:id,api:api}))
-  },[])
+  useEffect(() => {
+    dispatch(getBatchDetail({ id: id, api: api }));
+  }, [id]);
 
   useEffect(()=>{
     setFormData({
@@ -46,10 +45,11 @@ const InsBatchesDetail = () => {
   },[batchDetails])
   useEffect(()=>{
     if(showStudents){
-      dispatch(listStudents({ api, batchId: id }));
+      dispatch(listStudents({ api:api, batchId: id,page }));
     }
   },[showStudents])
-  console.log(students);
+  
+  
   const handleInputChange = (e) => {
     const {name, value} = e.target
     setFormData({
@@ -62,6 +62,7 @@ const InsBatchesDetail = () => {
     alert("Are you sure want to update")
     dispatch(editBatchDetail({id:id,values:formData,toast:toast,api:api}))
   }
+  
 
   return (
     <SidebarComp>
@@ -212,8 +213,10 @@ const InsBatchesDetail = () => {
               </Grid>
             </form>
           </Paper>
-          {showStudents && students && students.students.length > 0 ? (
-            <>
+          {showStudents && studentLoading ?
+          <LinearProgress color="primary" />
+                : showStudents && !studentLoading && students && students.students?.length > 0 ? (
+          <>
               <Box
                 display={"flex"}
                 justifyContent={"space-between"}
@@ -279,7 +282,7 @@ const InsBatchesDetail = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {students.total_page > 0 ? (
+              {students && students.students?.total_page > 0 ? (
                 <Box mx={"auto"} marginTop={2} textAlign="center">
                   <Pagination
                     variant="outlined"
@@ -291,9 +294,9 @@ const InsBatchesDetail = () => {
                 </Box>
               ) : null}
             </>
-          ) : (
+          ) : ( 
             <Typography variant="h5" sx={{ marginTop: 4 }}>
-              <Button variant="outlined" onClick={() => setShowStudents(true)}>
+              <Button variant="outlined" onClick={() => setShowStudents(!showStudents)}>
                 Show Students
               </Button>
             </Typography>

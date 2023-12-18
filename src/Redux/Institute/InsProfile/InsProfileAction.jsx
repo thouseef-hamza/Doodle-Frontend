@@ -24,7 +24,7 @@ export const editInsProfile = createAsyncThunk(
                  values
                );
                if (response.status === 200){
-                    toast.success("Student Updated Successfully")
+                    toast.success("Profile Updated Successfully")
                }
                return response.data
           } catch (error) {

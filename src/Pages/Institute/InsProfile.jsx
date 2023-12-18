@@ -41,10 +41,12 @@ const InsProfile = () => {
       },
     });
   },[insDetails])
+  console.log(insDetails);
+  console.log(formData);
   const fileInputRef = useRef(null);
   const handleSubmit = (e) => {
     e.preventDefault()
-     window.alert("Are You Sure Want To Update Student");
+     window.alert("Are You Sure Want To Update Profile");
      e.preventDefault();
      dispatch(
        editInsProfile({
@@ -109,12 +111,12 @@ const InsProfile = () => {
   };
 console.log(formData);
   return (
-        <SidebarComp>
+    <SidebarComp>
       {loading ? (
         <SpinnerComp />
       ) : (
         <>
-          <ToastContainer/>
+          <ToastContainer />
           <Box>
             <Typography
               color={"#1F2D5A"}
@@ -231,6 +233,7 @@ console.log(formData);
                   </Typography>
                   <Grid item xs={12}>
                     <TextField
+                    required
                       fullWidth
                       label="Address"
                       name="address"
@@ -243,6 +246,7 @@ console.log(formData);
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
+                    required
                       fullWidth
                       label="City"
                       variant="outlined"
@@ -254,6 +258,7 @@ console.log(formData);
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
+                    required
                       fullWidth
                       label="State"
                       name="state"
@@ -264,6 +269,7 @@ console.log(formData);
                   </Grid>
                   <Grid item xs={4}>
                     <TextField
+                    required
                       fullWidth
                       label="Postal Code"
                       name="postal_code"
@@ -288,9 +294,9 @@ console.log(formData);
               </Grid>
             </Grid>
           </form>
-          </>
+        </>
       )}
-      </SidebarComp>
+    </SidebarComp>
   );
 }
 

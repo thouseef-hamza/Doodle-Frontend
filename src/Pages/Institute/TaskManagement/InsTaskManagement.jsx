@@ -301,7 +301,7 @@ const InsTaskManagement = () => {
                       }
                       input={<OutlinedInput label="Select Students" />}
                     >
-                      {students && students?.map((student) => (
+                      {students && students.students?.map((student) => (
                         <MenuItem key={student.id} value={student.id}>
                           {student.first_name + " " + student.last_name}
                         </MenuItem>
@@ -329,7 +329,7 @@ const InsTaskManagement = () => {
                       }
                       input={<OutlinedInput label="Select Batches" />}
                     >
-                      {batches && batches.map((batch) => (
+                      {batches && batches.batch?.map((batch) => (
                         <MenuItem key={batch.id} value={batch.id}>
                           {batch.name}
                         </MenuItem>
