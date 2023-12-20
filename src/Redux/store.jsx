@@ -5,14 +5,21 @@ import  InsBatchesListCreateSlice  from "./Institute/InsBatches/InsBatchesListCr
 import InsBatchesDetailSlice from "./Institute/InsBatches/InsBatchesDetailSlice";
 import InsProfileSlice from "./Institute/InsProfile/InsProfileSlice";
 import InsTasksListCreateSlice from "./Institute/InsTasks/InsTasksListCreateSlice";
+import InsTaskDetailSlice from "./Institute/InsTasks/InsTaskDetailSlice";
+import InsStudTaskAssignmentDetailSlice from "./Institute/InsTaskAssignment/InsStudTaskAssignmentDetailSlice";
+import InsStudTaskAssignmentListSlice from "./Institute/InsTaskAssignment/InsStudTaskAssignmentListSlice";
+
 
 export const store = configureStore({
   reducer: {
     insStudentsListCreate: InsStudentsListCreateSlice,
     insStudentDetail: InsStudentDetailSlice,
     insBatchesListCreate: InsBatchesListCreateSlice,
-    insBatchDetail:InsBatchesDetailSlice,
-    insProfile:InsProfileSlice,
-    insTasksListCreate:InsTasksListCreateSlice,
+    insBatchDetail: InsBatchesDetailSlice,
+    insProfile: InsProfileSlice,
+    insTasksListCreate: InsTasksListCreateSlice,
+    insTasksDetail: InsTaskDetailSlice,
+    insStudTaskAssignmentList: InsStudTaskAssignmentListSlice,
+    insStudTaskAssignmentDetail: InsStudTaskAssignmentDetailSlice,
   },
 });

@@ -14,6 +14,8 @@ import { useTheme } from '@emotion/react';
 import { ToastContainer, toast } from "react-toastify";
 import SpinnerComp from '../../../Components/SpinnerComp';
 import { listBatches } from '../../../Redux/Institute/InsBatches/InsBatchesListCreateAction';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 // const VisuallyHiddenInput = styled('input')({
 //   clip: 'rect(0 0 0 0)',
 //   clipPath: 'inset(50%)',
@@ -110,7 +112,7 @@ const InsTaskManagement = () => {
     title:"",
     description:"",
     task_url:"",
-    due_date:"",
+    due_date:new Date(),
     task_type:"",
     assigned_to:[],
   })
@@ -130,14 +132,7 @@ const InsTaskManagement = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createTask({api:api,values:formData,toast:toast,setOpen:setOpen}))
-    setFormData({
-      title: "",
-      description: "",
-      task_url: "",
-      due_date: "",
-      task_type: "",
-      assigned_to: [],
-    });
+    setFormData("");
   }
   const handleBatchesClick =()=>{
     dispatch(listBatches({api:api}))
@@ -182,16 +177,18 @@ const InsTaskManagement = () => {
                     Add Task
                   </Button>
                 </Grid>
-                {tasks && tasks.length >= 1 && tasks.map((value) =>
-                  value.task_type !== "teacher" ? (
-                    <StudentCard
-                      key={value.id}
-                      id={value.id}
-                      title={value.title}
-                      description={value.description}
-                    />
-                  ) : null
-                )}
+                {tasks &&
+                  tasks.length >= 1 &&
+                  tasks.map((value) =>
+                    value.task_type !== "teacher" ? (
+                      <StudentCard
+                        key={value.id}
+                        id={value.id}
+                        title={value.title}
+                        description={value.description}
+                      />
+                    ) : null
+                  )}
               </Grid>
               <Grid container md={3} spacing={2} marginLeft={2}>
                 {/* Teacher Section */}
@@ -205,16 +202,18 @@ const InsTaskManagement = () => {
                     Teachers
                   </Typography>
                 </Grid>
-                {tasks && tasks.length >= 1 && tasks.map((value) =>
-                  value.task_type === "teacher" ? (
-                    <TeacherCard
-                      key={value.id}
-                      id={value.id}
-                      title={value.title}
-                      description={value.description}
-                    />
-                  ) : null
-                )}
+                {tasks &&
+                  tasks.length >= 1 &&
+                  tasks.map((value) =>
+                    value.task_type === "teacher" ? (
+                      <TeacherCard
+                        key={value.id}
+                        id={value.id}
+                        title={value.title}
+                        description={value.description}
+                      />
+                    ) : null
+                  )}
               </Grid>
             </Box>
             <StudentAddComp open={open} title={"Task Form Filling"}>
@@ -295,17 +294,19 @@ const InsTaskManagement = () => {
                         selected
                           .map(
                             (id) =>
-                              students.find((obj) => obj.id === id)?.first_name
+                              students.students.find((obj) => obj.id === id)
+                                ?.first_name
                           )
                           .join(", ")
                       }
                       input={<OutlinedInput label="Select Students" />}
                     >
-                      {students && students.students?.map((student) => (
-                        <MenuItem key={student.id} value={student.id}>
-                          {student.first_name + " " + student.last_name}
-                        </MenuItem>
-                      ))}
+                      {students &&
+                        students.students?.map((student) => (
+                          <MenuItem key={student.id} value={student.id}>
+                            {student.first_name + " " + student.last_name}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 ) : formData.task_type === "batch" ? (
@@ -329,24 +330,24 @@ const InsTaskManagement = () => {
                       }
                       input={<OutlinedInput label="Select Batches" />}
                     >
-                      {batches && batches.batch?.map((batch) => (
-                        <MenuItem key={batch.id} value={batch.id}>
-                          {batch.name}
-                        </MenuItem>
-                      ))}
+                      {batches &&
+                        batches.batch?.map((batch) => (
+                          <MenuItem key={batch.id} value={batch.id}>
+                            {batch.name}
+                          </MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 ) : null}
-                <TextField
-                  id="outlined-basic"
+                <DatePicker
+                sx={{width:"100%",marginTop:1}}
                   label="Due Date"
-                  type="date"
-                  multiline
-                  variant="outlined"
-                  name="due_date"
-                  onChange={handleChange}
-                  fullWidth
-                  margin="normal"
+                  onChange={(date) =>
+                    setFormData({ ...formData, due_date: date })
+                  }
+                  value={dayjs(formData.due_date)}
+                  format="DD-MM-YYYY"
+                  slotProps={(params) => <TextField fullWidth {...params} />}
                 />
                 <Button onClick={() => setOpen(false)} color="primary">
                   Cancel

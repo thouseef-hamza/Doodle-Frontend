@@ -33,6 +33,7 @@ const InsPayments = () => {
   const handleStudentPaymentSubmit = (e) => {
     e.preventDefault();
   };
+  
   // Sort ============>
   const [anchorEl, setAnchorEl] = useState(null);
   const sortOpen = Boolean(anchorEl);
@@ -130,6 +131,13 @@ const InsPayments = () => {
                   Fee (High to Low)
                 </MenuItem>
               </Menu>
+              {/* <Button
+                variant="outlined"
+                onClick={() => setOpen(true)}
+                sx={{ marginTop: 1,justifySelf:"flex-start" }}
+              >
+                Add New Payment
+              </Button> */}
             </Container>
             <Grid item spacing={2}>
               <Typography>
@@ -180,10 +188,17 @@ const InsPayments = () => {
             </Box>
           </Grid>
           <Grid container spacing={2} md={3} justifyContent={"flex-end"}>
-            <Button variant="outlined" onClick={() => setOpen(true)}>
+            <Typography color={"text.primary"} variant="h5" marginTop={3}>
+              Payment Detail
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => setOpen(true)}
+              sx={{ marginTop: 1 }}
+            >
               Add New Upi
             </Button>
-            <Grid item xs={12} marginLeft={2} marginTop={1.5}>
+            <Grid item xs={12} marginLeft={2}>
               <Accordion>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}

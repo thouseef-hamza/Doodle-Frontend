@@ -45,7 +45,7 @@ export const deleteTaskDetail = createAsyncThunk(
         TASKS_BASE_URL + `institute/task/${id}/`
       );
       if (response.status === 204) {
-        navigate("/institute/tasks");
+        navigate("/institute/task");
       }
     } catch (error) {
       return rejectWithValue(error);

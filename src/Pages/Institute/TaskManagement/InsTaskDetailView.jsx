@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
-import { Box, Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, CircularProgress, FormControl, Grid, IconButton, Input, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -8,18 +8,65 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { Search, SearchIconWrapper, StyledInputBase } from '../../../Components/SearchBar';
 import SearchIcon from "@mui/icons-material/Search";  
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteTaskDetail, getTaskDetails } from '../../../Redux/Institute/InsTasks/InsTaskDetailAction';
 import useAxios from '../../../Hooks/useAxios';
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { DatePicker } from "@mui/x-date-pickers"; 
+import { styled } from "@mui/material/styles";
+import dayjs from 'dayjs';
+import { ToastContainer } from 'react-toastify';
+import SpinnerComp from '../../../Components/SpinnerComp';
+import  {TaskAssignmentList}  from '../../../Redux/Institute/InsTaskAssignment/InsStudTaskAssignmentListAction';
+import { listStudents } from '../../../Redux/Institute/InsStudents/InsStudentListCreateAction';
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const InsTaskDetailView = () => {
-  const {id} = useParams()
+  const {id} = useParams() 
+  const [formData,setFormData] = useState({})
+  // const [searchQuery,setSearchQuery] = useState("")
+  const { taskDetails, loading } = useSelector((state) => state.insTasksDetail);
+  const { stulist,loading:taskStudentsLoading } = useSelector((state) => state.insStudTaskAssignmentList);
+  const [stuFormData,setStuFormData]=useState({})
+  const { students ,loading:studentsLoading } = useSelector((state) => state.insStudentsListCreate);
+  const [fetchStudents,setfetchStudents]=useState(true)
+  // const {}
   const dispatch = useDispatch()
   let api=useAxios();
   const navigate=useNavigate()
   useEffect(()=>{
-    dispatch(getTaskDetails({api:api}))
+    dispatch(getTaskDetails({api,id}))
+    if(taskDetails){
+      setFormData(taskDetails)
+    }
   },[])
+  console.log(formData);
+  useEffect(()=>{
+    if(!loading){
+      dispatch(TaskAssignmentList({ api, task_id: id }));
+      if(stulist){
+        setStuFormData(stulist)
+      }
+    }
+  },[])
+
+  useEffect(()=>{
+    if(fetchStudents){
+      dispatch(listStudents({api}))
+    }
+  },[fetchStudents])
+  const handleSearchChange = () => console.log("jgh");
   return (
     <>
       <SidebarComp>
@@ -42,201 +89,304 @@ const InsTaskDetailView = () => {
             Task Detail View
           </Typography>
         </Box>
-        <Paper>
-          <form>
-            <Grid container padding={2} spacing={2}>
-              <Grid item xs={12} sm={6}>
+        {loading && !formData ? (
+          <SpinnerComp />
+        ) : (
+          <Paper>
+            <form>
+              <Grid container padding={2} spacing={2}>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    id="outlined-basic-1"
+                    label="Task Name"
+                    name="title"
+                    variant="outlined"
+                    value={formData && formData.title}
+                    // onChange={handleInputChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                  <DatePicker
+                    sx={{ width: "100%" }}
+                    label="Due Date"
+                    format="DD-MM-YYYY"
+                    // onChange={(date) =>
+                    //   setFormData({ ...formData, start_date: date })
+                    // }
+                    value={formData && dayjs(formData.due_date)}
+                    name="due_date"
+                    slotProps={(props) => <TextField fullWidth {...props} />}
+                  />
+                </Grid>
+                <Grid item xs={2}>
+                  <FormControl sx={{ minWidth: 120 }} fullWidth>
+                    <InputLabel id="demo-select-small-label">
+                      Task Type
+                    </InputLabel>
+                    <Select
+                      labelId="demo-select-small-label"
+                      id="demo-select-small"
+                      label="Task Type"
+                      defaultValue={"none"}
+                      value={formData && formData.task_type}
+                    >
+                      <MenuItem value="none">
+                        <em></em>
+                      </MenuItem>
+                      <MenuItem value={"individual"}>Individual</MenuItem>
+                      <MenuItem value={"batch"}>Batch</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    id="outlined-basic-1"
+                    label="Task URL"
+                    name=""
+                    type="text"
+                    variant="outlined"
+                    // onChange={handleInputChange}
+                    InputProps={{
+                      startAdornment: (
+                        <Link
+                          href={formData && formData.task_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {formData && formData.task_url}
+                        </Link>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  {/* <FormControl fullWidth>
+                    <InputLabel id="demo-multiple-checkbox-label">
+                      Tag
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-checkbox-label"
+                      id="demo-multiple-checkbox"
+                      multiple
+                      value={formData && formData.assigned_to}
+                      // onChange={handleChange}
+                      input={<OutlinedInput label="Tag" />}
+                      renderValue={(selected) => selected.join(", ")}
+                      // MenuProps={MenuProps}
+                    > 
+                  {students && students?.students?.length > 0 && students.students.map((value) => (
+                        <MenuItem key={value.id} value={value.id}>
+                          <Checkbox checked={value.id.indexOf(value.id) > -1} />
+                          <ListItemText primary={value.first_name} />
+                        </MenuItem>
+                  ))} 
+                  </Select>
+                  </FormControl> */}
+
+                  <FormControl sx={{ marginTop: 2 }} fullWidth>
+                    <InputLabel id="demo-multiple-name-label">
+                      Select Students
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-name-label"
+                      id="demo-multiple-name"
+                      multiple
+                      value={
+                        formData && Array.isArray(formData.assigned_to)
+                          ? formData.assigned_to
+                          : []
+                      }
+                      name="assigned_to"
+                      // onChange={handleChange}
+                      renderValue={(selected) =>
+                        selected
+                          .map(
+                            (id) =>
+                              students &&
+                              students.students.find((obj) => obj.id === id)
+                                ?.first_name
+                          )
+                          .join(", ")
+                      }
+                      input={<OutlinedInput label="Select Students" />}
+                    >
+                      {students &&
+                        students.students?.map((student) => (
+                          <MenuItem key={student.id} value={student.id}>
+                            {student.first_name + " " + student.last_name}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </FormControl>
+                  {/* </form> */}
+                </Grid>
+                {/* <Grid item xs={12} sm={4}>
+                <Tooltip title="Upload for Task Document">
                 <TextField
                   fullWidth
-                  id="outlined-basic-1"
-                  label="Task Name"
-                  name="name"
-                  variant="outlined"
-                  value={name}
-                  // onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
+                  name="Document"
+                  type='file'
                   id="outlined-basic-2"
-                  label="Start Date"
-                  variant="outlined"
-                  name="start_date"
-                  type="date"
-                  format="YYYY-MM-DD"
-                  // value={formData.start_date}
-                  // onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  fullWidth
-                  multiline
-                  name="description"
-                  id="outlined-basic-2"
-                  label="Description"
+                  
                   variant="outlined"
                   // value={formData.description}
                   // onChange={handleInputChange}
-                />
+                /> */}
+                {/* </Tooltip> */}
+                {/* </Grid> */}
+                <Grid item xs={12} sm={12}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    name="description"
+                    id="outlined-basic-2"
+                    label="Description"
+                    variant="outlined"
+                    value={formData && formData.description}
+                    // onChange={handleInputChange}
+                  />
+                </Grid>
+
+                {/* <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                <VisuallyHiddenInput type="file" />
+              </Button> */}
+                <Button
+                  sx={{ marginTop: 1, marginLeft: 2 }}
+                  variant="contained"
+                  type="submit"
+                >
+                  Update
+                </Button>
+                <Button
+                  sx={{ marginTop: 1, marginLeft: 2 }}
+                  color="error"
+                  variant="contained"
+                  onClick={() => {
+                    alert("Are you sure want to delete");
+                    dispatch(deleteTaskDetail({ id, api, navigate }));
+                  }}
+                >
+                  Delete
+                </Button>
               </Grid>
-              <Button
-                sx={{ marginTop: 1, marginLeft: 2 }}
-                variant="contained"
-                type="submit"
-              >
-                Update
-              </Button>
-              <Button
-                sx={{ marginTop: 1, marginLeft: 2 }}
-                color="error"
-                variant="contained"
-                onClick={() => {
-                  alert("Are you sure want to delete");
-                  dispatch(deleteTaskDetail({ id, api, navigate }));
-                }}
-              >
-                Delete
-              </Button>
-            </Grid>
-          </form>
-        </Paper>
-        <Box
-          display={"flex"}
-          justifyContent={"flex-start"}
-          paddingRight={5}
-          marginTop={4}
-          marginBottom={4}
-        >
-          <TextField
-            id="outlined-size-small"
-            placeholder="Search"
-            size="small"
-            margin={"auto"}
-            sx={{ width: "40%", marginRight: 1 }}
-          />
-          <FormControl sx={{ minWidth: 120 }} size="small">
-            <InputLabel id="demo-select-small-label">Filter</InputLabel>
-            <Select
-              labelId="demo-select-small-label"
-              id="demo-select-small"
-              label="Filter"
+            </form>
+          </Paper>
+        )}
+        {!taskStudentsLoading ? (
+          <>
+            <Box
+              display={"flex"}
+              justifyContent={"flex-start"}
+              paddingRight={5}
+              marginTop={2}
+              marginBottom={4}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Completed</MenuItem>
-              <MenuItem value={20}>Submitted</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: "100%" }} aria-label="simple table">
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#ECE9FD" }}>
-                <TableCell>Student ID</TableCell>
-                <TableCell>Student Name</TableCell>
-                <TableCell>Student Batch</TableCell>
-                <TableCell>Submitted</TableCell>
-                <TableCell>Completed</TableCell>
-                <TableCell>Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell>STU 00001</TableCell>
-                <TableCell>Thouseef</TableCell>
-                <TableCell>Batch 1</TableCell>
-                <TableCell>
-                  <IconButton color="green">
-                    <CheckCircleRoundedIcon
-                      sx={{ color: "green" }}
-                      color="green"
-                    />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton color="green">
-                    <CancelRoundedIcon sx={{ color: "red" }} color="green" />
-                  </IconButton>
-                </TableCell>
-                <TableCell sx={{ color: "green" }}>Good</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>h</TableCell>
-                <TableCell>hg</TableCell>
-                <TableCell>uh</TableCell>
-                <TableCell>
-                  <IconButton color="green">
-                    <CheckCircleRoundedIcon
-                      sx={{ color: "green" }}
-                      color="green"
-                    />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell sx={{ color: "green" }}>Good</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>h</TableCell>
-                <TableCell>hg</TableCell>
-                <TableCell>uh</TableCell>
-                <TableCell>
-                  <IconButton>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell sx={{ color: "red" }}>
-                  Fair
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>h</TableCell>
-                <TableCell>hg</TableCell>
-                <TableCell>uh</TableCell>
-                <TableCell>
-                  <IconButton>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell sx={{ color: "#ffc53d" }}>
-                  Need Improvement
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>h</TableCell>
-                <TableCell>hg</TableCell>
-                <TableCell>uh</TableCell>
-                <TableCell>
-                  <IconButton>
-                    <CheckCircleRoundedIcon sx={{ color: "green" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton disabled>
-                    <CancelRoundedIcon sx={{ color: "red" }} />
-                  </IconButton>
-                </TableCell>
-                <TableCell  sx={{ color: "red" }}>Fair</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+              <TextField
+                id="outlined-size-small"
+                placeholder="Search"
+                size="small"
+                margin={"normal"}
+                sx={{ width: "40%", marginRight: 1 }}
+              />
+              <FormControl sx={{ minWidth: 120, marginTop: 2 }} size="small">
+                <InputLabel id="demo-select-small-label">Filter</InputLabel>
+                <Select
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
+                  label="Filter"
+                  value={"none"}
+                >
+                  <MenuItem value="none">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={"completed"}>Completed</MenuItem>
+                  <MenuItem value={"completed"}>Submitted</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: "100%" }} aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#ECE9FD" }}>
+                    <TableCell>Student ID</TableCell>
+                    <TableCell>Student Name</TableCell>
+                    <TableCell>Student Batch</TableCell>
+                    <TableCell>Submitted</TableCell>
+                    <TableCell>Completed</TableCell>
+                    <TableCell>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {stulist &&
+                    stulist.length > 0 &&
+                    stulist.map((value) => (
+                      <TableRow key={value.id}>
+                        <TableCell>{value.user.unique_code}</TableCell>
+                        <TableCell>
+                          {value.user.first_name + " " + value.user.last_name}
+                        </TableCell>
+                        <TableCell>{value.user.batch_name}</TableCell>
+                        <TableCell>
+                          {value.is_completed ? (
+                            <IconButton color="green">
+                              <CheckCircleRoundedIcon
+                                sx={{ color: "green" }}
+                                color="green"
+                              />
+                            </IconButton>
+                          ) : (
+                            <IconButton color="green">
+                              <CancelRoundedIcon sx={{ color: "red" }} />
+                            </IconButton>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          {value.is_submitted ? (
+                            <IconButton color="green">
+                              <CheckCircleRoundedIcon
+                                sx={{ color: "green" }}
+                                color="green"
+                              />
+                            </IconButton>
+                          ) : (
+                            <IconButton color="green">
+                              <CancelRoundedIcon sx={{ color: "red" }} />
+                            </IconButton>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          color={
+                            value.status === "good"
+                              ? "success"
+                              : value.status === "fair"
+                              ? "warning"
+                              : value.status === "needs_improvement"
+                              ? "error"
+                              : null
+                          }
+                          sx={{ color: "blue" }}
+                        >
+                          {value.status.toUpperCase()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  {/*  */}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        ) : !loading ? (
+            <LinearProgress color="primary" />
+        ):null
+        }
       </SidebarComp>
     </>
   );

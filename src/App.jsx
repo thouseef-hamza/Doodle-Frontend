@@ -27,6 +27,7 @@ import InstituteRoutes from "./routers/InstituteRoutes";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import InsPayments from "./Pages/Institute/InsPayments";
+import PageNotFound from "./Pages/Authentication/PageNotFound";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           element={<OTPAuthentication />}
           path="/verifyotp/:user_id/:phone_number"
         />
+        <Route element={<PageNotFound/>} path="*"/>
         {/* Institute Actions */}
         <Route
           element={
