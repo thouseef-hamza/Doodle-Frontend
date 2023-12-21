@@ -10,7 +10,9 @@ export const InsStudTaskAssignmentDetailSlice = createSlice({
   },
   extraReducers:builder=>{
      builder
-     .addCase(getTaskAssignment.pending,state=>state.loading=true)
+     .addCase(getTaskAssignment.pending,state=>{
+          state.loading=true
+     })
      .addCase(getTaskAssignment.rejected,(state,action)=>{
           state.loading=false;
           state.error=action.payload;
@@ -21,7 +23,9 @@ export const InsStudTaskAssignmentDetailSlice = createSlice({
           state.taskAssignDetails=action.payload;
      })
      builder
-     .addCase(editTaskAssignment.pending,state=>state.loading=true)
+     .addCase(editTaskAssignment.pending,state=>{
+          state.loading=true
+     })
      .addCase(editTaskAssignment.rejected,(state,action)=>{
           state.loading=false;
           state.error=action.payload;

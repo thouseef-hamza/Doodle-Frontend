@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
-import { Autocomplete, Box, Button, Checkbox, CircularProgress, FormControl, Grid, IconButton, Input, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Checkbox, CircularProgress, FormControl, FormControlLabel, Grid, IconButton, Input, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -19,6 +19,8 @@ import SpinnerComp from '../../../Components/SpinnerComp';
 import  {TaskAssignmentList}  from '../../../Redux/Institute/InsTaskAssignment/InsStudTaskAssignmentListAction';
 import { listStudents } from '../../../Redux/Institute/InsStudents/InsStudentListCreateAction';
 import { ToastContainer, toast } from "react-toastify";
+import StudentAddComp from '../../../Components/StudentAddComp';
+import { editTaskAssignment, getTaskAssignment } from '../../../Redux/Institute/InsTaskAssignment/InsStudTaskAssignmentDetailAction';
 
 
 const VisuallyHiddenInput = styled("input")({
@@ -42,7 +44,10 @@ const InsTaskDetailView = () => {
   const [stuFormData,setStuFormData]=useState({})
   const { students ,loading:studentsLoading } = useSelector((state) => state.insStudentsListCreate);
   const [fetchStudents,setfetchStudents]=useState(true)
-  // const {}
+  const [studTaskOpen,setStudTaskOpen]=useState(false)
+  const {taskAssignDetails}=useSelector((state)=>state.insStudTaskAssignmentDetail)
+  const [studTaskID,setStudTaskID]=useState(null)
+  const [studTaskFormData,setStudTaskFormData]=useState({})
   const dispatch = useDispatch()
   let api=useAxios();
   const navigate=useNavigate()
@@ -52,14 +57,14 @@ const InsTaskDetailView = () => {
       setFormData(taskDetails)
     }
   },[])
-  useEffect(()=>{
-    if(!loading){
+  useEffect(() => {
+    if (!loading && !studTaskOpen) {
       dispatch(TaskAssignmentList({ api, task_id: id }));
-      if(stulist){
-        setStuFormData(stulist)
+      if (stulist) {
+        setStuFormData(stulist);
       }
     }
-  },[])
+  }, [studTaskOpen]);
 
   useEffect(()=>{
     if(fetchStudents){
@@ -78,10 +83,31 @@ const InsTaskDetailView = () => {
       e.preventDefault()
       dispatch(editTaskDetails({api,values:formData,id,toast}))
     }
+    useEffect(() => {
+      if (studTaskOpen) {
+        dispatch(getTaskAssignment({ api, task_id: id, id: studTaskID }));
+        setStudTaskFormData(taskAssignDetails)
+      }
+    }, [studTaskOpen]);
+
+    const handleStudTaskSubmit=(e)=>{
+      e.preventDefault()
+      alert("Are You Sure Want To Update")
+      dispatch(
+        editTaskAssignment({
+          api,
+          id: studTaskID,
+          task_id: id,
+          values: studTaskFormData,
+          setStudTaskOpen,
+        })
+      );
+    }
+    console.log(studTaskFormData);
   return (
     <>
       <SidebarComp>
-        <ToastContainer/>
+        <ToastContainer />
         <Box>
           <Link to={"/institute/task"}>
             <Button
@@ -141,7 +167,11 @@ const InsTaskDetailView = () => {
                       id="demo-select-small"
                       label="Task Type"
                       onChange={handleChange}
-                      value={formData && formData.task_type == "individual" ? "individual" : "batch"}
+                      value={
+                        formData && formData.task_type == "individual"
+                          ? "individual"
+                          : "batch"
+                      }
                     >
                       <MenuItem value="select" disabled>
                         <em>Select</em>
@@ -174,7 +204,6 @@ const InsTaskDetailView = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  {/* imp #TODO */}
                   <FormControl sx={{ marginTop: 2 }} fullWidth>
                     <InputLabel id="demo-multiple-name-label">
                       Select Students
@@ -311,6 +340,7 @@ const InsTaskDetailView = () => {
                     <TableCell>Submitted</TableCell>
                     <TableCell>Completed</TableCell>
                     <TableCell>Status</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -324,7 +354,7 @@ const InsTaskDetailView = () => {
                         </TableCell>
                         <TableCell>{value.user.batch_name}</TableCell>
                         <TableCell>
-                          {value.is_completed ? (
+                          {value.is_submitted ? (
                             <IconButton color="green">
                               <CheckCircleRoundedIcon
                                 sx={{ color: "green" }}
@@ -339,7 +369,7 @@ const InsTaskDetailView = () => {
                         </TableCell>
                         <TableCell>
                           {" "}
-                          {value.is_submitted ? (
+                          {value.is_completed ? (
                             <IconButton color="green">
                               <CheckCircleRoundedIcon
                                 sx={{ color: "green" }}
@@ -352,19 +382,32 @@ const InsTaskDetailView = () => {
                             </IconButton>
                           )}
                         </TableCell>
-                        <TableCell
-                          color={
-                            value.status === "good"
-                              ? "success"
-                              : value.status === "fair"
-                              ? "warning"
-                              : value.status === "needs_improvement"
-                              ? "error"
-                              : null
-                          }
-                          sx={{ color: "blue" }}
-                        >
-                          {value.status.toUpperCase()}
+                        <TableCell color={"error"}>
+                          <span
+                            style={{
+                              color:
+                                value.status == "good"
+                                  ? "green"
+                                  : value.status == "fair"
+                                  ? "yellow"
+                                  : value.status == "needs_improvement"
+                                  ? "red"
+                                  : "blue",
+                            }}
+                          >
+                            {value.status.toUpperCase()}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            onClick={() => {
+                              setStudTaskOpen(true);
+                              setStudTaskID(value.id);
+                            }}
+                          >
+                            Edit
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -375,6 +418,161 @@ const InsTaskDetailView = () => {
           </>
         ) : !loading ? (
           <LinearProgress color="primary" />
+        ) : null}
+        {studTaskOpen && studTaskFormData ? (
+          <StudentAddComp
+            key={studTaskFormData.id}
+            open={studTaskOpen}
+            title={
+              studTaskFormData.user?.first_name +
+              " " +
+              studTaskFormData.user?.last_name
+            }
+          >
+            <form onSubmit={handleStudTaskSubmit}>
+              <TextField
+                fullWidth
+                id="outlined-basic-2"
+                label="Submitted URL"
+                name="submitted_url"
+                type="text"
+                variant="outlined"
+                value={studTaskFormData.submitted_url}
+                sx={{ marginTop: 1 }}
+                InputProps={{
+                  startAdornment: (
+                    <Link
+                      href={studTaskFormData.submitted_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {studTaskFormData.submitted_url}
+                    </Link>
+                  ),
+                }}
+              />
+              <Grid item xs={2}>
+                <FormControl sx={{ minWidth: 120, marginTop: 1 }} fullWidth>
+                  <InputLabel id="demo-select-small-label">
+                    Task Status
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    label="Task Status"
+                    onChange={(e) =>
+                      setStudTaskFormData({
+                        ...studTaskFormData,
+                        status: e.target.value,
+                      })
+                    }
+                    value={studTaskFormData.status}
+                  >
+                    <MenuItem value={"reviewing"}>Reviewing</MenuItem>
+                    <MenuItem value={"good"}>Good</MenuItem>
+                    <MenuItem value={"fair"}>Fair</MenuItem>
+                    <MenuItem value={"needs_improvement"}>
+                      Needs Improvement
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={2}>
+                <FormControl
+                  sx={{ minWidth: 120, marginTop: 1, marginBottom: 1 }}
+                  fullWidth
+                >
+                  <InputLabel id="demo-select-small-label">
+                    Task Status
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    label="Task Status"
+                    onChange={(e) =>
+                      setStudTaskFormData({
+                        ...studTaskFormData,
+                        is_completed: e.target.value,
+                      })
+                    }
+                    value={studTaskFormData.is_completed}
+                  >
+                    <MenuItem value={true}>Completed</MenuItem>
+                    <MenuItem value={false}>Not Completed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={2}>
+                <FormControl
+                  sx={{ minWidth: 120, marginTop: 1, marginBottom: 1 }}
+                  fullWidth
+                >
+                  <InputLabel id="demo-select-small-label">
+                    Task Status
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-select-small"
+                    label="Task Status"
+                    onChange={(e) =>
+                      setStudTaskFormData({
+                        ...studTaskFormData,
+                        is_submitted: e.target.value,
+                      })
+                    }
+                    value={studTaskFormData.is_submitted}
+                  >
+                    <MenuItem value={true}>Submitted</MenuItem>
+                    <MenuItem value={false}>Not Submitted</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {/* <TextField
+                id="outlined-basic"
+                label="Fee Penalty"
+                type="number"
+                variant="outlined"
+                name="fee_penalty"
+                fullWidth
+                margin="normal"
+                // onChange={handleChange}
+              /> */}
+              {/* <DatePicker
+                sx={{ width: "100%" }}
+                label="Start Date"
+                format="DD-MM-YYYY"
+                onChange={(date) =>
+                  setFormData({ ...studTaskFormData, start_date: date })
+                }
+                value={dayjs(studTaskFormData.start_date)}
+                name="start_date"
+                slotProps={(props) => <TextField fullWidth {...props} />}
+              /> */}
+              <TextField
+                id="outlined-basic"
+                label="Feed Back"
+                type="text"
+                disabled
+                multiline
+                variant="outlined"
+                name="description"
+                onChange={(e) =>
+                  setStudTaskFormData({
+                    ...studTaskFormData,
+                    feed_back: e.target.value,
+                  })
+                }
+                fullWidth
+                margin="normal"
+              />
+              <Button onClick={() => setStudTaskOpen(false)} color="primary">
+                Cancel
+              </Button>
+              <Button type="submit" color="primary">
+                Update
+              </Button>
+            </form>
+          </StudentAddComp>
         ) : null}
       </SidebarComp>
     </>
