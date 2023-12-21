@@ -16,7 +16,7 @@ export const InsStudentsListCreateSlice = createSlice({
       .addCase(createStudent.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null
-        state.students.push(action.payload);
+        state.students.students.push(action.payload);
       })
       .addCase(createStudent.rejected, (state, action) => {
         state.loading = false;

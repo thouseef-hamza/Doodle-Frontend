@@ -8,6 +8,8 @@ import InsTasksListCreateSlice from "./Institute/InsTasks/InsTasksListCreateSlic
 import InsTaskDetailSlice from "./Institute/InsTasks/InsTaskDetailSlice";
 import InsStudTaskAssignmentDetailSlice from "./Institute/InsTaskAssignment/InsStudTaskAssignmentDetailSlice";
 import InsStudTaskAssignmentListSlice from "./Institute/InsTaskAssignment/InsStudTaskAssignmentListSlice";
+import StuProfileSlice from "./Student/StuProfile/StuProfileSlice";
+import stuClassmatesListSlice  from "./Student/StuClassmates/ClassmatesSlice";
 
 
 export const store = configureStore({
@@ -21,5 +23,7 @@ export const store = configureStore({
     insTasksDetail: InsTaskDetailSlice,
     insStudTaskAssignmentList: InsStudTaskAssignmentListSlice,
     insStudTaskAssignmentDetail: InsStudTaskAssignmentDetailSlice,
+    stuProfile: StuProfileSlice,
+    stuClassmates: stuClassmatesListSlice,
   },
 });

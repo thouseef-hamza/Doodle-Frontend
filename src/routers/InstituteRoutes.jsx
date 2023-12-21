@@ -6,6 +6,7 @@ const InstituteRoutes = ({children, ...rest}) => {
 
       if (token) {
         const userToken = jwt_decode(token?.access)
+        console.log(userToken);
         const is_active = userToken?.is_active;
         const is_blocked = userToken?.is_blocked;
         const is_institute = userToken?.is_institute;

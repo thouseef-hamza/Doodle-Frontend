@@ -219,8 +219,7 @@ const InsStudentsListCreate = () => {
         ) : (
           <>
             <TableComp data={students.students} columns={tableHead} />
-            {students && students.total_page > 0 ? (
-              <Box mx={"auto"} marginTop={2} textAlign="center">
+              <Box mx={"auto"} marginTop={2} textAlign="center" display={"flex"} justifyContent={'center'}>
                 <Pagination
                   variant="outlined"
                   page={page}
@@ -229,7 +228,6 @@ const InsStudentsListCreate = () => {
                   color="primary"
                 />
               </Box>
-            ) : null}
           </>
         )}
 

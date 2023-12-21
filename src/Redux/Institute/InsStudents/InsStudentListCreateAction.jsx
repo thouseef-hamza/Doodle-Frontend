@@ -35,7 +35,7 @@ export const listStudents = createAsyncThunk(
       queryParams.push(`sort=${sortQuery}`);
     }
     if (page) {
-      queryParams.push(`page=${page}`);
+      endpoint+=`?page=${page}`
     }
     if (batchId) {
       queryParams.push(`batch=${batchId}`);

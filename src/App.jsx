@@ -28,6 +28,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import InsPayments from "./Pages/Institute/InsPayments";
 import PageNotFound from "./Pages/Authentication/PageNotFound";
+import ForgetPassword from "./Pages/Authentication/ForgetPassword";
+import StuClassmates from "./Pages/Student/StuClassmates";
 
 function App() {
   return (
@@ -44,6 +46,7 @@ function App() {
           path="/verifyotp/:user_id/:phone_number"
         />
         <Route element={<PageNotFound/>} path="*"/>
+        <Route element={<ForgetPassword/>} path="/forget"/>
         {/* Institute Actions */}
         <Route
           element={
@@ -159,6 +162,7 @@ function App() {
         <Route element={<StuDashboard />} path="/student/dashboard" />
         <Route element={<StudentLogin />} path="/student/login" />
         <Route element={<StuProfile />} path="/student/profile" />
+        <Route element={<StuClassmates />} path="/student/classmates" />
       </Routes>
     </LocalizationProvider>
   );

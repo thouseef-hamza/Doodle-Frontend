@@ -1,5 +1,5 @@
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, Container, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, Container, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Pagination, Select, TextField, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from "@mui/material/styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -100,6 +100,7 @@ const InsTaskManagement = () => {
   const [open,setOpen] = useState(false)
   const dispatch = useDispatch()
   const {tasks,loading,error} = useSelector(state=>state.insTasksListCreate)
+  const [page,setPage]=useState(1)
   console.log(tasks);
   const { students } = useSelector(
     (state) => state.insStudentsListCreate
@@ -163,13 +164,7 @@ const InsTaskManagement = () => {
               alignItems={"flex-start"}
               marginLeft={0}
             >
-              <Grid
-                container
-                md={  
-                  8
-                }
-                spacing={2}
-              >
+              <Grid container md={8} spacing={2}>
                 {/* Student Section */}
                 <Grid
                   item
@@ -197,6 +192,22 @@ const InsTaskManagement = () => {
                       />
                     ) : null
                   )}
+                <Box
+                  mx={"auto"}
+                  marginTop={12}
+                  textAlign="center"
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
+                  <Pagination
+                    variant="outlined"
+                    page={page}
+                    onChange={(event, page) => setPage(page)}
+                    count={batches && batches.total_page}
+                    color="primary"
+                  />
+                </Box>
               </Grid>
               {tasks.tasks &&
                 tasks?.tasks.map((value) => {

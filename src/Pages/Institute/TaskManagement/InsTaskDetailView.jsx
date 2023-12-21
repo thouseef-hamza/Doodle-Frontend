@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
-import { Autocomplete, Box, Button, Checkbox, CircularProgress, FormControl, FormControlLabel, Grid, IconButton, Input, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Paper, Radio, RadioGroup, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import {  Box, Button, FormControl, Grid, IconButton,  InputLabel, LinearProgress,Menu, MenuItem, OutlinedInput, Pagination, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
-import { Search, SearchIconWrapper, StyledInputBase } from '../../../Components/SearchBar';
-import SearchIcon from "@mui/icons-material/Search";  
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTaskDetail, editTaskDetails, getTaskDetails } from '../../../Redux/Institute/InsTasks/InsTaskDetailAction';
 import useAxios from '../../../Hooks/useAxios';
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { DatePicker } from "@mui/x-date-pickers"; 
 import { styled } from "@mui/material/styles";
 import dayjs from 'dayjs';
@@ -21,89 +17,97 @@ import { listStudents } from '../../../Redux/Institute/InsStudents/InsStudentLis
 import { ToastContainer, toast } from "react-toastify";
 import StudentAddComp from '../../../Components/StudentAddComp';
 import { editTaskAssignment, getTaskAssignment } from '../../../Redux/Institute/InsTaskAssignment/InsStudTaskAssignmentDetailAction';
-
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import  FilterAltIcon  from "@mui/icons-material/FilterAlt";
 
 const InsTaskDetailView = () => {
-  const {id} = useParams() 
-  const [formData,setFormData] = useState({})
+  const { id } = useParams();
+  const [formData, setFormData] = useState({});
   // const [searchQuery,setSearchQuery] = useState("")
   const { taskDetails, loading } = useSelector((state) => state.insTasksDetail);
-  const { stulist,loading:taskStudentsLoading } = useSelector((state) => state.insStudTaskAssignmentList);
-  const [stuFormData,setStuFormData]=useState({})
-  const { students ,loading:studentsLoading } = useSelector((state) => state.insStudentsListCreate);
-  const [fetchStudents,setfetchStudents]=useState(true)
-  const [studTaskOpen,setStudTaskOpen]=useState(false)
-  const {taskAssignDetails}=useSelector((state)=>state.insStudTaskAssignmentDetail)
-  const [studTaskID,setStudTaskID]=useState(null)
-  const [studTaskFormData,setStudTaskFormData]=useState({})
-  const dispatch = useDispatch()
-  let api=useAxios();
-  const navigate=useNavigate()
-  useEffect(()=>{
-    dispatch(getTaskDetails({api,id}))
-    if(taskDetails){
-      setFormData(taskDetails)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortQuery, setSortQuery] = useState("");
+  const { stulist, loading: taskStudentsLoading } = useSelector(
+    (state) => state.insStudTaskAssignmentList
+  );
+  const { students, loading: studentsLoading } = useSelector(
+    (state) => state.insStudentsListCreate
+  );
+  const [studTaskOpen, setStudTaskOpen] = useState(false);
+  const { taskAssignDetails } = useSelector(
+    (state) => state.insStudTaskAssignmentDetail
+  );
+  const [studTaskID, setStudTaskID] = useState(null);
+  const [studTaskFormData, setStudTaskFormData] = useState({});
+  const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  let api = useAxios();
+  const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(getTaskDetails({ api, id }));
+    if (taskDetails) {
+      setFormData(taskDetails);
     }
-  },[])
+  }, []);
   useEffect(() => {
     if (!loading && !studTaskOpen) {
-      dispatch(TaskAssignmentList({ api, task_id: id }));
-      if (stulist) {
-        setStuFormData(stulist);
-      }
+      dispatch(
+        TaskAssignmentList({ api, searchQuery,sortQuery, page , task_id: id })
+      );
+    }
+  }, [studTaskOpen,searchQuery,sortQuery]);
+
+  useEffect(() => {
+      dispatch(listStudents({ api }));
+  }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setSortQuery(null);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(editTaskDetails({ api, values: formData, id, toast }));
+  };
+  useEffect(() => {
+    if (studTaskOpen) {
+      dispatch(getTaskAssignment({ api, task_id: id, id: studTaskID }));
+      setStudTaskFormData(taskAssignDetails);
     }
   }, [studTaskOpen]);
 
-  useEffect(()=>{
-    if(fetchStudents){
-      dispatch(listStudents({api}))
-    }
-  },[fetchStudents])
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
+  const handleStudTaskSubmit = (e) => {
+    e.preventDefault();
+    alert("Are You Sure Want To Update");
+    dispatch(
+      editTaskAssignment({
+        api,
+        id: studTaskID,
+        task_id: id,
+        values: studTaskFormData,
+        setStudTaskOpen,
+      })
+    );
+  };
 
-    const handleSubmit = (e) => {
-      e.preventDefault()
-      dispatch(editTaskDetails({api,values:formData,id,toast}))
-    }
-    useEffect(() => {
-      if (studTaskOpen) {
-        dispatch(getTaskAssignment({ api, task_id: id, id: studTaskID }));
-        setStudTaskFormData(taskAssignDetails)
-      }
-    }, [studTaskOpen]);
-
-    const handleStudTaskSubmit=(e)=>{
-      e.preventDefault()
-      alert("Are You Sure Want To Update")
-      dispatch(
-        editTaskAssignment({
-          api,
-          id: studTaskID,
-          task_id: id,
-          values: studTaskFormData,
-          setStudTaskOpen,
-        })
-      );
-    }
-    console.log(studTaskFormData);
+  // Sort ============>
+  const [anchorEl, setAnchorEl] = useState(null);
+  const sortOpen = Boolean(anchorEl);
+  const handleSortClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleSortClose = (e, type) => {
+    e.preventDefault();
+    setSearchQuery(null);
+    setSortQuery(type);
+    setAnchorEl(null);
+  };
   return (
     <>
       <SidebarComp>
@@ -298,38 +302,54 @@ const InsTaskDetailView = () => {
             </form>
           </Paper>
         )}
-        {!taskStudentsLoading ? (
+        <Box
+          display={"flex"}
+          justifyContent={"flex-start"}
+          paddingRight={5}
+          marginTop={2}
+          marginBottom={4}
+        >
+          <TextField
+            onChange={handleSearchChange}
+            id="outlined-size-small"
+            value={searchQuery}
+            placeholder="Search..."
+            size="small"
+          />
+          <Button sx={{ marginLeft: 1 }} variant="contained" type="submit">
+            Search
+          </Button>
+          <Button
+            sx={{ marginLeft: 1 }}
+            id="basic-button"
+            aria-controls={sortOpen ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={sortOpen ? "true" : undefined}
+            onClick={handleSortClick}
+            endIcon={<FilterAltIcon />}
+            variant="outlined"
+          >
+            Sort By
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={sortOpen}
+            onClose={handleSortClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={(e) => handleSortClose(e, "completed")}>
+              Reviewing
+            </MenuItem>
+            <MenuItem onClick={(e) => handleSortClose(e, "submitted")}>
+              Submitted
+            </MenuItem>
+          </Menu>
+        </Box>
+        {!taskStudentsLoading  ? (
           <>
-            <Box
-              display={"flex"}
-              justifyContent={"flex-start"}
-              paddingRight={5}
-              marginTop={2}
-              marginBottom={4}
-            >
-              <TextField
-                id="outlined-size-small"
-                placeholder="Search"
-                size="small"
-                margin={"normal"}
-                sx={{ width: "40%", marginRight: 1 }}
-              />
-              <FormControl sx={{ minWidth: 120, marginTop: 2 }} size="small">
-                <InputLabel id="demo-select-small-label">Filter</InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  label="Filter"
-                  value={"none"}
-                >
-                  <MenuItem value="none">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={"completed"}>Completed</MenuItem>
-                  <MenuItem value={"completed"}>Submitted</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: "100%" }} aria-label="simple table">
                 <TableHead>
@@ -344,9 +364,9 @@ const InsTaskDetailView = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {stulist &&
-                    stulist.length > 0 &&
-                    stulist.map((value) => (
+                  {stulist.taskassignlist &&
+                    stulist.taskassignlist.length > 0 &&
+                    stulist.taskassignlist.map((value) => (
                       <TableRow key={value.id}>
                         <TableCell>{value.user.unique_code}</TableCell>
                         <TableCell>
@@ -415,6 +435,15 @@ const InsTaskDetailView = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <Pagination
+              variant="outlined"
+              page={page}
+              onChange={(event, page) => setPage(page)}
+              count={
+                stulist.taskassignlist && stulist.taskassignlist.total_page
+              }
+              color="primary"
+            />
           </>
         ) : !loading ? (
           <LinearProgress color="primary" />

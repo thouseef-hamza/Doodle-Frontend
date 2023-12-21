@@ -178,17 +178,17 @@ const StuSidebarComp =  React.memo(({children})=> {
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
-              onClick={() => navigate("/student/students")}
+              onClick={() => navigate("/student/classmates")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
                 backgroundColor:
-                  location.pathname === "/student/students"
+                  location.pathname === "/student/classmates"
                     ? theme.palette.primary.dark
                     : "initial",
                 color:
-                  location.pathname === "/student/students"
+                  location.pathname === "/student/classmates"
                     ? "white"
                     : "text.primary",
                 ":hover": {

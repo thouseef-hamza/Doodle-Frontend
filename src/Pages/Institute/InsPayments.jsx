@@ -20,7 +20,6 @@ const InsPayments = () => {
   const [edit, setEdit] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortQuery, setSortQuery] = useState("");
-    const [notification, setNotification] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
@@ -32,6 +31,7 @@ const InsPayments = () => {
 
   const handleStudentPaymentSubmit = (e) => {
     e.preventDefault();
+    
   };
   
   // Sort ============>

@@ -182,8 +182,13 @@ const InsBatchesListCreate = () => {
                   />
                 ))}
               </Grid>
-              {batches && batches.total_page > 0 ? (
-                <Box mx={"auto"} marginTop={2} textAlign="center">
+                <Box
+                  mx={"auto"}
+                  marginTop={2}
+                  textAlign="center"
+                  display={"flex"}
+                  justifyContent={"center"}
+                >
                   <Pagination
                     variant="outlined"
                     page={page}
@@ -192,8 +197,6 @@ const InsBatchesListCreate = () => {
                     color="primary"
                   />
                 </Box>
-              ) : null}
-
               <StudentAddComp open={open} title={"Batch Form Filling"}>
                 <form onSubmit={handleSubmit}>
                   <TextField
