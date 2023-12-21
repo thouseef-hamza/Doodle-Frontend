@@ -121,7 +121,8 @@ const InsTaskManagement = () => {
     dispatch(listTasks({api:api}))
     dispatch(listStudents({api:api}))
   },[])
-
+  console.log(tasks);
+  console.log(tasks?.tasks);
   const handleChange = (e) => {
     const {name,value} = e.target
     setFormData({
@@ -162,7 +163,13 @@ const InsTaskManagement = () => {
               alignItems={"flex-start"}
               marginLeft={0}
             >
-              <Grid container md={8} spacing={2}>
+              <Grid
+                container
+                md={  
+                  8
+                }
+                spacing={2}
+              >
                 {/* Student Section */}
                 <Grid
                   item
@@ -177,9 +184,10 @@ const InsTaskManagement = () => {
                     Add Task
                   </Button>
                 </Grid>
-                {tasks &&
-                  tasks.length >= 1 &&
-                  tasks.map((value) =>
+                {/* {tasks && tasks.} */}
+                {tasks.tasks &&
+                  tasks?.tasks.length > 0 &&
+                  tasks?.tasks.map((value) =>
                     value.task_type !== "teacher" ? (
                       <StudentCard
                         key={value.id}
@@ -190,31 +198,36 @@ const InsTaskManagement = () => {
                     ) : null
                   )}
               </Grid>
-              <Grid container md={3} spacing={2} marginLeft={2}>
-                {/* Teacher Section */}
-                <Grid
-                  item
-                  xs={12}
-                  sx={{ display: "flex" }}
-                  justifyContent={"space-between"}
-                >
-                  <Typography color={"text.primary"} variant="h5">
-                    Teachers
-                  </Typography>
-                </Grid>
-                {tasks &&
-                  tasks.length >= 1 &&
-                  tasks.map((value) =>
-                    value.task_type === "teacher" ? (
-                      <TeacherCard
-                        key={value.id}
-                        id={value.id}
-                        title={value.title}
-                        description={value.description}
-                      />
-                    ) : null
-                  )}
-              </Grid>
+              {tasks.tasks &&
+                tasks?.tasks.map((value) => {
+                  value.task_type === "teacher" ? (
+                    <Grid container md={3} spacing={2} marginLeft={2}>
+                      {/* Teacher Section */}
+                      <Grid
+                        item
+                        xs={12}
+                        sx={{ display: "flex" }}
+                        justifyContent={"space-between"}
+                      >
+                        <Typography color={"text.primary"} variant="h5">
+                          Teachers
+                        </Typography>
+                      </Grid>
+                      {tasks.tasks &&
+                        tasks?.tasks.length >= 1 &&
+                        tasks?.tasks.map((value) =>
+                          value.task_type === "teacher" ? (
+                            <TeacherCard
+                              key={value.id}
+                              id={value.id}
+                              title={value.title}
+                              description={value.description}
+                            />
+                          ) : null
+                        )}
+                    </Grid>
+                  ) : null;
+                })}
             </Box>
             <StudentAddComp open={open} title={"Task Form Filling"}>
               <form onSubmit={handleSubmit}>
@@ -340,7 +353,7 @@ const InsTaskManagement = () => {
                   </FormControl>
                 ) : null}
                 <DatePicker
-                sx={{width:"100%",marginTop:1}}
+                  sx={{ width: "100%", marginTop: 1 }}
                   label="Due Date"
                   onChange={(date) =>
                     setFormData({ ...formData, due_date: date })

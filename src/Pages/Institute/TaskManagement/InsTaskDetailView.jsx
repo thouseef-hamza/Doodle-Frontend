@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import SidebarComp from '../../../Components/Sidebar/SidebarComp'
-import { Box, Button, Checkbox, CircularProgress, FormControl, Grid, IconButton, Input, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Checkbox, CircularProgress, FormControl, Grid, IconButton, Input, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography } from '@mui/material';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -9,16 +9,17 @@ import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import { Search, SearchIconWrapper, StyledInputBase } from '../../../Components/SearchBar';
 import SearchIcon from "@mui/icons-material/Search";  
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTaskDetail, getTaskDetails } from '../../../Redux/Institute/InsTasks/InsTaskDetailAction';
+import { deleteTaskDetail, editTaskDetails, getTaskDetails } from '../../../Redux/Institute/InsTasks/InsTaskDetailAction';
 import useAxios from '../../../Hooks/useAxios';
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { DatePicker } from "@mui/x-date-pickers"; 
 import { styled } from "@mui/material/styles";
 import dayjs from 'dayjs';
-import { ToastContainer } from 'react-toastify';
 import SpinnerComp from '../../../Components/SpinnerComp';
 import  {TaskAssignmentList}  from '../../../Redux/Institute/InsTaskAssignment/InsStudTaskAssignmentListAction';
 import { listStudents } from '../../../Redux/Institute/InsStudents/InsStudentListCreateAction';
+import { ToastContainer, toast } from "react-toastify";
+
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -51,7 +52,6 @@ const InsTaskDetailView = () => {
       setFormData(taskDetails)
     }
   },[])
-  console.log(formData);
   useEffect(()=>{
     if(!loading){
       dispatch(TaskAssignmentList({ api, task_id: id }));
@@ -66,10 +66,22 @@ const InsTaskDetailView = () => {
       dispatch(listStudents({api}))
     }
   },[fetchStudents])
-  const handleSearchChange = () => console.log("jgh");
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      dispatch(editTaskDetails({api,values:formData,id,toast}))
+    }
   return (
     <>
       <SidebarComp>
+        <ToastContainer/>
         <Box>
           <Link to={"/institute/task"}>
             <Button
@@ -93,17 +105,17 @@ const InsTaskDetailView = () => {
           <SpinnerComp />
         ) : (
           <Paper>
-            <form>
+            <form onSubmit={handleSubmit}>
               <Grid container padding={2} spacing={2}>
                 <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth
                     id="outlined-basic-1"
                     label="Task Name"
+                    value={formData && formData.title}
                     name="title"
                     variant="outlined"
-                    value={formData && formData.title}
-                    // onChange={handleInputChange}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item xs={12} sm={2}>
@@ -111,9 +123,9 @@ const InsTaskDetailView = () => {
                     sx={{ width: "100%" }}
                     label="Due Date"
                     format="DD-MM-YYYY"
-                    // onChange={(date) =>
-                    //   setFormData({ ...formData, start_date: date })
-                    // }
+                    onChange={(date) =>
+                      setFormData({ ...formData, start_date: date })
+                    }
                     value={formData && dayjs(formData.due_date)}
                     name="due_date"
                     slotProps={(props) => <TextField fullWidth {...props} />}
@@ -128,11 +140,11 @@ const InsTaskDetailView = () => {
                       labelId="demo-select-small-label"
                       id="demo-select-small"
                       label="Task Type"
-                      defaultValue={"none"}
-                      value={formData && formData.task_type}
+                      onChange={handleChange}
+                      value={formData && formData.task_type == "individual" ? "individual" : "batch"}
                     >
-                      <MenuItem value="none">
-                        <em></em>
+                      <MenuItem value="select" disabled>
+                        <em>Select</em>
                       </MenuItem>
                       <MenuItem value={"individual"}>Individual</MenuItem>
                       <MenuItem value={"batch"}>Batch</MenuItem>
@@ -142,12 +154,12 @@ const InsTaskDetailView = () => {
                 <Grid item xs={12} sm={4}>
                   <TextField
                     fullWidth
-                    id="outlined-basic-1"
+                    id="outlined-basic-2"
                     label="Task URL"
-                    name=""
+                    name="task_url"
                     type="text"
                     variant="outlined"
-                    // onChange={handleInputChange}
+                    onChange={handleChange}
                     InputProps={{
                       startAdornment: (
                         <Link
@@ -162,29 +174,7 @@ const InsTaskDetailView = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  {/* <FormControl fullWidth>
-                    <InputLabel id="demo-multiple-checkbox-label">
-                      Tag
-                    </InputLabel>
-                    <Select
-                      labelId="demo-multiple-checkbox-label"
-                      id="demo-multiple-checkbox"
-                      multiple
-                      value={formData && formData.assigned_to}
-                      // onChange={handleChange}
-                      input={<OutlinedInput label="Tag" />}
-                      renderValue={(selected) => selected.join(", ")}
-                      // MenuProps={MenuProps}
-                    > 
-                  {students && students?.students?.length > 0 && students.students.map((value) => (
-                        <MenuItem key={value.id} value={value.id}>
-                          <Checkbox checked={value.id.indexOf(value.id) > -1} />
-                          <ListItemText primary={value.first_name} />
-                        </MenuItem>
-                  ))} 
-                  </Select>
-                  </FormControl> */}
-
+                  {/* imp #TODO */}
                   <FormControl sx={{ marginTop: 2 }} fullWidth>
                     <InputLabel id="demo-multiple-name-label">
                       Select Students
@@ -199,7 +189,7 @@ const InsTaskDetailView = () => {
                           : []
                       }
                       name="assigned_to"
-                      // onChange={handleChange}
+                      onChange={handleChange}
                       renderValue={(selected) =>
                         selected
                           .map(
@@ -245,7 +235,7 @@ const InsTaskDetailView = () => {
                     label="Description"
                     variant="outlined"
                     value={formData && formData.description}
-                    // onChange={handleInputChange}
+                    onChange={handleChange}
                   />
                 </Grid>
 
@@ -384,9 +374,8 @@ const InsTaskDetailView = () => {
             </TableContainer>
           </>
         ) : !loading ? (
-            <LinearProgress color="primary" />
-        ):null
-        }
+          <LinearProgress color="primary" />
+        ) : null}
       </SidebarComp>
     </>
   );

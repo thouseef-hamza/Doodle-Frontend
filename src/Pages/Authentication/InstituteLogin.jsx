@@ -49,6 +49,7 @@ const InstituteLogin = () => {
             label="Your Code"
             variant="outlined"
             name="unique_code"
+            defaultValue={"ADMIN 0003"}
             sx={{ width: isMobile ? "70vw" : "40vw" }}
             margin="normal"
           />
@@ -61,6 +62,7 @@ const InstituteLogin = () => {
               onChange={(e)=>console.log(e.target.value)}
               id="outlined-adornment-password"
               type={showPassword ? "text" : "password"}
+              defaultValue={"thouseef"}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton

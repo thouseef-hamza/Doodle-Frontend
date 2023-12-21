@@ -20,7 +20,7 @@ export const InsTasksListCreateSlice = createSlice({
      .addCase(createTask.fulfilled,(state,action)=>{
           state.loading = false;
           state.error=null
-          state.tasks.push(action.payload)
+          state.tasks.tasks.push(action.payload)
 
      })
      builder
