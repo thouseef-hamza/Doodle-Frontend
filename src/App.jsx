@@ -30,6 +30,7 @@ import InsPayments from "./Pages/Institute/InsPayments";
 import PageNotFound from "./Pages/Authentication/PageNotFound";
 import ForgetPassword from "./Pages/Authentication/ForgetPassword";
 import StuClassmates from "./Pages/Student/StuClassmates";
+import StuTasks from "./Pages/Student/StuTasks";
 
 function App() {
   return (
@@ -163,6 +164,7 @@ function App() {
         <Route element={<StudentLogin />} path="/student/login" />
         <Route element={<StuProfile />} path="/student/profile" />
         <Route element={<StuClassmates />} path="/student/classmates" />
+        <Route element={<StuTasks />} path="/student/tasks" />
       </Routes>
     </LocalizationProvider>
   );

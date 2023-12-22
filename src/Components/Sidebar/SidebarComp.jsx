@@ -9,9 +9,9 @@ import Typography from "@mui/material/Typography";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import useResponsive from "../../Hooks/useResponsive";
-import ExploreIcon from "@mui/icons-material/Explore";
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -142,7 +142,7 @@ const SidebarComp =  React.memo(({children})=> {
                 },
               }}
             >
-              <HomeIcon
+              <HomeOutlinedIcon
                 sx={{
                   ":hover": {
                     color: "white",
@@ -182,7 +182,7 @@ const SidebarComp =  React.memo(({children})=> {
                 },
               }}
             >
-              <ExploreIcon
+              <ExploreOutlinedIcon
                 sx={{
                   ":hover": {
                     color: "white",

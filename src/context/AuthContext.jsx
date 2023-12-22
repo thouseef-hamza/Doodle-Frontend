@@ -48,7 +48,13 @@ export const AuthProvider = ({ children }) => {
         setUser(jwtDecode(data.jwt_token.access));
         localStorage.setItem("authTokens", JSON.stringify(data.jwt_token));
         console.log(user);
-        user.is_institute ? navigate("/institute/home") : user.is_student ? navigate("/student/dashboard") : null
+        if (user.is_institute === true){
+          navigate("/institute/home")
+        } else if(user.is_student === true){
+          navigate("/student/dashboard") 
+        } else{
+          navigate("/home")
+        }
       } else {
         alert("Something Went Wrong");
       }

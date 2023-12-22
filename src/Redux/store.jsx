@@ -10,6 +10,8 @@ import InsStudTaskAssignmentDetailSlice from "./Institute/InsTaskAssignment/InsS
 import InsStudTaskAssignmentListSlice from "./Institute/InsTaskAssignment/InsStudTaskAssignmentListSlice";
 import StuProfileSlice from "./Student/StuProfile/StuProfileSlice";
 import stuClassmatesListSlice  from "./Student/StuClassmates/ClassmatesSlice";
+import StudTaskDetailSlice from "./Student/StuTaskAssignment/StudTaskDetailSlice";
+import StudTaskListSlice from "./Student/StuTaskAssignment/StudTaskListSlice";
 
 
 export const store = configureStore({
@@ -23,7 +25,10 @@ export const store = configureStore({
     insTasksDetail: InsTaskDetailSlice,
     insStudTaskAssignmentList: InsStudTaskAssignmentListSlice,
     insStudTaskAssignmentDetail: InsStudTaskAssignmentDetailSlice,
+
     stuProfile: StuProfileSlice,
     stuClassmates: stuClassmatesListSlice,
+    stuTasksList: StudTaskListSlice,
+    stuTasksDetail: StudTaskDetailSlice,
   },
 });

@@ -1,5 +1,5 @@
 import { Button } from '@mui/base';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import Avatar from '@mui/material/Avatar';
 const StuClassmates = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const {classmates} = useSelector((state)=>state.stuClassmates)
+  const [page,setPage]=useState(1)
   const api=useAxios()
   const dispatch = useDispatch()
      const handleSearchChange = (e) => {
@@ -63,47 +64,53 @@ const StuClassmates = () => {
             </TableHead>
             <TableBody>
               {classmates &&
-              classmates.students?.map((student) => (
-                <TableRow
-                  key={student.id}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell align="left">
-                    <Avatar
-                      alt={`${student.first_name}`}
-                      src={`${student.profile_picture}`}
-                    />
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {student.first_name + " " + student.last_name}
-                  </TableCell>
-                  <TableCell align="left">{student.email}</TableCell>
-                  <TableCell align="left">{student.phone_number}</TableCell>
-                  <TableCell align="left">
-                    {student?.student_profile?.date_of_birth}
-                  </TableCell>
-                  <TableCell align="left">
-                    {student?.student_profile?.gender?.replace(
-                      /\b\w/g,
-                      (match) => match.toUpperCase()
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+                classmates.students?.map((student) => (
+                  <TableRow
+                    key={student.id}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell align="left">
+                      <Avatar
+                        alt={`${student.first_name}`}
+                        src={`${student.profile_picture}`}
+                      />
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {student.first_name + " " + student.last_name}
+                    </TableCell>
+                    <TableCell align="left">{student.email}</TableCell>
+                    <TableCell align="left">{student.phone_number}</TableCell>
+                    <TableCell align="left">
+                      {student?.student_profile?.date_of_birth}
+                    </TableCell>
+                    <TableCell align="left">
+                      {student?.student_profile?.gender?.replace(
+                        /\b\w/g,
+                        (match) => match.toUpperCase()
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-         <Box mx={"auto"} marginTop={2} textAlign="center" display={"flex"} justifyContent={'center'}>
-                <Pagination
-                  variant="outlined"
-                  page={page}
-                  onChange={(event, page) => setPage(page)}
-                  count={students && students.total_page}
-                  color="primary"
-                />
-              </Box>
+        <Box
+          mx={"auto"}
+          marginTop={2}
+          textAlign="center"
+          display={"flex"}
+          justifyContent={"center"}
+        >
+          <Pagination
+            variant="outlined"
+            page={page}
+            onChange={(event, page) => setPage(page)}
+            count={classmates && classmates.total_page}
+            color="primary"
+          />
+        </Box>
       </StuSidebarComp>
     </>
   );
