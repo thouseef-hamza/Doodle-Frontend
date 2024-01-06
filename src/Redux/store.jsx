@@ -12,6 +12,10 @@ import StuProfileSlice from "./Student/StuProfile/StuProfileSlice";
 import stuClassmatesListSlice  from "./Student/StuClassmates/ClassmatesSlice";
 import StudTaskDetailSlice from "./Student/StuTaskAssignment/StudTaskDetailSlice";
 import StudTaskListSlice from "./Student/StuTaskAssignment/StudTaskListSlice";
+import UPIListSlice from "./Institute/InsPayments/UPIListSlice";
+import UPIDetailSlice from "./Institute/InsPayments/UPIDetailSlice";
+import PaymentListSlice from "./Institute/InsPayments/PaymentListSlice";
+import PaymentDetailSlice from "./Institute/InsPayments/PaymentDetailSlice";
 
 
 export const store = configureStore({
@@ -25,7 +29,10 @@ export const store = configureStore({
     insTasksDetail: InsTaskDetailSlice,
     insStudTaskAssignmentList: InsStudTaskAssignmentListSlice,
     insStudTaskAssignmentDetail: InsStudTaskAssignmentDetailSlice,
-
+    insStudPayments:PaymentListSlice,
+    insStudPaymentsDetail:PaymentDetailSlice,
+    insUPI:UPIListSlice,
+    insUPIDetail:UPIDetailSlice,
     stuProfile: StuProfileSlice,
     stuClassmates: stuClassmatesListSlice,
     stuTasksList: StudTaskListSlice,

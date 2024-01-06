@@ -20,9 +20,11 @@ const StuClassmates = () => {
     setSearchQuery(e.target.value)
   };
   useEffect(()=>{
-     dispatch(listClassmates({api,searchQuery}))
+     dispatch(listClassmates({api}))
+  },[])
+  useEffect(()=>{
+    dispatch(listClassmates({ api ,searchQuery}));
   },[searchQuery])
-  console.log(classmates);
   return (
     <>
       <StuSidebarComp>
@@ -52,50 +54,52 @@ const StuClassmates = () => {
             Search
           </Button>
         </Container>
-        <TableContainer component={Paper} sx={{ marginTop: 3 }}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Student</TableCell>
-                <TableCell align="left">Full Name</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Phone Number</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {classmates &&
-                classmates.students?.map((student) => (
-                  <TableRow
-                    key={student.id}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
+        {classmates && classmates.students?.length > 0 ? (
+          <TableContainer component={Paper} sx={{ marginTop: 3 }}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Avatar</TableCell>
+                  <TableCell align="left">Full Name</TableCell>
+                  <TableCell align="left">Email</TableCell>
+                  <TableCell align="left">Phone Number</TableCell>
+                  <TableCell align="left">Date of Birth</TableCell>
+                  <TableCell align="left">Gender</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {classmates.students.map((student) => (
+                  <TableRow key={student.id}>
                     <TableCell align="left">
                       <Avatar
-                        alt={`${student.first_name}`}
-                        src={`${student.profile_picture}`}
+                        alt={student.first_name}
+                        src={student.profile_picture}
                       />
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {student.first_name + " " + student.last_name}
+                      {`${student.first_name} ${student.last_name}`}
                     </TableCell>
                     <TableCell align="left">{student.email}</TableCell>
                     <TableCell align="left">{student.phone_number}</TableCell>
                     <TableCell align="left">
-                      {student?.student_profile?.date_of_birth}
+                      {student.student_profile?.date_of_birth}
                     </TableCell>
                     <TableCell align="left">
-                      {student?.student_profile?.gender?.replace(
+                      {student.student_profile?.gender?.replace(
                         /\b\w/g,
                         (match) => match.toUpperCase()
                       )}
                     </TableCell>
                   </TableRow>
                 ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Typography variant="h6" textAlign={"center"} sx={{ marginTop: 3 }}>
+            You are the first one in this class. Welcome!
+          </Typography>
+        )}
         <Box
           mx={"auto"}
           marginTop={2}

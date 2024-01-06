@@ -1,9 +1,9 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Container, FormControl, Grid, Icon, InputLabel, Menu, MenuItem, Pagination, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import SidebarComp from '../../Components/Sidebar/SidebarComp'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer,toast } from 'react-toastify'
 import StudentAddComp from '../../Components/StudentAddComp';
 import useResponsive from '../../Hooks/useResponsive';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import  ExpandMoreIcon  from '@mui/icons-material/ExpandMore'
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import DoneIcon from "@mui/icons-material/Done";
@@ -12,18 +12,27 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ClearIcon from "@mui/icons-material/Clear";
 import UpgradeIcon from "@mui/icons-material/Upgrade";
 import { DatePicker } from '@mui/x-date-pickers';
+import { useDispatch, useSelector } from 'react-redux';
+import { listPayments } from '../../Redux/Institute/InsPayments/PaymentListAction';
+import useAxios from '../../Hooks/useAxios';
+import { createUPI, listUPI } from '../../Redux/Institute/InsPayments/UPIListAction';
 
 
 const InsPayments = () => {
   const [open, setOpen] = useState(false);
   const isMobile = useResponsive("sm");
   const [edit, setEdit] = useState(false);
+  const { payments } = useSelector((state) => state.insStudPayments);
+  const { upis } = useSelector((state) => state.insUPI);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortQuery, setSortQuery] = useState("");
+    const [editupiFormData,seteditUpiFormData] = useState("")
+    const [upiFormData,setUpiFormData]=useState({})
   const handleClose = () => {
     setOpen(false);
   };
-  
+  const api = useAxios()
+  const dispatch = useDispatch() 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value)
     setSortQuery(null)
@@ -31,8 +40,27 @@ const InsPayments = () => {
 
   const handleStudentPaymentSubmit = (e) => {
     e.preventDefault();
-    
   };
+
+  const handleUpiChange = (e)=>{
+    const {name,value} = e.target
+    setUpiFormData({
+      ...upiFormData,
+      [name]: value,
+    });
+    console.log(upiFormData);
+  }
+
+  const handleUPISubmit=(e)=>{
+    e.preventDefault()
+    dispatch(createUPI({api,toast,values:upiFormData}))
+  }
+  
+  useEffect(()=>{
+    dispatch(listPayments({api,searchQuery,sortQuery}))
+    dispatch(listUPI({api}))
+  },[])
+
   
   // Sort ============>
   const [anchorEl, setAnchorEl] = useState(null);
@@ -65,7 +93,7 @@ const InsPayments = () => {
           alignItems={"flex-start"}
           marginLeft={0}
         >
-          <Grid container md={9} spacing={2}>
+          <Grid container spacing={2}>
             {/* Student Section */}
             <Grid
               item
@@ -139,11 +167,11 @@ const InsPayments = () => {
                 Add New Payment
               </Button> */}
             </Container>
-            <Grid item spacing={2}>
+            <Grid item>
               <Typography>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 900 }} aria-label="simple table">
-                    <TableHead fullWidth>
+                    <TableHead>
                       <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell align="left">Batch No</TableCell>
@@ -154,40 +182,61 @@ const InsPayments = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <TableRow>
-                        <TableCell align="left">Thouseef Hamza T P</TableCell>
-                        <TableCell align="left">Kunnamkulam</TableCell>
-                        <TableCell align="left">
-                          <Typography>Thousi</Typography>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Typography>Thousi</Typography>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Icon>
-                            <UnpublishedOutlinedIcon color="error" />
-                          </Icon>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Button
-                            variant="outlined"
-                            onClick={() => setEdit(!edit)}
-                          >
-                            Edit
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                      {/* Here Ends */}
+                      {payments &&
+                        payments.students?.length > 0 &&
+                        payments.students?.map((student) => (
+                          <TableRow key={student.id}>
+                            <TableCell align="left">
+                              {student.student_name}
+                            </TableCell>
+                            <TableCell align="left">
+                              {student.batch_name}
+                            </TableCell>
+                            <TableCell align="left">
+                              <Typography>{student.fee_amount}</Typography>
+                            </TableCell>
+                            <TableCell align="left">
+                              <Typography>{student.fee_paid}</Typography>
+                            </TableCell>
+                            <TableCell align="left">
+                              {student.fee_status === "overdue" ? (
+                                <Icon>
+                                  <UnpublishedOutlinedIcon color="error" />
+                                </Icon>
+                              ) : student.fee_status === "pending" ? (
+                                <Icon>
+                                  <AccessTimeIcon color="warning" />
+                                </Icon>
+                              ) : (
+                                <Icon>
+                                  <DoneIcon color="success" />
+                                </Icon>
+                              )}
+                            </TableCell>
+                            <TableCell align="left">
+                              <Button
+                                variant="outlined"
+                                onClick={() => setEdit(!edit)}
+                              >
+                                Edit
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
               </Typography>
             </Grid>
             <Box mx={"auto"} marginTop={2} textAlign="center">
-              <Pagination variant="outlined" count={10} color="primary" />
+              <Pagination
+                variant="outlined"
+                count={payments && payments.total_page}
+                color="primary"
+              />
             </Box>
           </Grid>
-          <Grid container spacing={2} md={3} justifyContent={"flex-end"}>
+          <Grid container spacing={2} justifyContent={"flex-end"}>
             <Typography color={"text.primary"} variant="h5" marginTop={3}>
               Payment Detail
             </Typography>
@@ -198,60 +247,73 @@ const InsPayments = () => {
             >
               Add New Upi
             </Button>
-            <Grid item xs={12} marginLeft={2}>
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>SBI</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <form>
-                    <TextField
-                      required
-                      id="outlined-basic"
-                      label="Payment Number"
-                      type="text"
-                      variant="outlined"
-                      name="payment_number"
-                      margin="normal"
-                      fullWidth
-                    />
-                    <TextField
-                      required
-                      id="outlined-basic"
-                      label="Payment Bank"
-                      type="text"
-                      variant="outlined"
-                      name="last_name"
-                      margin="normal"
-                      fullWidth
-                    />
-                    <TextField
-                      id="outlined-basic"
-                      required
-                      label="Payment ID"
-                      type="text"
-                      variant="outlined"
-                      name="email"
-                      margin="normal"
-                      fullWidth
-                    />
-                    <br />
-                    <Button type="submit" color="primary" variant="contained">
-                      Update
-                    </Button>
-                  </form>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
+            {upis && upis.length > 0 ? (
+              <>
+                {upis.map((upi, index) => (
+                  <Grid item xs={12} key={index} marginLeft={2}>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls={`panel${index}-content`}
+                        id={`panel${index}-header`}
+                      >
+                        <Typography>{upi.payment_bank}</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <form>
+                          <TextField
+                            required
+                            value={upi.payment_number}
+                            id="outlined-basic"
+                            label="Payment Number"
+                            type="text"
+                            variant="outlined"
+                            name="payment_number"
+                            margin="normal"
+                            fullWidth
+                          />
+                          <TextField
+                            value={upi.payment_bank}
+                            required
+                            id="outlined-basic"
+                            label="Payment Bank"
+                            type="text"
+                            variant="outlined"
+                            name="payment_bank"
+                            margin="normal"
+                            fullWidth
+                          />
+                          <TextField
+                            id="outlined-basic"
+                            value={upi.upi_id}
+                            required
+                            label="UPI ID"
+                            type="text"
+                            variant="outlined"
+                            name="email"
+                            margin="normal"
+                            fullWidth
+                          />
+                          <br />
+                          <Button
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                          >
+                            Update
+                          </Button>
+                        </form>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Grid>
+                ))}
+              </>
+            ) : null}
           </Grid>
         </Box>
         {/* Student Filling Form */}
         <StudentAddComp open={open} title={"Payment Detail Filling"}>
-          <form>
+          <form onSubmit={handleUPISubmit}>
             <TextField
               required
               id="outlined-basic"
@@ -261,6 +323,7 @@ const InsPayments = () => {
               name="payment_number"
               sx={{ width: isMobile ? "70vw" : "40vw" }}
               margin="normal"
+              onChange={handleUpiChange}
             />
             <TextField
               required
@@ -268,19 +331,21 @@ const InsPayments = () => {
               label="Payment Bank"
               type="text"
               variant="outlined"
-              name="last_name"
+              name="payment_bank"
               sx={{ width: isMobile ? "70vw" : "40vw" }}
               margin="normal"
+              onChange={handleUpiChange}
             />
             <TextField
               id="outlined-basic"
               required
-              label="Payment ID"
+              label="UPI ID"
               type="text"
               variant="outlined"
-              name="email"
+              name="upi_id"
               sx={{ width: isMobile ? "70vw" : "40vw" }}
               margin="normal"
+              onChange={handleUpiChange}
             />
             {/* </FormControl> */}
             <Button onClick={handleClose} color="primary">
@@ -298,27 +363,4 @@ const InsPayments = () => {
 
 export default InsPayments
 
-                                  // <FormControl
-                                  //   sx={{ m: 1, minWidth: 120 }}
-                                  //   size="small"
-                                  // >
-                                  //   <InputLabel id="demo-select-small-label">
-                                  //     Status
-                                  //   </InputLabel>
-                                  //   <Select
-                                  //     labelId="demo-select-small-label"
-                                  //     id="demo-select-small"
-                                  //     defaultValue={"none"}
-                                  //     // value={age}
-                                  //     label="Age"
-                                  //     // onChange={handleChange}
-                                  //   >
-                                  //     <MenuItem value="none" disabled>
-                                  //       <em>None</em>
-                                  //     </MenuItem>
-                                  //     <MenuItem value={"completed"}>
-                                  //       Completed
-                                  //     </MenuItem>
-                                  //     <MenuItem value={""}>Pending</MenuItem>
-                                  //   </Select>
-                                  // </FormControl>
+                         

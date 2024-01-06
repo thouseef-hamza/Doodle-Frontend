@@ -25,7 +25,7 @@ export default function CardComp({id,name,description,start_date,batch_fee,fee_p
                 />
                 {is_scheduled?
                 <Chip
-                  label={`Reminder ${scheduled_date}`}
+                  label={`Reminder is On`}
                   color="primary"
                   size="small"
                   variant="contained"

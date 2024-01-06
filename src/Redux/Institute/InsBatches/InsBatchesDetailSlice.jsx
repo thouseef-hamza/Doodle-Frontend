@@ -4,7 +4,7 @@ import { deleteBatchDetail, editBatchDetail, getBatchDetail } from "./InsBatches
 export const InsBatchesDetailSlice = createSlice({
   name: "InsBatchesDetailSlice",
   initialState:{
-     batchDetails:[],
+     batchDetails:{},
      loading:false,
      error:null
   },
@@ -12,11 +12,12 @@ export const InsBatchesDetailSlice = createSlice({
      builder
      .addCase(getBatchDetail.pending,(state)=> {
           state.loading = true;
+          state.batchDetails={};
+          state.error=null;
      })
      .addCase(getBatchDetail.fulfilled,(state,action)=>{
           state.loading = false;
           state.batchDetails = action.payload
-          state.error = null;
      })
      .addCase(getBatchDetail.rejected, (state,action)=>{
           state.loading = false;

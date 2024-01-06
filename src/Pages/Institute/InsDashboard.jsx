@@ -57,11 +57,9 @@ const InsDashboard = () => {
   let api=useAxios()
   console.log(api);
   const [data, setData] = useState("");
-  console.log(data);
   const fetchData = async () => {
     try {
       const response = await api.get(INS_BASE_URL + "dashboard/");
-      console.log(response);
       setData(response.data)
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -71,7 +69,7 @@ const InsDashboard = () => {
       labels: ["Collections", "Remaining"],
       datasets: [
         {
-          data: [data.this_month_revenue, data.remaining_amount ? data.remaining_amoun : 10  ],
+          data: [data.this_month_revenue, data.remaining_amount ? data.remaining_amount : 10  ],
           backgroundColor: ["#7E56D8", "#A47DFD"],
           hoverBackgroundColor: ["#7E56D8", "#A47DFD"],
         },

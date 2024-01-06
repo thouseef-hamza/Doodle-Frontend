@@ -1,9 +1,9 @@
-import { Avatar, Box, Button, Divider, Grid, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, Divider, FormControl, Grid, InputLabel, LinearProgress, Pagination, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import SidebarComp from "../../Components/Sidebar/SidebarComp"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useAxios from "../../Hooks/useAxios";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SpinnerComp from "../../Components/SpinnerComp";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteBatchDetail, editBatchDetail, getBatchDetail } from "../../Redux/Institute/InsBatches/InsBatchesDetailAction";
@@ -12,7 +12,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import dayjs from "dayjs";
 import { listStudents } from "../../Redux/Institute/InsStudents/InsStudentListCreateAction";
+import { listUPI } from "../../Redux/Institute/InsPayments/UPIListAction";
 // import { DateAdapter } from "../../utils/FormatDate/DateAdapter";
+import MenuItem from "@mui/material/MenuItem";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import { listPayments } from "../../Redux/Institute/InsPayments/PaymentListAction";
 
 const InsBatchesDetail = () => {
   const navigate = useNavigate()
@@ -22,7 +26,9 @@ const InsBatchesDetail = () => {
   const { batchDetails, loading } = useSelector(
     (state) => state.insBatchDetail
   );
-
+  const { payments } = useSelector((state) => state.insStudPayments);
+  console.log(payments);
+  const { upis } = useSelector((state) => state.insUPI);
   const [showStudents,setShowStudents] = useState(false)
   const { students } = useSelector((state) => state.insStudentsListCreate);
   const studentLoading = useSelector((state) => state.insStudentsListCreate.loading)
@@ -31,6 +37,7 @@ const InsBatchesDetail = () => {
   const {id} = useParams()
   useEffect(() => {
     dispatch(getBatchDetail({ id: id, api: api }));
+
   }, [id]);
 
   useEffect(()=>{
@@ -38,17 +45,22 @@ const InsBatchesDetail = () => {
       name: batchDetails.name,
       description: batchDetails.description,
       start_date: batchDetails.start_date,
-      scheduled_date: batchDetails.scheduled_date,
+      scheduled_date: batchDetails.scheduled_date
+        ? batchDetails.scheduled_date
+        : new Date(),
       batch_fees: batchDetails.batch_fees,
       fee_penalty: batchDetails.fee_penalty,
+      institute_payment_detail: batchDetails.institute_payment_detail,
+      is_scheduled: batchDetails.is_scheduled,
     });
-  },[batchDetails])
+  },[])
   useEffect(()=>{
     if(showStudents){
       dispatch(listStudents({ api:api, batchId: id,page }));
     }
+    dispatch(listUPI({api}))
+    dispatch(listPayments({api}))
   },[showStudents])
-  
   
   const handleInputChange = (e) => {
     const {name, value} = e.target
@@ -62,7 +74,12 @@ const InsBatchesDetail = () => {
     alert("Are you sure want to update")
     dispatch(editBatchDetail({id:id,values:formData,toast:toast,api:api}))
   }
-  
+  const [reminder,setReminder]=useState(batchDetails.is_scheduled)
+  const handleReminder = () => {
+    setReminder(!reminder)
+    setFormData({...formData,is_scheduled:reminder})
+    dispatch(editBatchDetail({id,values:formData,api}))
+  }
 
   return (
     <SidebarComp>
@@ -102,8 +119,15 @@ const InsBatchesDetail = () => {
               <Typography variant="h6">Batch Details</Typography>
               <Button
                 variant="contained"
-                endIcon={<NotificationsIcon />}
+                endIcon={
+                  batchDetails.is_scheduled == true ? (
+                    <NotificationsActiveIcon />
+                  ) : (
+                    <NotificationsIcon />
+                  )
+                }
                 size="small"
+                onClick={handleReminder}
               >
                 Fee Reminder
               </Button>
@@ -180,6 +204,40 @@ const InsBatchesDetail = () => {
                     slotProps={(params) => <TextField {...params} />}
                   />
                 </Grid>
+                <Grid item xs={3}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label-121">
+                      UPI ID
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label-121"
+                      id="demo-simple-select-121"
+                      defaultValue={"S"}
+                      color="primary"
+                      value={formData && formData.institute_payment_detail}
+                      label="UPI ID"
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          institute_payment_detail: e.target.value,
+                        })
+                      }
+                      name="payment_id"
+                    >
+                      {upis &&
+                        upis.length > 0 && [
+                          <MenuItem key={"S"} value={"S"} disabled>
+                            Select
+                          </MenuItem>,
+                          ...upis.map((upi) => (
+                            <MenuItem key={upi.id} value={upi.id}>
+                              {upi.payment_bank}
+                            </MenuItem>
+                          )),
+                        ]}
+                    </Select>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12} sm={12}>
                   <TextField
                     fullWidth
@@ -213,10 +271,13 @@ const InsBatchesDetail = () => {
               </Grid>
             </form>
           </Paper>
-          {showStudents && studentLoading ?
-          <LinearProgress color="primary" />
-                : showStudents && !studentLoading && students && students.students?.length > 0 ? (
-          <>
+          {showStudents && studentLoading ? (
+            <LinearProgress color="primary" />
+          ) : showStudents &&
+            !studentLoading &&
+            students &&
+            students.students?.length > 0 ? (
+            <>
               <Box
                 display={"flex"}
                 justifyContent={"space-between"}
@@ -294,9 +355,12 @@ const InsBatchesDetail = () => {
                 </Box>
               ) : null}
             </>
-          ) : ( 
+          ) : (
             <Typography variant="h5" sx={{ marginTop: 4 }}>
-              <Button variant="outlined" onClick={() => setShowStudents(!showStudents)}>
+              <Button
+                variant="outlined"
+                onClick={() => setShowStudents(!showStudents)}
+              >
                 Show Students
               </Button>
             </Typography>

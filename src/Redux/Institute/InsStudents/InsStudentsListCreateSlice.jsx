@@ -12,10 +12,10 @@ export const InsStudentsListCreateSlice = createSlice({
     builder
       .addCase(createStudent.pending, (state) => {
         state.loading = true;
+        state.error=null;
       })
       .addCase(createStudent.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = null
         state.students.students.push(action.payload);
       })
       .addCase(createStudent.rejected, (state, action) => {
@@ -25,11 +25,11 @@ export const InsStudentsListCreateSlice = createSlice({
     builder
       .addCase(listStudents.pending, (state) => {
         state.loading = true;
+        state.error=null;
       })
       .addCase(listStudents.fulfilled, (state, action) => {
         state.loading = false;
         state.students = action.payload;
-        state.error = null
       })
       .addCase(listStudents.rejected, (state, action) => {
         state.loading = false;

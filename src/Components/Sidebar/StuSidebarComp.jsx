@@ -21,6 +21,8 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 import LogoutIcon from "@mui/icons-material/Logout";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
+import PaymentIcon from "@mui/icons-material/Payment";
+
 
 const drawerWidth = 240;
 
@@ -288,7 +290,7 @@ const StuSidebarComp =  React.memo(({children})=> {
               />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
+          {/* <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
@@ -363,12 +365,50 @@ const StuSidebarComp =  React.memo(({children})=> {
                 sx={{ opacity: open ? 1 : 0 }}
               />
             </ListItemButton>
+          </ListItem> */}
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+              onClick={() => navigate("/student/payments")}
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+                backgroundColor:
+                  location.pathname === "/student/payments"
+                    ? theme.palette.primary.dark
+                    : "initial",
+                color:
+                  location.pathname === "/student/payments"
+                    ? "white"
+                    : "text.primary",
+                ":hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                  color: "white",
+                },
+              }}
+            >
+              <PaymentIcon
+                sx={{
+                  ":hover": {
+                    color: "white",
+                  },
+                  mr: open ? 3 : "auto",
+                }}
+              />
+              <ListItemText
+                primary={"Payments"}
+                color="#1F2D5A"
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               onMouseEnter={() => setOpen(true)}
               onMouseLeave={() => setOpen(false)}
-              onClick={() => navigate("/student/account")}
+              // onClick={() => navigate("/student/account")}
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
