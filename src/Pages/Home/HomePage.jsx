@@ -4,6 +4,7 @@ import { Grid, Typography,CardMedia, CardContent, Card, Box, Link, Container, Bu
 import {  ArrowForward, Facebook, Instagram, Twitter } from '@mui/icons-material';
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { useNavigate } from 'react-router-dom';
+import SecondImage from '../../assets/images/Education.png'
 
 
 const HomePage = () => {
@@ -65,7 +66,7 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <img
-              src="src/assets/images/Education.png"
+              src={SecondImage}
               alt="Description"
               style={{ width: "100%", height: "auto" }}
             />
