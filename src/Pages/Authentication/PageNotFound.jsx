@@ -2,7 +2,7 @@ import { Box, Button } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import LogoComponent from '../../Components/Authentication/LogoComponent';
-import PageNotFound from '../../assets/images/404ErrorPagenotFound.png'
+import Page404NotFound from '../../assets/images/404ErrorPagenotFound.png'
 
 const PageNotFound = () => {
      const navigate=useNavigate()
@@ -14,14 +14,14 @@ const PageNotFound = () => {
         alignItems={"center"}
         flexDirection={"column"}
       >
-          <br/>
+        <br />
         <LogoComponent />
-        <img
-          src={PageNotFound}
-          width={"30%"}
-          alt="Page Not Found"
-        />
-        <Button onClick={() => navigate("/institute/home")} variant="outlined" sx={{marginTop:5}}>
+        <img src={Page404NotFound} width={"30%"} alt="Page Not Found" />
+        <Button
+          onClick={() => navigate("/institute/home")}
+          variant="outlined"
+          sx={{ marginTop: 5 }}
+        >
           Back To Home
         </Button>
       </Box>
