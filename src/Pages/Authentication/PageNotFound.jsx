@@ -2,6 +2,7 @@ import { Box, Button } from '@mui/material';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import LogoComponent from '../../Components/Authentication/LogoComponent';
+import PageNotFound from '../../assets/images/404ErrorPagenotFound.png'
 
 const PageNotFound = () => {
      const navigate=useNavigate()
@@ -16,7 +17,7 @@ const PageNotFound = () => {
           <br/>
         <LogoComponent />
         <img
-          src="/src/assets/images/404ErrorPagenotFound.png"
+          src={PageNotFound}
           width={"30%"}
           alt="Page Not Found"
         />

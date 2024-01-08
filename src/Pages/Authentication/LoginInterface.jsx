@@ -1,5 +1,6 @@
 import { AuthInterfaceComponent } from '../../Components/Authentication/AuthInterfaceComponent'
-
+import InstituteImage from '../../assets/images/InstituteLogin.png'
+import TeacherImage from '../../assets/images/TeacherLogin.png'
 const LoginInterface = () => {
   return (
     <>
@@ -10,8 +11,8 @@ const LoginInterface = () => {
      teacher_path="" 
      student_path="/student/login"
      institute_path="/institute/login" 
-     institute_image="src/assets/images/InstituteLogin.png" 
-     teacher_image="src/assets/images/TeacherLogin.png" 
+     institute_image={InstituteImage}
+     teacher_image={TeacherImage}
      />
     </>
   )

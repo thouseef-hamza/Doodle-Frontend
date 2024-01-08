@@ -5,6 +5,9 @@ import {  useState } from 'react';
 import useAxios from '../../Hooks/useAxios';
 import { AUTH_BASE_URL } from '../../utils/api/api';
 import {ToastContainer,toast} from 'react-toastify'
+import ChangePassword from '../../assets/images/change-password.png'
+import ChangePassword2 from '../../assets/images/shield.png'
+import DeleteAccount from '../../assets/images/delete-account.png'
 
 
 const InsAccount = () => {
@@ -81,7 +84,7 @@ const InsAccount = () => {
                 <CardMedia
                   loading="lazy"
                   component="img"
-                  image="/src/assets/images/change-password.png"
+                  image={ChangePassword}
                   title="change-password"
                   style={{ objectFit: "contain" }}
                 />
@@ -99,7 +102,7 @@ const InsAccount = () => {
                 <CardMedia
                   loading="lazy"
                   component="img"
-                  image="/src/assets/images/delete-account.png"
+                  image={DeleteAccount}
                   title="delete-account"
                   style={{ objectFit: "contain" }}
                 />
@@ -129,7 +132,7 @@ const InsAccount = () => {
                   width={10}
                   component={"img"}
                   style={{ objectFit: "contain" }}
-                  src="/src/assets/images/shield.png"
+                  src={ChangePassword2}
                 />
                 <Typography>Reset Password</Typography>
 

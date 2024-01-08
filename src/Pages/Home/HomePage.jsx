@@ -2,9 +2,13 @@ import { useState } from 'react';
 import HeaderComp from '../../Components/Header/HeaderComp'
 import { Grid, Typography,CardMedia, CardContent, Card, Box, Link, Container, Button, Alert, Snackbar } from '@mui/material'
 import {  ArrowForward, Facebook, Instagram, Twitter } from '@mui/icons-material';
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { useNavigate } from 'react-router-dom';
-import SecondImage from '../../assets/images/Education.png'
+import FirstImage from '../../assets/images/Education.png'
+import SecondImage from '../../assets/images/Online learning-pana.png'
+import Feature1 from '../../assets/images/Job hunt-amico.png'
+import Feature2 from '../../assets/images/Job offers-amico.png'
+import Feature3 from '../../assets/images/college class-bro.png'
+import Feature4 from '../../assets/images/Dashboard-amico.png'
 
 
 const HomePage = () => {
@@ -66,7 +70,7 @@ const HomePage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <img
-              src={SecondImage}
+              src={FirstImage}
               alt="Description"
               style={{ width: "100%", height: "auto" }}
             />
@@ -83,7 +87,7 @@ const HomePage = () => {
       >
         <Grid item xs={12} md={6}>
           <img
-            src="src/assets/images/Online learning-pana.png"
+            src={SecondImage}
             alt="Description"
             style={{ width: "100%", height: "auto" }}
           />
@@ -133,7 +137,7 @@ const HomePage = () => {
               component={"img"}
               style={{ objectFit: "contain" }}
               loading="lazy"
-              image="src/assets/images/Job hunt-amico.png"
+              image={Feature1}
             />
             <CardContent>
               <Typography variant="h6">
@@ -155,7 +159,7 @@ const HomePage = () => {
             <CardMedia
               component={"img"}
               style={{ objectFit: "contain" }}
-              image="src/assets/images/Job offers-amico.png"
+              image={Feature2}
               loading="lazy"
             />
             <CardContent>
@@ -180,7 +184,7 @@ const HomePage = () => {
               loading="lazy"
               component={"img"}
               title="class"
-              image="src/assets/images/college class-bro.png"
+              image={Feature3}
               style={{ objectFit: "contain" }}
             />
             <CardContent>
@@ -204,7 +208,7 @@ const HomePage = () => {
               loading="lazy"
               component={"img"}
               title="dashboard"
-              image="src/assets/images/Dashboard-amico.png"
+              image={Feature4}
               style={{ objectFit: "contain" }}
             />
             <CardContent>

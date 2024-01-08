@@ -8,6 +8,8 @@ import { useTheme } from '@emotion/react';
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LogoutIcon from "@mui/icons-material/Logout";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import HiringImage from '../../assets/images/Ins-Hiring.png'
+import SearchTeachers from '../../assets/images/Search-teachers.png'
 const card = {
   "&:hover": {
     backgroundColor: "primary.dark", // Change to your desired color
@@ -21,9 +23,7 @@ const InsHomePage = () => {
   const [elevation, setElevation] = useState(0);
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const isMobile = useReducer("sm")
 
-  let { user, logOutUser } = useContext(AuthContext);
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -183,7 +183,7 @@ const InsHomePage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <img
-              src="/src/assets/images/Ins-Hiring.png"
+              src={HiringImage}
               alt="Description"
               style={{ width: "100%", height: "auto" }}
             />
@@ -315,7 +315,7 @@ const InsHomePage = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={6}>
             <img
-              src="/src/assets/images/Search-teachers.png"
+              src={SearchTeachers}
               alt="Description"
               style={{ width: "100%", height: "auto" }}
             />
