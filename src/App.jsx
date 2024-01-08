@@ -31,6 +31,7 @@ import PageNotFound from "./Pages/Authentication/PageNotFound";
 import ForgetPassword from "./Pages/Authentication/ForgetPassword";
 import StuClassmates from "./Pages/Student/StuClassmates";
 import StuTasks from "./Pages/Student/StuTasks";
+import StuPayments from "./Pages/Student/StuPayments";
 
 function App() {
   return (
@@ -165,6 +166,7 @@ function App() {
         <Route element={<StuProfile />} path="/student/profile" />
         <Route element={<StuClassmates />} path="/student/classmates" />
         <Route element={<StuTasks />} path="/student/tasks" />
+        <Route element={<StuPayments/>} path="/student/payments"/>
       </Routes>
     </LocalizationProvider>
   );
